@@ -1,6 +1,6 @@
-D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Module.TopDownArenaRuntime.cpp
+D:\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Module.TopDownArenaRuntime.cpp
 /I .
-/I D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Source\TopDownArenaRuntime\Private
+/I D:\FlightSim\Plugins\GameFeatures\TopDownArena\Source\TopDownArenaRuntime\Private
 /I ..\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\UHT
 /I Runtime\CoreUObject\Public
 /I Runtime
@@ -292,18 +292,18 @@ D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win6
 /I ..\Plugins\FX\Niagara\Source\NiagaraShader\Public
 /I ..\Plugins\FX\Niagara\Source\NiagaraVertexFactories\Public
 /I Developer\DesktopPlatform\Public
-/I D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\UnrealEditor\Inc\TopDownArenaRuntime\UHT
-/I D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Source
-/I D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Source\TopDownArenaRuntime\Public
-/I D:\Workspace\FlightSim\Intermediate\Build\Win64\UnrealEditor\Inc\LyraGame\UHT
-/I D:\Workspace\FlightSim\Source\LyraGame
-/I D:\Workspace\FlightSim\Source
+/I D:\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\UnrealEditor\Inc\TopDownArenaRuntime\UHT
+/I D:\FlightSim\Plugins\GameFeatures\TopDownArena\Source
+/I D:\FlightSim\Plugins\GameFeatures\TopDownArena\Source\TopDownArenaRuntime\Public
+/I D:\FlightSim\Intermediate\Build\Win64\UnrealEditor\Inc\LyraGame\UHT
+/I D:\FlightSim\Source\LyraGame
+/I D:\FlightSim\Source
 /I ..\Plugins\Experimental\ModularGameplay\Intermediate\Build\Win64\UnrealEditor\Inc\ModularGameplay\UHT
 /I ..\Plugins\Experimental\ModularGameplay\Source\ModularGameplay\Public
 /I ..\Plugins\Experimental\ModularGameplay\Source
-/I D:\Workspace\FlightSim\Plugins\ModularGameplayActors\Intermediate\Build\Win64\UnrealEditor\Inc\ModularGameplayActors\UHT
-/I D:\Workspace\FlightSim\Plugins\ModularGameplayActors\Source
-/I D:\Workspace\FlightSim\Plugins\ModularGameplayActors\Source\ModularGameplayActors\Public
+/I D:\FlightSim\Plugins\ModularGameplayActors\Intermediate\Build\Win64\UnrealEditor\Inc\ModularGameplayActors\UHT
+/I D:\FlightSim\Plugins\ModularGameplayActors\Source
+/I D:\FlightSim\Plugins\ModularGameplayActors\Source\ModularGameplayActors\Public
 /I ..\Plugins\Runtime\ReplicationGraph\Intermediate\Build\Win64\UnrealEditor\Inc\ReplicationGraph\UHT
 /I ..\Plugins\Runtime\ReplicationGraph\Source\Public
 /I ..\Plugins\Runtime\ReplicationGraph
@@ -324,28 +324,29 @@ D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win6
 /I ..\Plugins\Online\OnlineSubsystem
 /I ..\Plugins\Online\OnlineBase\Source\Public
 /I ..\Plugins\Online\OnlineBase
-/I D:\Workspace\FlightSim\Plugins\CommonLoadingScreen\Intermediate\Build\Win64\UnrealEditor\Inc\CommonLoadingScreen\UHT
-/I D:\Workspace\FlightSim\Plugins\CommonLoadingScreen\Source
-/I D:\Workspace\FlightSim\Plugins\CommonLoadingScreen\Source\CommonLoadingScreen\Public
-/I D:\Workspace\FlightSim\Plugins\AsyncMixin\Source
-/I D:\Workspace\FlightSim\Plugins\AsyncMixin\Source\Public
-/I D:\Workspace\FlightSim\Plugins\AsyncMixin
+/I D:\FlightSim\Plugins\CommonLoadingScreen\Intermediate\Build\Win64\UnrealEditor\Inc\CommonLoadingScreen\UHT
+/I D:\FlightSim\Plugins\CommonLoadingScreen\Source
+/I D:\FlightSim\Plugins\CommonLoadingScreen\Source\CommonLoadingScreen\Public
+/I D:\FlightSim\Plugins\AsyncMixin\Source
+/I D:\FlightSim\Plugins\AsyncMixin\Source\Public
+/I D:\FlightSim\Plugins\AsyncMixin
 /I ..\Plugins\Experimental\ControlFlows\Source\ControlFlows\Public
 /I ..\Plugins\Experimental\ControlFlows\Source
-/I ThirdParty\mimalloc\include
-/I ThirdParty\LibTiff\Source\Win64
-/I ThirdParty\LibTiff\Source
-/I "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\INCLUDE"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"
-/FI"D:\Workspace\FlightSim\Intermediate\Build\Win64\x64\LyraEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
-/FI"D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Definitions.TopDownArenaRuntime.h"
-/Yu"D:\Workspace\FlightSim\Intermediate\Build\Win64\x64\LyraEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Fp"D:\Workspace\FlightSim\Intermediate\Build\Win64\x64\LyraEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
-/Fo"D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Module.TopDownArenaRuntime.cpp.obj"
-/sourceDependencies D:\Workspace\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Module.TopDownArenaRuntime.cpp.dep.json
+/external:W0
+/external:I ThirdParty\mimalloc\include
+/external:I ThirdParty\LibTiff\Source\Win64
+/external:I ThirdParty\LibTiff\Source
+/external:I "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.34.31933\INCLUDE"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\shared"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\um"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\winrt"
+/FI"D:\FlightSim\Intermediate\Build\Win64\x64\LyraEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/FI"D:\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Definitions.TopDownArenaRuntime.h"
+/Yu"D:\FlightSim\Intermediate\Build\Win64\x64\LyraEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Fp"D:\FlightSim\Intermediate\Build\Win64\x64\LyraEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
+/Fo"D:\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Module.TopDownArenaRuntime.cpp.obj"
+/sourceDependencies D:\FlightSim\Plugins\GameFeatures\TopDownArena\Intermediate\Build\Win64\x64\UnrealEditor\Development\TopDownArenaRuntime\Module.TopDownArenaRuntime.cpp.dep.json
 /Zc:inline
 /nologo
 /Oi

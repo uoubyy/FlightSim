@@ -1,0 +1,30 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\workspace\\flightsim\\plugins\\gamefeatures\\droneracer_yanyi\\source\\droneracer_yanyiruntime\\private\\droneherocomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\workspace\\flightsim\\intermediate\\build\\win64\\x64\\lyraeditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\droneracer_yanyi\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\droneracer_yanyiruntime\\definitions.droneracer_yanyiruntime.h",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\droneracer_yanyi\\source\\droneracer_yanyiruntime\\public\\droneherocomponent.h",
+            "d:\\workspace\\flightsim\\source\\lyragame\\character\\lyraherocomponent.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\source\\modulargameplay\\public\\components\\gameframeworkinitstateinterface.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\gameplaytags\\classes\\gameplaytagcontainer.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\core\\public\\misc\\comparisonutility.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\gameplaytags\\uht\\gameplaytagcontainer.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\intermediate\\build\\win64\\unrealeditor\\inc\\modulargameplay\\uht\\gameframeworkinitstateinterface.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\source\\modulargameplay\\public\\components\\pawncomponent.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\source\\modulargameplay\\public\\components\\gameframeworkcomponent.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\intermediate\\build\\win64\\unrealeditor\\inc\\modulargameplay\\uht\\gameframeworkcomponent.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\intermediate\\build\\win64\\unrealeditor\\inc\\modulargameplay\\uht\\pawncomponent.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\runtime\\gameplayabilities\\source\\gameplayabilities\\public\\gameplayabilityspechandle.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\runtime\\gameplayabilities\\intermediate\\build\\win64\\unrealeditor\\inc\\gameplayabilities\\uht\\gameplayabilityspechandle.generated.h",
+            "d:\\workspace\\flightsim\\intermediate\\build\\win64\\unrealeditor\\inc\\lyragame\\uht\\lyraherocomponent.generated.h",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\droneracer_yanyi\\intermediate\\build\\win64\\unrealeditor\\inc\\droneracer_yanyiruntime\\uht\\droneherocomponent.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\source\\modulargameplay\\public\\components\\gameframeworkcomponentdelegates.h",
+            "d:\\dev\\ue_5.2\\engine\\plugins\\experimental\\modulargameplay\\intermediate\\build\\win64\\unrealeditor\\inc\\modulargameplay\\uht\\gameframeworkcomponentdelegates.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

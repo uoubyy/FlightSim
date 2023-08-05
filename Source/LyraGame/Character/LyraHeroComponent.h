@@ -39,20 +39,22 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Lyra|Hero")
 	static ULyraHeroComponent* FindHeroComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<ULyraHeroComponent>() : nullptr); }
 
+	/** 2K Extend LyraHeroComponent to DroneHeroComponent - BEGIN
 	/** Overrides the camera from an active gameplay ability */
-	void SetAbilityCameraMode(TSubclassOf<ULyraCameraMode> CameraMode, const FGameplayAbilitySpecHandle& OwningSpecHandle);
+	virtual void SetAbilityCameraMode(TSubclassOf<ULyraCameraMode> CameraMode, const FGameplayAbilitySpecHandle& OwningSpecHandle);
 
 	/** Clears the camera override if it is set */
-	void ClearAbilityCameraMode(const FGameplayAbilitySpecHandle& OwningSpecHandle);
+	virtual void ClearAbilityCameraMode(const FGameplayAbilitySpecHandle& OwningSpecHandle);
 
 	/** Adds mode-specific input config */
-	void AddAdditionalInputConfig(const ULyraInputConfig* InputConfig);
+	virtual void AddAdditionalInputConfig(const ULyraInputConfig* InputConfig);
 
 	/** Removes a mode-specific input config if it has been added */
-	void RemoveAdditionalInputConfig(const ULyraInputConfig* InputConfig);
+	virtual void RemoveAdditionalInputConfig(const ULyraInputConfig* InputConfig);
 
 	/** True if this is controlled by a real player and has progressed far enough in initialization where additional input bindings can be added */
-	bool IsReadyToBindInputs() const;
+	virtual bool IsReadyToBindInputs() const;
+	/** 2K Extend LyraHeroComponent to DroneHeroComponent - END
 	
 	/** The name of the extension event sent via UGameFrameworkComponentManager when ability inputs are ready to bind */
 	static const FName NAME_BindInputsNow;

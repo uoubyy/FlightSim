@@ -61,12 +61,20 @@ void ADroneCharacter::Tick(float DeltaTime)
 		TurnValue = FMath::Clamp(TurnValue, -1.0f, 1.0f);
 
 		// fake code
-		IsRoll = true;
-		RollDirection = TurnDirection;
+
+		if (UCharacterMovementComponent* DroneMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent()))
+		{
+			if (DroneMovementComponent->IsFlying())
+			{
+				IsRoll = true;
+				RollDirection = TurnDirection;
+			}
+		}
 	}
 	else
 	{
-		TurnValue = 0.0f;
+		TurnValue = FMath::Lerp(0.0f, TurnValue, 0.8f);
+
 		// fake code
 		IsRoll = false;
 	}
@@ -80,57 +88,36 @@ void ADroneCharacter::Tick(float DeltaTime)
 void ADroneCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
+	PawnExtComponent->SetupPlayerInputComponent();
+}
 
-	const APlayerController* PC = GetController<APlayerController>();
-	check(PC);
+void ADroneCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
 
-	const ULyraLocalPlayer* LP = Cast<ULyraLocalPlayer>(PC->GetLocalPlayer());
-	check(LP);
+	PawnExtComponent->HandleControllerChanged();
+}
 
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	check(Subsystem);
+void ADroneCharacter::UnPossessed()
+{
+	Super::UnPossessed();
 
-	// Subsystem->ClearAllMappings();
+	PawnExtComponent->HandleControllerChanged();
+}
 
-	if (const ULyraPawnData* PawnData = PawnExtComponent->GetPawnData<ULyraPawnData>())
-	{
-		if (const ULyraInputConfig* InputConfig = PawnData->InputConfig)
-		{
-			ULyraInputComponent* LyraIC = Cast<ULyraInputComponent>(PlayerInputComponent);
-			{
-				if (ensureMsgf(LyraIC, TEXT("Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to ULyraInputComponent or a subclass of it.")))
-				{
-					// Add the key mappings that may have been set by the player
-					LyraIC->AddInputMappings(InputConfig, Subsystem);
-				}
-			}
+void ADroneCharacter::OnRep_Controller()
+{
+	Super::OnRep_Controller();
 
-			for (const FLyraInputAction& InputAction : InputConfig->NativeInputActions)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Find Input Tag %s"), *InputAction.InputTag.ToString())
-			}
+	PawnExtComponent->HandleControllerChanged();
+}
 
-			// Hard code all the Input Gameplay Tag
-			const FGameplayTag InputTag_ThrottleUp = FGameplayTag::RequestGameplayTag(FName("InputTag.ThrottleUp"));
-			const FGameplayTag InputTag_Roll = FGameplayTag::RequestGameplayTag(FName("InputTag.Roll"));
-			const FGameplayTag InputTag_Yaw = FGameplayTag::RequestGameplayTag(FName("InputTag.Yaw"));
-			const FGameplayTag InputTag_Pitch = FGameplayTag::RequestGameplayTag(FName("InputTag.Pitch"));
-			const FGameplayTag InputTag_MainWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.MainWeapon"));
-			const FGameplayTag InputTag_SecondaryWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.SecondaryWeapon"));
+void ADroneCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
 
-			LyraIC->BindNativeAction(InputConfig, InputTag_ThrottleUp, ETriggerEvent::Triggered, this, &ThisClass::Input_ThrottleUp, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_Roll, ETriggerEvent::Triggered, this, &ThisClass::Input_Roll, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_Yaw, ETriggerEvent::Triggered, this, &ThisClass::Input_Yaw, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_Pitch, ETriggerEvent::Triggered, this, &ThisClass::Input_Pitch, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_MainWeapon, ETriggerEvent::Started, this, &ThisClass::Input_MainWeapon, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_SecondaryWeapon, ETriggerEvent::Started, this, &ThisClass::Input_SecondaryWeapon, /*bLogIfNotFound=*/ false);
-
-			LyraIC->BindNativeAction(InputConfig, InputTag_ThrottleUp, ETriggerEvent::Completed, this, &ThisClass::Input_ThrottleUp_Completed, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_Roll, ETriggerEvent::Completed, this, &ThisClass::Input_Roll_Completed, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_Yaw, ETriggerEvent::Completed, this, &ThisClass::Input_Yaw_Completed, /*bLogIfNotFound=*/ false);
-			LyraIC->BindNativeAction(InputConfig, InputTag_Pitch, ETriggerEvent::Completed, this, &ThisClass::Input_Pitch_Completed, /*bLogIfNotFound=*/ false);
-		}
-	}
+	PawnExtComponent->HandlePlayerStateReplicated();
 }
 
 void ADroneCharacter::PostInitializeComponents()
@@ -184,12 +171,16 @@ void ADroneCharacter::Input_Pitch(const FInputActionValue& InputActionValue)
 {
 	UCharacterMovementComponent* DroneMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
 	FVector CurrentVelocity = DroneMovementComponent->GetLastUpdateVelocity();
-	float CurrentSpeed = CurrentVelocity.Length();
+	CurrentSpeed = CurrentVelocity.Length();
 
 	if (CurrentSpeed < MinimumTakeOffSpeed)
 	{
 		OnPowerInsufficient();
 		return;
+	}
+	else
+	{
+		DroneMovementComponent->SetMovementMode(EMovementMode::MOVE_Flying);
 	}
 
 	IsPitchUp = true;
@@ -211,7 +202,7 @@ void ADroneCharacter::CalculateEngineForce()
 	if (UCharacterMovementComponent* DroneMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent()))
 	{
 		FVector CurrentVelocity = DroneMovementComponent->GetLastUpdateVelocity();
-		float CurrentSpeed = CurrentVelocity.Length();
+		CurrentSpeed = CurrentVelocity.Length();
 		float MaxSpeed = DroneMovementComponent->GetMaxSpeed();
 
 		FVector EngineForce = FVector::Zero();
@@ -230,15 +221,16 @@ void ADroneCharacter::CalculateEngineForce()
 		// Pitch Compensation
 		EngineForce += CurrentVelocity.Z * -1000 * GetActorUpVector();
 
-		if (!IsPitchUp && !IsTurn && CurrentSpeed > MaxSpeed)
-		{
-			EngineForce += GetActorForwardVector() * -100 * (CurrentSpeed - MaxSpeed);
-		}
+		//if (!IsPitchUp && !IsTurn && CurrentSpeed > MaxSpeed)
+		//{
+		//	EngineForce += GetActorForwardVector() * -100 * (CurrentSpeed - MaxSpeed);
+		//}
 
 		DroneMovementComponent->AddForce(EngineForce);
 
 		//FRotator CurrentRotator = CurrentVelocity.Rotation();
 		FRotator CurrentRotator = FRotator::ZeroRotator;
+		CurrentRotator.Yaw += TurnValue * MaxRollDegree / 10;
 		CurrentRotator.Roll += RollValue * MaxRollDegree;
 		CurrentRotator.Pitch += PitchValue * MaxRollDegree / 10;
 		GetMesh()->SetRelativeRotation(CurrentRotator);
@@ -252,8 +244,7 @@ void ADroneCharacter::OnEngineThrottleUp(float DeltaTime)
 	if(IsThrottleUp)
 	{ 
 		ThrottleAmount = FMath::Clamp(ThrottleAmount + ThrottleUpSpeed * DeltaTime, 0, MaxThrottleAmount);
-
-		UpdatePropellorRotationSpeed(ThrottleAmount * 50);
 	}
+	UpdatePropellorRotationSpeed(CurrentSpeed);
 }
 

@@ -17,13 +17,13 @@ void EmptyLinkFunctionForGeneratedCodeDroneRacer_YanyiRuntime_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000000,
-				0xA565FA8E,
-				0x31D8D543,
+				0x37A56B68,
+				0x4520ABC8,
 				METADATA_PARAMS(nullptr, 0)
 			};
 			UECodeGen_Private::ConstructUPackage(Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime.OuterSingleton, PackageParams);
 		}
 		return Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_DroneRacer_YanyiRuntime(Z_Construct_UPackage__Script_DroneRacer_YanyiRuntime, TEXT("/Script/DroneRacer_YanyiRuntime"), Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xA565FA8E, 0x31D8D543));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_DroneRacer_YanyiRuntime(Z_Construct_UPackage__Script_DroneRacer_YanyiRuntime, TEXT("/Script/DroneRacer_YanyiRuntime"), Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0x37A56B68, 0x4520ABC8));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

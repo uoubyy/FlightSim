@@ -15,5 +15,9 @@ class DRONERACER_YANYIRUNTIME_API UDroneMovementComponent : public UCharacterMov
 	GENERATED_BODY()
 	
 public:
+
+	UFUNCTION(BlueprintPure, Category = "Drone|Pawn")
+	static UDroneMovementComponent* FindDroneMovementComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UDroneMovementComponent>() : nullptr); }
+
 	virtual FRotator ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const;
 };
