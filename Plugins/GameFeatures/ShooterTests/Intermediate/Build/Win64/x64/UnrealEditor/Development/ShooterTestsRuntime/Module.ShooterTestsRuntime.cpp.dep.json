@@ -1,0 +1,35 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\shootertestsruntime\\module.shootertestsruntime.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\workspace\\flightsim\\intermediate\\build\\win64\\x64\\lyraeditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\shootertestsruntime\\definitions.shootertestsruntime.h",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\intermediate\\build\\win64\\unrealeditor\\inc\\shootertestsruntime\\uht\\shootertestsdevicepropertytester.gen.cpp",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\source\\shootertestsruntime\\private\\shootertestsdevicepropertytester.h",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\intermediate\\build\\win64\\unrealeditor\\inc\\shootertestsruntime\\uht\\shootertestsdevicepropertytester.generated.h",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\intermediate\\build\\win64\\unrealeditor\\inc\\shootertestsruntime\\uht\\shootertestsruntime.init.gen.cpp",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\source\\shootertestsruntime\\private\\shootertestsdevicepropertytester.cpp",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\classes\\gameframework\\inputdevicesubsystem.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\classes\\gameframework\\inputsettings.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\classes\\gameframework\\playerinput.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\public\\gesturerecognizer.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\public\\keystate.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\playerinput.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\developersettings\\public\\engine\\platformsettings.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\developersettings\\public\\engine\\platformsettingsmanager.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\developersettings\\uht\\platformsettingsmanager.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\developersettings\\uht\\platformsettings.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\inputsettings.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\inputdevicesubsystem.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\classes\\components\\capsulecomponent.h",
+            "d:\\dev\\ue_5.2\\engine\\source\\runtime\\engine\\classes\\components\\shapecomponent.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\shapecomponent.generated.h",
+            "d:\\dev\\ue_5.2\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\capsulecomponent.generated.h",
+            "d:\\workspace\\flightsim\\plugins\\gamefeatures\\shootertests\\source\\shootertestsruntime\\private\\shootertestsruntimemodule.cpp"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
