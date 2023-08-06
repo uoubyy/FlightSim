@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/LyraHeroComponent.h"
+#include "DroneMovementComponent.h"
 #include "DroneHeroComponent.generated.h"
 
 class UGameFrameworkComponentManager;
@@ -62,5 +63,16 @@ protected:
 	void Input_Roll_Completed(const FInputActionValue& InputActionValue);
 	void Input_Yaw_Completed(const FInputActionValue& InputActionValue);
 	void Input_Pitch_Completed(const FInputActionValue& InputActionValue);
-	
+
+protected:
+	// Current Status
+	UPROPERTY(BlueprintReadWrite, Category = "Drone")
+	EPlaneStatus CurrentPlaneStatus;
+
+private:
+
+	UPROPERTY()
+	TObjectPtr<class UDroneMovementComponent> DroneMovementComponent;
+
+	void UpdateMovementComponentInput();
 };

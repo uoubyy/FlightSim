@@ -97,6 +97,10 @@ void UDroneHeroComponent::CheckDefaultInitialization()
 void UDroneHeroComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 2K TODO: safety check
+	const APawn* Pawn = GetPawn<APawn>();
+	DroneMovementComponent = UDroneMovementComponent::FindDroneMovementComponent(Pawn);
 }
 
 void UDroneHeroComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -190,40 +194,95 @@ bool UDroneHeroComponent::IsReadyToBindInputs() const
 
 void UDroneHeroComponent::Input_ThrottleUp(const FInputActionValue& InputActionValue)
 {
-	UE_LOG(LogDrone, Warning, TEXT("UDroneHeroComponent::Input_ThrottleUp"));
+	CurrentPlaneStatus |= EPlaneStatus::ThrottleUP;
+	CurrentPlaneStatus &= ~EPlaneStatus::ThrottleDown;
+
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_Roll(const FInputActionValue& InputActionValue)
 {
+	float ActionValue = InputActionValue.Get<float>();
+	if (ActionValue < 0.0f)
+	{
+		CurrentPlaneStatus |= EPlaneStatus::RollLeft;
+		CurrentPlaneStatus &= ~EPlaneStatus::RollRight;
+	}
+	else
+	{
+		CurrentPlaneStatus |= EPlaneStatus::RollRight;
+		CurrentPlaneStatus &= ~EPlaneStatus::RollLeft;
+	}
 
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_Yaw(const FInputActionValue& InputActionValue)
 {
+	float ActionValue = InputActionValue.Get<float>();
+	if (ActionValue < 0.0f)
+	{
+		CurrentPlaneStatus |= EPlaneStatus::YawLeft;
+		CurrentPlaneStatus &= ~EPlaneStatus::YawRight;
+	}
+	else
+	{
+		CurrentPlaneStatus |= EPlaneStatus::YawRight;
+		CurrentPlaneStatus &= ~EPlaneStatus::YawLeft;
+	}
 
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_Pitch(const FInputActionValue& InputActionValue)
 {
+	float ActionValue = InputActionValue.Get<float>();
+	if (ActionValue > 0.0f)
+	{
+		CurrentPlaneStatus |= EPlaneStatus::PitchUp;
+		CurrentPlaneStatus &= ~EPlaneStatus::PitchDown;
+	}
+	else
+	{
+		CurrentPlaneStatus |= EPlaneStatus::PitchDown;
+		CurrentPlaneStatus &= ~EPlaneStatus::PitchUp;
+	}
 
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_ThrottleUp_Completed(const FInputActionValue& InputActionValue)
 {
-
+	CurrentPlaneStatus &= ~EPlaneStatus::ThrottleUP;
+	CurrentPlaneStatus &= ~EPlaneStatus::ThrottleDown;
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_Roll_Completed(const FInputActionValue& InputActionValue)
 {
-
+	CurrentPlaneStatus &= ~EPlaneStatus::RollRight;
+	CurrentPlaneStatus &= ~EPlaneStatus::RollLeft;
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_Yaw_Completed(const FInputActionValue& InputActionValue)
 {
-
+	CurrentPlaneStatus &= ~EPlaneStatus::YawLeft;
+	CurrentPlaneStatus &= ~EPlaneStatus::YawRight;
+	UpdateMovementComponentInput();
 }
 
 void UDroneHeroComponent::Input_Pitch_Completed(const FInputActionValue& InputActionValue)
 {
+	CurrentPlaneStatus &= ~EPlaneStatus::PitchUp;
+	CurrentPlaneStatus &= ~EPlaneStatus::PitchDown;
+	UpdateMovementComponentInput();
+}
 
+void UDroneHeroComponent::UpdateMovementComponentInput()
+{
+	if (DroneMovementComponent)
+	{
+		DroneMovementComponent->UpdatePlaneControlInput(CurrentPlaneStatus);
+	}
 }

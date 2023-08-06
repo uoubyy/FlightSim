@@ -1,0 +1,15 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.DroneRacer_YanyiRuntime.cpp.obj": [
+			"DroneRacer_YanyiRuntimeModule.cpp.obj",
+			"DroneCharacter.gen.cpp.obj",
+			"DroneHeroComponent.gen.cpp.obj",
+			"DroneMovementComponent.gen.cpp.obj",
+			"DroneRacer_YanyiRuntime.init.gen.cpp.obj",
+			"DroneCharacter.cpp.obj",
+			"DroneHeroComponent.cpp.obj",
+			"DroneMovementComponent.cpp.obj"
+		]
+	}
+}
