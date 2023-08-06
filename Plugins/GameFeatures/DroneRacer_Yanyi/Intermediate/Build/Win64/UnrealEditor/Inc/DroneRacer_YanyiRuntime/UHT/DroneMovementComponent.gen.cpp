@@ -9,10 +9,12 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 // Cross Module References
+	COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 	DRONERACER_YANYIRUNTIME_API UClass* Z_Construct_UClass_UDroneMovementComponent();
 	DRONERACER_YANYIRUNTIME_API UClass* Z_Construct_UClass_UDroneMovementComponent_NoRegister();
 	DRONERACER_YANYIRUNTIME_API UEnum* Z_Construct_UEnum_DroneRacer_YanyiRuntime_EPlaneStatus();
 	ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
+	ENGINE_API UClass* Z_Construct_UClass_UCameraShakeBase_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_UCharacterMovementComponent();
 	UPackage* Z_Construct_UPackage__Script_DroneRacer_YanyiRuntime();
 // End Cross Module References
@@ -87,6 +89,13 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		}
 		return Z_Registration_Info_UEnum_EPlaneStatus.InnerSingleton;
 	}
+	DEFINE_FUNCTION(UDroneMovementComponent::execGetMaxEngineForce)
+	{
+		P_FINISH;
+		P_NATIVE_BEGIN;
+		*(float*)Z_Param__Result=P_THIS->GetMaxEngineForce();
+		P_NATIVE_END;
+	}
 	DEFINE_FUNCTION(UDroneMovementComponent::execGetThrottleAmount)
 	{
 		P_FINISH;
@@ -115,6 +124,7 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		UClass* Class = UDroneMovementComponent::StaticClass();
 		static const FNameNativePtrPair Funcs[] = {
 			{ "FindDroneMovementComponent", &UDroneMovementComponent::execFindDroneMovementComponent },
+			{ "GetMaxEngineForce", &UDroneMovementComponent::execGetMaxEngineForce },
 			{ "GetThrottleAmount", &UDroneMovementComponent::execGetThrottleAmount },
 			{ "UpdatePlaneControlInput", &UDroneMovementComponent::execUpdatePlaneControlInput },
 		};
@@ -170,6 +180,39 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		if (!ReturnFunction)
 		{
 			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UDroneMovementComponent_FindDroneMovementComponent_Statics::FuncParams);
+		}
+		return ReturnFunction;
+	}
+	struct Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics
+	{
+		struct DroneMovementComponent_eventGetMaxEngineForce_Parms
+		{
+			float ReturnValue;
+		};
+		static const UECodeGen_Private::FFloatPropertyParams NewProp_ReturnValue;
+		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FFunctionParams FuncParams;
+	};
+	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(DroneMovementComponent_eventGetMaxEngineForce_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::PropPointers[] = {
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::NewProp_ReturnValue,
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::Function_MetaDataParams[] = {
+		{ "Category", "Drone|Engine" },
+		{ "ModuleRelativePath", "Public/DroneMovementComponent.h" },
+	};
+#endif
+	const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UDroneMovementComponent, nullptr, "GetMaxEngineForce", nullptr, nullptr, sizeof(Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::DroneMovementComponent_eventGetMaxEngineForce_Parms), Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x54020401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::Function_MetaDataParams, UE_ARRAY_COUNT(Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::Function_MetaDataParams)) };
+	UFunction* Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce()
+	{
+		static UFunction* ReturnFunction = nullptr;
+		if (!ReturnFunction)
+		{
+			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce_Statics::FuncParams);
 		}
 		return ReturnFunction;
 	}
@@ -303,6 +346,10 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		static const UECodeGen_Private::FMetaDataPairParam NewProp_MinimumTakeOffSpeed_MetaData[];
 #endif
 		static const UECodeGen_Private::FFloatPropertyParams NewProp_MinimumTakeOffSpeed;
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_CameraShakeClass_MetaData[];
+#endif
+		static const UECodeGen_Private::FClassPropertyParams NewProp_CameraShakeClass;
 		static const UECodeGen_Private::FBytePropertyParams NewProp_CurrentPlaneStatus_Underlying;
 #if WITH_METADATA
 		static const UECodeGen_Private::FMetaDataPairParam NewProp_CurrentPlaneStatus_MetaData[];
@@ -334,6 +381,7 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 	};
 	const FClassFunctionLinkInfo Z_Construct_UClass_UDroneMovementComponent_Statics::FuncInfo[] = {
 		{ &Z_Construct_UFunction_UDroneMovementComponent_FindDroneMovementComponent, "FindDroneMovementComponent" }, // 3549007461
+		{ &Z_Construct_UFunction_UDroneMovementComponent_GetMaxEngineForce, "GetMaxEngineForce" }, // 1113610308
 		{ &Z_Construct_UFunction_UDroneMovementComponent_GetThrottleAmount, "GetThrottleAmount" }, // 1644422068
 		{ &Z_Construct_UFunction_UDroneMovementComponent_UpdatePlaneControlInput, "UpdatePlaneControlInput" }, // 2060593217
 	};
@@ -370,14 +418,14 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		{ "ModuleRelativePath", "Public/DroneMovementComponent.h" },
 	};
 #endif
-	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxThrottleAmount = { "MaxThrottleAmount", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, MaxThrottleAmount), METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxThrottleAmount_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxThrottleAmount_MetaData)) };
+	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxThrottleAmount = { "MaxThrottleAmount", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, MaxThrottleAmount), METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxThrottleAmount_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxThrottleAmount_MetaData)) };
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce_MetaData[] = {
 		{ "Category", "Drone|Throttle" },
 		{ "ModuleRelativePath", "Public/DroneMovementComponent.h" },
 	};
 #endif
-	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce = { "ThrottleToForce", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, ThrottleToForce), METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce_MetaData)) };
+	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce = { "ThrottleToForce", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, ThrottleToForce), METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleToForce_MetaData)) };
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleSensitivity_MetaData[] = {
 		{ "Category", "Drone|Throttle" },
@@ -419,7 +467,14 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		{ "ModuleRelativePath", "Public/DroneMovementComponent.h" },
 	};
 #endif
-	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed = { "MinimumTakeOffSpeed", nullptr, (EPropertyFlags)0x0020080000000014, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, MinimumTakeOffSpeed), METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed_MetaData)) };
+	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed = { "MinimumTakeOffSpeed", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, MinimumTakeOffSpeed), METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed_MetaData)) };
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CameraShakeClass_MetaData[] = {
+		{ "Category", "Drone|Camera" },
+		{ "ModuleRelativePath", "Public/DroneMovementComponent.h" },
+	};
+#endif
+	const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CameraShakeClass = { "CameraShakeClass", nullptr, (EPropertyFlags)0x0024080000010001, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, STRUCT_OFFSET(UDroneMovementComponent, CameraShakeClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UCameraShakeBase_NoRegister, METADATA_PARAMS(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CameraShakeClass_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CameraShakeClass_MetaData)) };
 	const UECodeGen_Private::FBytePropertyParams Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CurrentPlaneStatus_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, nullptr, nullptr, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CurrentPlaneStatus_MetaData[] = {
@@ -469,6 +524,7 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MaxRollDegree,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_YawSensitivity,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_MinimumTakeOffSpeed,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CameraShakeClass,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CurrentPlaneStatus_Underlying,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_CurrentPlaneStatus,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDroneMovementComponent_Statics::NewProp_ThrottleAmount,
@@ -518,9 +574,9 @@ void EmptyLinkFunctionForGeneratedCodeDroneMovementComponent() {}
 		{ EPlaneStatus_StaticEnum, TEXT("EPlaneStatus"), &Z_Registration_Info_UEnum_EPlaneStatus, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2367090507U) },
 	};
 	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_Statics::ClassInfo[] = {
-		{ Z_Construct_UClass_UDroneMovementComponent, UDroneMovementComponent::StaticClass, TEXT("UDroneMovementComponent"), &Z_Registration_Info_UClass_UDroneMovementComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UDroneMovementComponent), 3352833882U) },
+		{ Z_Construct_UClass_UDroneMovementComponent, UDroneMovementComponent::StaticClass, TEXT("UDroneMovementComponent"), &Z_Registration_Info_UClass_UDroneMovementComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UDroneMovementComponent), 3449155978U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_996499187(TEXT("/Script/DroneRacer_YanyiRuntime"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_2466487495(TEXT("/Script/DroneRacer_YanyiRuntime"),
 		Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_Statics::ClassInfo),
 		nullptr, 0,
 		Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_Statics::EnumInfo));

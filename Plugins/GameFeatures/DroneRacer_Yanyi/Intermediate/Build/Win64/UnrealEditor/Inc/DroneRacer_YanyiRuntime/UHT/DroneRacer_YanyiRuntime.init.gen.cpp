@@ -17,7 +17,7 @@ void EmptyLinkFunctionForGeneratedCodeDroneRacer_YanyiRuntime_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000000,
-				0xDBBC8D1E,
+				0xFBE71DE5,
 				0xF84F5E60,
 				METADATA_PARAMS(nullptr, 0)
 			};
@@ -25,5 +25,5 @@ void EmptyLinkFunctionForGeneratedCodeDroneRacer_YanyiRuntime_init() {}
 		}
 		return Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_DroneRacer_YanyiRuntime(Z_Construct_UPackage__Script_DroneRacer_YanyiRuntime, TEXT("/Script/DroneRacer_YanyiRuntime"), Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xDBBC8D1E, 0xF84F5E60));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_DroneRacer_YanyiRuntime(Z_Construct_UPackage__Script_DroneRacer_YanyiRuntime, TEXT("/Script/DroneRacer_YanyiRuntime"), Z_Registration_Info_UPackage__Script_DroneRacer_YanyiRuntime, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xFBE71DE5, 0xF84F5E60));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

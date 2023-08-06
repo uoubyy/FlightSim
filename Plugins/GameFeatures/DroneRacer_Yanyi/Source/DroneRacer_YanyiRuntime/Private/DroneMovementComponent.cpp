@@ -46,21 +46,31 @@ void UDroneMovementComponent::UpdatePlaneControlInput(const EPlaneStatus NewCont
 	CurrentPlaneStatus = NewControlInput;
 }
 
+float UDroneMovementComponent::GetMaxEngineForce() const
+{
+	return MaxThrottleAmount * ThrottleToForce;
+}
+
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
 {
 	if (uint8(CurrentPlaneStatus & EPlaneStatus::ThrottleUP) || AutoDrive)
 	{
 		ThrottleAmount += ThrottleSensitivity * DeltaTime;
 	}
-	else if (ThrottleAmount > 0.0f)
+	else
 	{
-		ThrottleAmount = FMath::Lerp(0.0f, ThrottleAmount, 0.5f);
+		ThrottleAmount -= ThrottleSensitivity * DeltaTime; //FMath::Lerp(0.0f, ThrottleAmount, 0.95f);
 	}
 	ThrottleAmount = FMath::Clamp(ThrottleAmount, 0.0f, MaxThrottleAmount);
 }
 
 void UDroneMovementComponent::UpdatePitchAmount(float DeltaTime)
 {
+	if (!IsFlying() && LastUpdateVelocity.Length() < MinimumTakeOffSpeed)
+	{
+		return;
+	}
+
 	if (uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) || uint8(CurrentPlaneStatus & EPlaneStatus::PitchDown))
 	{
 		PitchAmount += PitchSensitivity * DeltaTime * (uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) ? 1 : -1);
@@ -126,7 +136,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 	if(LastUpdateVelocity.Length() >= MinimumTakeOffSpeed)
 	{ 
-		EnginePitchForce = PitchAmount * ForwardSpeed * PawnOwner->GetActorUpVector() * 30.0f;
+		EnginePitchForce = PitchAmount * ForwardSpeed * PawnOwner->GetActorUpVector() * 15.0f;
 	}
 
 	// Pitch Compensation
@@ -134,7 +144,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 	//if (uint8(CurrentPlaneStatus & EPlaneStatus::YawLeft) || uint8(CurrentPlaneStatus & EPlaneStatus::YawRight))
 	{
-		EngineYawForce = YawAmount * ForwardSpeed * PawnOwner->GetActorRightVector() * 30.0f;
+		EngineYawForce = YawAmount * ForwardSpeed * PawnOwner->GetActorRightVector() * 15.0f;
 	}
 
 	EngineForce = EngineForwardForce + EnginePitchForce + EngineYawForce + PitchCompensation;
@@ -148,7 +158,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 	{
 		FRotator CurrentRotator = FRotator::ZeroRotator;
 		CurrentRotator.Roll += RollAmount;
-		CurrentRotator.Pitch += PitchAmount * ForwardSpeed / GetMaxSpeed() * 15 + 5.0f;
+		CurrentRotator.Pitch += PitchAmount + 5.0f;
 		CurrentRotator.Yaw += YawAmount;
 
 		OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
@@ -163,4 +173,30 @@ float UDroneMovementComponent::ConvertThrottleToForce()
 	}
 
 	return 20000.0f;
+}
+
+void UDroneMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
+
+	if (!PawnOwner)
+	{
+		return;
+	}
+
+	if (MovementMode == MOVE_Flying && CameraShakeClass)
+	{
+		APlayerController* PlayerControler = Cast<APlayerController>(PawnOwner->GetController());
+		if (PlayerControler && PlayerControler->IsLocalController())
+		{
+			PlayerControler->PlayerCameraManager->StartCameraShake(CameraShakeClass, 1.0f, ECameraShakePlaySpace::CameraLocal, FRotator::ZeroRotator);
+			UE_LOG(LogTemp, Warning, TEXT("Start Camera Shake."));
+		}
+	}
+	else if(CameraShakeClass)
+	{
+		APlayerController* PlayerControler = Cast<APlayerController>(PawnOwner->GetController());
+		PlayerControler->PlayerCameraManager->StopAllInstancesOfCameraShake(CameraShakeClass);
+		UE_LOG(LogTemp, Warning, TEXT("Stop Camera Shake."));
+	}
 }

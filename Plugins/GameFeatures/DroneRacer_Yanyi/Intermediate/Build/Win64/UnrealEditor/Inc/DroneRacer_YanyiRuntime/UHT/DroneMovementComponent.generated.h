@@ -20,6 +20,7 @@ enum class EPlaneStatus : uint8;
 #define FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_31_SPARSE_DATA
 #define FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_31_RPC_WRAPPERS \
  \
+	DECLARE_FUNCTION(execGetMaxEngineForce); \
 	DECLARE_FUNCTION(execGetThrottleAmount); \
 	DECLARE_FUNCTION(execUpdatePlaneControlInput); \
 	DECLARE_FUNCTION(execFindDroneMovementComponent);
@@ -27,6 +28,7 @@ enum class EPlaneStatus : uint8;
 
 #define FID_Workspace_FlightSim_Plugins_GameFeatures_DroneRacer_Yanyi_Source_DroneRacer_YanyiRuntime_Public_DroneMovementComponent_h_31_RPC_WRAPPERS_NO_PURE_DECLS \
  \
+	DECLARE_FUNCTION(execGetMaxEngineForce); \
 	DECLARE_FUNCTION(execGetThrottleAmount); \
 	DECLARE_FUNCTION(execUpdatePlaneControlInput); \
 	DECLARE_FUNCTION(execFindDroneMovementComponent);

@@ -48,16 +48,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Drone|Engine")
 	float GetThrottleAmount() const { return ThrottleAmount; }
 
+	UFUNCTION(BlueprintCallable, Category = "Drone|Engine")
+	float GetMaxEngineForce() const;
+
 protected:
 
 	// Configuration
 	UPROPERTY(EditDefaultsOnly, Category = "Drone|Throttle")
 	bool AutoDrive;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
 	float MaxThrottleAmount;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
 	float ThrottleToForce;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Drone|Throttle")
@@ -75,11 +78,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Drone|Yaw")
 	float YawSensitivity;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Drone|Engine")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Engine")
 	float MinimumTakeOffSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Drone|Camera")
-	TObjectPtr<class UCameraShakeBase> CameraShake;
+	TSubclassOf<class UCameraShakeBase> CameraShakeClass;
 
 	// Current Status
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")
@@ -110,4 +113,8 @@ private:
 	void CalculateEngineForce();
 
 	float ConvertThrottleToForce();
+
+protected:
+
+	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode);
 };
