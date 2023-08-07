@@ -33,6 +33,13 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+	// 2K TODO Bind to Lyra Ability Input
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMainWeaponFire();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSecondaryWeaponFire();
+
 private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character", Meta = (AllowPrivateAccess = "true"))

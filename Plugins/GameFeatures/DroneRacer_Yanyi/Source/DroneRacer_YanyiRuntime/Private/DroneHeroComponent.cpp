@@ -15,6 +15,7 @@
 #include "Character/LyraPawnData.h"
 
 #include "Input/LyraInputComponent.h"
+#include "DroneCharacter.h"
 
 
 DEFINE_LOG_CATEGORY(LogDrone);
@@ -160,9 +161,9 @@ void UDroneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputComp
 					LyraIC->BindNativeAction(InputConfig, InputTag_Yaw, ETriggerEvent::Completed, this, &ThisClass::Input_Yaw_Completed, false);
 					LyraIC->BindNativeAction(InputConfig, InputTag_Pitch, ETriggerEvent::Completed, this, &ThisClass::Input_Pitch_Completed, false);
 
-					// 2K Bind to LyraAbilitySystem
-					//LyraIC->BindNativeAction(InputConfig, InputTag_MainWeapon, ETriggerEvent::Started, this, &ThisClass::Input_MainWeapon, false);
-					//LyraIC->BindNativeAction(InputConfig, InputTag_SecondaryWeapon, ETriggerEvent::Started, this, &ThisClass::Input_SecondaryWeapon, false);
+					// 2K Bind to Lyra Ability mSystem
+					LyraIC->BindNativeAction(InputConfig, InputTag_MainWeapon, ETriggerEvent::Triggered, this, &ThisClass::Input_MainWeapon, false);
+					LyraIC->BindNativeAction(InputConfig, InputTag_SecondaryWeapon, ETriggerEvent::Started, this, &ThisClass::Input_SecondaryWeapon, false);
 				}
 			}
 		}
@@ -277,6 +278,34 @@ void UDroneHeroComponent::Input_Pitch_Completed(const FInputActionValue& InputAc
 	CurrentPlaneStatus &= ~EPlaneStatus::PitchUp;
 	CurrentPlaneStatus &= ~EPlaneStatus::PitchDown;
 	UpdateMovementComponentInput();
+}
+
+void UDroneHeroComponent::Input_MainWeapon(const FInputActionValue& InputActionValue)
+{
+	APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return;
+	}
+
+	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
+	{
+		DroneCharacter->OnMainWeaponFire();
+	}
+}
+
+void UDroneHeroComponent::Input_SecondaryWeapon(const FInputActionValue& InputActionValue)
+{
+	APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return;
+	}
+
+	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
+	{
+		DroneCharacter->OnSecondaryWeaponFire();
+	}
 }
 
 void UDroneHeroComponent::UpdateMovementComponentInput()

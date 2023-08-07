@@ -80,7 +80,7 @@ void UDroneMovementComponent::UpdatePitchAmount(float DeltaTime)
 		PitchAmount = FMath::Lerp(0.0f, PitchAmount, 0.95f);
 	}
 
-	PitchAmount = FMath::Clamp(PitchAmount, -5.0f, 10.0f);
+	PitchAmount = FMath::Clamp(PitchAmount, -10.0f, 10.0f);
 }
 
 void UDroneMovementComponent::UpdateRollAmount(float DeltaTime)

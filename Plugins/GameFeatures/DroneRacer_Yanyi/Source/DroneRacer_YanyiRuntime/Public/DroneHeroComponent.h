@@ -64,6 +64,9 @@ protected:
 	void Input_Yaw_Completed(const FInputActionValue& InputActionValue);
 	void Input_Pitch_Completed(const FInputActionValue& InputActionValue);
 
+	void Input_MainWeapon(const FInputActionValue& InputActionValue);
+	void Input_SecondaryWeapon(const FInputActionValue& InputActionValue);
+
 protected:
 	// Current Status
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")
