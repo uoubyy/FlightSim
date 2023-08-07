@@ -51,6 +51,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Drone|Engine")
 	float GetMaxEngineForce() const;
 
+	virtual bool ShouldRemainVertical() const;
+
+	virtual void BeginPlay() override;
+
 protected:
 
 	// Configuration
@@ -59,6 +63,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
 	float MaxThrottleAmount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
+	float MinThrottleAmount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
 	float ThrottleToForce;
@@ -83,6 +90,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Drone|Camera")
 	TSubclassOf<class UCameraShakeBase> CameraShakeClass;
+
+	UPROPERTY(EditAnywhere, Category = "Balance")
+	UCurveFloat* CameraFOVCurveAsset;
 
 	// Current Status
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")
@@ -113,6 +123,8 @@ private:
 	void CalculateEngineForce();
 
 	float ConvertThrottleToForce();
+
+	void UpdateCameraEffect();
 
 protected:
 

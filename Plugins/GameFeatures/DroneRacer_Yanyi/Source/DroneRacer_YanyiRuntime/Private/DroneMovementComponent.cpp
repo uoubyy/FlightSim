@@ -15,19 +15,14 @@ void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 
 	UpdateRollAmount(DeltaTime);
 
-
-	if (uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) && LastUpdateVelocity.Length() > MinimumTakeOffSpeed)
-	{
-		SetMovementMode(EMovementMode::MOVE_Flying);
-	}
-
-	if (IsFlying() && LastUpdateVelocity.Length() <= MinimumTakeOffSpeed)
-	{
-		SetMovementMode(EMovementMode::MOVE_Falling);
-		GravityScale = 5000.0f;
-	}
+	//if (uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) && LastUpdateVelocity.Length() > MinimumTakeOffSpeed)
+	//{
+	//	SetMovementMode(EMovementMode::MOVE_Flying);
+	//}
 
 	CalculateEngineForce();
+
+	UpdateCameraEffect();
 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
@@ -55,6 +50,16 @@ float UDroneMovementComponent::GetMaxEngineForce() const
 	return MaxThrottleAmount * ThrottleToForce;
 }
 
+bool UDroneMovementComponent::ShouldRemainVertical() const
+{
+	return IsMovingOnGround();
+}
+
+void UDroneMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
 {
 	if (uint8(CurrentPlaneStatus & EPlaneStatus::ThrottleUP) || AutoDrive)
@@ -65,7 +70,7 @@ void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
 	{
 		ThrottleAmount -= ThrottleSensitivity * DeltaTime; //FMath::Lerp(0.0f, ThrottleAmount, 0.95f);
 	}
-	ThrottleAmount = FMath::Clamp(ThrottleAmount, 0.0f, MaxThrottleAmount);
+	ThrottleAmount = FMath::Clamp(ThrottleAmount, MinThrottleAmount, MaxThrottleAmount);
 }
 
 void UDroneMovementComponent::UpdatePitchAmount(float DeltaTime)
@@ -89,19 +94,21 @@ void UDroneMovementComponent::UpdatePitchAmount(float DeltaTime)
 
 void UDroneMovementComponent::UpdateRollAmount(float DeltaTime)
 {
-	if(!IsFlying()) return;
-
+	float RealRollSensitivity = IsFalling() ? RollSensitivity * 10.0f : RollSensitivity;
 	if (uint8(CurrentPlaneStatus & EPlaneStatus::RollLeft) || uint8(CurrentPlaneStatus & EPlaneStatus::RollRight) 
-	|| uint8(CurrentPlaneStatus & EPlaneStatus::YawLeft) || uint8(CurrentPlaneStatus & EPlaneStatus::YawRight))
+	|| uint8(CurrentPlaneStatus & EPlaneStatus::YawLeft) || uint8(CurrentPlaneStatus & EPlaneStatus::YawRight) || IsFalling())
 	{
-		RollAmount += RollSensitivity * DeltaTime * (uint8(CurrentPlaneStatus & EPlaneStatus::RollRight) || uint8(CurrentPlaneStatus & EPlaneStatus::YawRight) ? 1 : -1);
+		RollAmount += RealRollSensitivity * DeltaTime * (uint8(CurrentPlaneStatus & EPlaneStatus::RollRight) || uint8(CurrentPlaneStatus & EPlaneStatus::YawRight) ? 1 : -1);
 	}
 	else
 	{
 		RollAmount = FMath::Lerp(0.0f, RollAmount, 0.95f);
 	}
 
-	RollAmount = FMath::Clamp(RollAmount, -MaxRollDegree, MaxRollDegree);
+	if (IsFlying())
+	{
+		RollAmount = FMath::Clamp(RollAmount, -MaxRollDegree, MaxRollDegree);
+	}
 }
 
 void UDroneMovementComponent::UpdateYawAmount(float DeltaTime)
@@ -135,7 +142,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 	if(ForwardSpeed < GetMaxSpeed())
 	{ 
-		EngineForwardForce = ThrottleAmount * ConvertThrottleToForce() * PawnOwner->GetActorForwardVector() * (1.0 - ForwardSpeed / GetMaxSpeed());
+		EngineForwardForce = ThrottleAmount * ConvertThrottleToForce() * PawnOwner->GetActorForwardVector();// *(1.0f - ForwardSpeed / GetMaxSpeed());
 	}
 
 	if(LastUpdateVelocity.Length() >= MinimumTakeOffSpeed)
@@ -144,12 +151,9 @@ void UDroneMovementComponent::CalculateEngineForce()
 	}
 
 	// Pitch Compensation
-	FVector PitchCompensation = LastUpdateVelocity.Z * PawnOwner->GetActorUpVector() * -1000;
+	FVector PitchCompensation = LastUpdateVelocity.Z * PawnOwner->GetActorUpVector() * -600.0f;
 
-	//if (uint8(CurrentPlaneStatus & EPlaneStatus::YawLeft) || uint8(CurrentPlaneStatus & EPlaneStatus::YawRight))
-	{
-		EngineYawForce = YawAmount * ForwardSpeed * PawnOwner->GetActorRightVector() * 15.0f;
-	}
+	EngineYawForce = YawAmount * ForwardSpeed * PawnOwner->GetActorRightVector() * 15.0f;
 
 	EngineForce = EngineForwardForce + EnginePitchForce + EngineYawForce + PitchCompensation;
 
@@ -160,8 +164,10 @@ void UDroneMovementComponent::CalculateEngineForce()
 	// 2K TODO
 	if (ACharacter* OwnerCharacter = Cast<ACharacter>(PawnOwner))
 	{
-		FRotator CurrentRotator = FRotator::ZeroRotator;
-		CurrentRotator.Roll += RollAmount;
+		FRotator CurrentRotator = OwnerCharacter->GetMesh()->GetRelativeRotation();
+		CurrentRotator.Roll = RollAmount;
+		CurrentRotator.Pitch = PitchAmount;
+		CurrentRotator.Yaw = YawAmount;
 
 		OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
 	}
@@ -174,31 +180,38 @@ float UDroneMovementComponent::ConvertThrottleToForce()
 		return ThrottleToForce;
 	}
 
-	return 20000.0f;
+	return 10000.0f;
 }
 
-void UDroneMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
+void UDroneMovementComponent::UpdateCameraEffect()
 {
-	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
-
 	if (!PawnOwner)
 	{
 		return;
 	}
 
-	if (MovementMode == MOVE_Flying && CameraShakeClass)
+	APlayerController* PlayerControler = Cast<APlayerController>(PawnOwner->GetController());
+	if (!PlayerControler)
 	{
-		APlayerController* PlayerControler = Cast<APlayerController>(PawnOwner->GetController());
-		if (PlayerControler && PlayerControler->IsLocalController())
-		{
-			PlayerControler->PlayerCameraManager->StartCameraShake(CameraShakeClass, 1.0f, ECameraShakePlaySpace::CameraLocal, FRotator::ZeroRotator);
-			UE_LOG(LogTemp, Warning, TEXT("Start Camera Shake."));
-		}
+		return;
 	}
-	else if(CameraShakeClass)
+
+	if (CameraShakeClass && uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) && PlayerControler->IsLocalController())
 	{
-		APlayerController* PlayerControler = Cast<APlayerController>(PawnOwner->GetController());
-		PlayerControler->PlayerCameraManager->StopAllInstancesOfCameraShake(CameraShakeClass);
-		UE_LOG(LogTemp, Warning, TEXT("Stop Camera Shake."));
+		PlayerControler->PlayerCameraManager->StartCameraShake(CameraShakeClass, 1.0f, ECameraShakePlaySpace::CameraLocal, FRotator::ZeroRotator);
+		UE_LOG(LogTemp, Warning, TEXT("StartCameraShake"));
 	}
+
+	check(CameraFOVCurveAsset)
+	{
+		float CurveSample = (ThrottleAmount - MinThrottleAmount) / (MaxThrottleAmount - MinThrottleAmount);
+		float ExtraFOV = CameraFOVCurveAsset->GetFloatValue(CurveSample) * 30.0f;
+		const float TargetFOV = 90.0f + ExtraFOV;
+		PlayerControler->PlayerCameraManager->SetFOV(TargetFOV);
+	}
+}
+
+void UDroneMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
 }
