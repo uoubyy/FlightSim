@@ -44,4 +44,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class ULyraPawnExtensionComponent> PawnExtComponent;
+
+	UFUNCTION()
+	void OnAirCraftHitOthers(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

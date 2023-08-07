@@ -34,8 +34,12 @@ void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 
 FRotator UDroneMovementComponent::ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const
 {
-	if(LastUpdateVelocity.SizeSquared() > UE_KINDA_SMALL_NUMBER)
+	if (LastUpdateVelocity.SizeSquared() > UE_KINDA_SMALL_NUMBER)
+	{
+		FRotator TargetRotation = LastUpdateVelocity.GetSafeNormal().Rotation();
+		// UE_LOG(LogTemp, Warning, TEXT("ComputeOrientToMovementRotation %f %f %f"), TargetRotation.Pitch, TargetRotation.Yaw, TargetRotation.Roll);
 		return LastUpdateVelocity.GetSafeNormal().Rotation();
+	}
 
 	// Don't change rotation.
 	return CurrentRotation;
@@ -77,7 +81,7 @@ void UDroneMovementComponent::UpdatePitchAmount(float DeltaTime)
 	}
 	else
 	{
-		PitchAmount = FMath::Lerp(0.0f, PitchAmount, 0.95f);
+		PitchAmount = FMath::Lerp(0.0f, PitchAmount, 0.99f);
 	}
 
 	PitchAmount = FMath::Clamp(PitchAmount, -10.0f, 10.0f);
@@ -136,7 +140,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 	if(LastUpdateVelocity.Length() >= MinimumTakeOffSpeed)
 	{ 
-		EnginePitchForce = PitchAmount * ForwardSpeed * PawnOwner->GetActorUpVector() * 15.0f;
+		EnginePitchForce = PitchAmount * ForwardSpeed * PawnOwner->GetActorUpVector() * 50.0f;
 	}
 
 	// Pitch Compensation
@@ -158,8 +162,6 @@ void UDroneMovementComponent::CalculateEngineForce()
 	{
 		FRotator CurrentRotator = FRotator::ZeroRotator;
 		CurrentRotator.Roll += RollAmount;
-		CurrentRotator.Pitch += PitchAmount + 5.0f;
-		CurrentRotator.Yaw += YawAmount;
 
 		OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
 	}

@@ -11,6 +11,7 @@
 #include "Input/LyraInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Player/LyraLocalPlayer.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
@@ -67,4 +68,9 @@ void ADroneCharacter::OnRep_PlayerState()
 void ADroneCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+}
+
+void ADroneCharacter::OnAirCraftHitOthers(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnAirCraftHitOthers"));
 }
