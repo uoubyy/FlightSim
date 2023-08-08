@@ -14,4 +14,7 @@ class DRONERACER_YANYIRUNTIME_API UDRBlueprintFunctionLibrary : public UBlueprin
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	static bool ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount);
 };

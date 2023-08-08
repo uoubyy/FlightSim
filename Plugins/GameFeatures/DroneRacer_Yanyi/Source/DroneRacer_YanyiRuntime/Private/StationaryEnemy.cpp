@@ -7,6 +7,8 @@
 #include "DamageCauserInterface.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "DRBlueprintFunctionLibrary.h"
+#include "DRHealthComponent.h"
 
 // Sets default values
 AStationaryEnemy::AStationaryEnemy()
@@ -21,8 +23,6 @@ AStationaryEnemy::AStationaryEnemy()
 	SphereComponent->SetupAttachment(RootComponent);
 
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
-
-	CurrentHealth = MaxHealth;
 }
 
 // Called when the game starts or when spawned
@@ -66,9 +66,10 @@ void AStationaryEnemy::OnSphereComponentBeginOverlap(UPrimitiveComponent* Overla
 	{
 		IDamageCauserInterface* DamageCauser = Cast<IDamageCauserInterface>(OtherActor);
 
-		CurrentHealth -= DamageCauser->Execute_GetDamageAmount(OtherActor);
+		float DamageValue = DamageCauser->Execute_GetDamageAmount(OtherActor);
+		HealthComponent->ApplyDamage(OtherActor->GetInstigator(), DamageValue);
 
-		if (CurrentHealth <= 0)
+		if (HealthComponent->GetCurrentHealth() <= 0.0f)
 		{
 			OnExploded();
 		}
@@ -130,9 +131,9 @@ void AStationaryEnemy::TraceTargetActors()
 
 			if (GetWorld()->LineTraceSingleByChannel(RayCastResult, RayCastStart, RayCastEnd, ECC_Pawn, CollisionParams))
 			{
-				// DrawDebugSphere(GetWorld(), RayCastResult.ImpactPoint, 20, 32, FColor::Green, false, 100.0f);
-				// UE_LOG(LogTemp, Warning, TEXT("RayCastResult Hit The Pawn."));
 				AdjustedLocation = RayCastResult.ImpactPoint;
+
+				UDRBlueprintFunctionLibrary::ApplyDamage(this, RayCastResult.GetActor(), DamageAmount);
 
 #if !UE_BUILD_SHIPPING
 				SucceededHitAmount++;

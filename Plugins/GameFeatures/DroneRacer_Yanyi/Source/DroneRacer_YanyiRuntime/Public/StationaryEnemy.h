@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "StationaryEnemy.generated.h"
 
 UCLASS()
-class DRONERACER_YANYIRUNTIME_API AStationaryEnemy : public AActor
+class DRONERACER_YANYIRUNTIME_API AStationaryEnemy : public APawn
 {
 	GENERATED_BODY()
 	
@@ -28,6 +28,9 @@ public:
 	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDRHealthComponent> HealthComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
@@ -36,11 +39,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float TargetRandomRange = 100.0f;;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	float DamageAmount = 10.0f;
+
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
-	float CurrentHealth;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

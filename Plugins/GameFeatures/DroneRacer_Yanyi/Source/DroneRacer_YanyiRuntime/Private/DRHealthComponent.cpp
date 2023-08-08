@@ -6,11 +6,7 @@
 // Sets default values for this component's properties
 UDRHealthComponent::UDRHealthComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
@@ -19,16 +15,41 @@ void UDRHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	CurrentHealth = MaxHealth;
+	DamageImmuneTimerDelegate.BindUFunction(this, "FlipDamageImmune");
 }
 
-
-// Called every frame
-void UDRHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UDRHealthComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::EndPlay(EndPlayReason);
 
-	// ...
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
+bool UDRHealthComponent::ApplyDamage(const AActor* DamageCauser, float DamageAmount)
+{
+	if (CanApplyDamage())
+	{
+		CurrentHealth -= DamageAmount;
+		CurrentHealth = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+
+		if (DamageImmuneDuration > 0.0f)
+		{
+			IsDamageImmune = true;
+			GetWorld()->GetTimerManager().SetTimer(DamageImmuneTimerHandle, DamageImmuneTimerDelegate, DamageImmuneDuration, false);
+		}
+		return true;
+	}
+
+	return false;
+}
+
+bool UDRHealthComponent::CanApplyDamage()
+{
+	return !IsDamageImmune && CurrentHealth > 0.0f;
+}
+
+void UDRHealthComponent::FlipDamageImmune()
+{
+	IsDamageImmune = !IsDamageImmune;
+}
