@@ -26,12 +26,15 @@ void UDRHealthComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
-bool UDRHealthComponent::ApplyDamage(const AActor* DamageCauser, float DamageAmount)
+bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 {
 	if (CanApplyDamage())
 	{
 		CurrentHealth -= DamageAmount;
-		CurrentHealth = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+		float NewHealthValue = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+
+		OnHealthChanged.Broadcast(this, CurrentHealth, NewHealthValue, DamageCauser);
+		CurrentHealth = NewHealthValue;
 
 		if (DamageImmuneDuration > 0.0f)
 		{
@@ -47,6 +50,11 @@ bool UDRHealthComponent::ApplyDamage(const AActor* DamageCauser, float DamageAmo
 bool UDRHealthComponent::CanApplyDamage()
 {
 	return !IsDamageImmune && CurrentHealth > 0.0f;
+}
+
+float UDRHealthComponent::GetHealthNormalized() const
+{
+	return ((MaxHealth > 0.0f) ? (CurrentHealth / MaxHealth) : 0.0f);
 }
 
 void UDRHealthComponent::FlipDamageImmune()
