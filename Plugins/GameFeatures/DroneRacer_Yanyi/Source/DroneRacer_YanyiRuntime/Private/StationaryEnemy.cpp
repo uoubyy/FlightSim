@@ -100,7 +100,7 @@ void AStationaryEnemy::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimu
 
 	if (TargetActors.Num() > 0)
 	{
-		GetWorld()->GetTimerManager().SetTimer(AimTargetTimerHandle, AimTargetTimerDelegate, 0.05f, true);
+		GetWorld()->GetTimerManager().SetTimer(AimTargetTimerHandle, AimTargetTimerDelegate, 1.0f / FireRate, true);
 	}
 	else
 	{
