@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float FireRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	float TargetRandomRange = 100.0f;;
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
@@ -65,6 +68,15 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void AttackTargetActor(const FVector& TargetActorLocation);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	FVector GetMuzzleLocation();
+
+#if !UE_BUILD_SHIPPING
+	int32 BulletsAmount = 0;
+
+	int32 SucceededHitAmount = 0;
+#endif
 
 public:	
 

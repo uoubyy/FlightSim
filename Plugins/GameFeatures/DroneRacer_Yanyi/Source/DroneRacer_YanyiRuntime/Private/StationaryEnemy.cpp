@@ -60,7 +60,7 @@ void AStationaryEnemy::PostInitializeComponents()
 
 void AStationaryEnemy::OnSphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("StationaryEnemy OnSphereComponentBeginOverlap"));
+	// UE_LOG(LogTemp, Warning, TEXT("StationaryEnemy OnSphereComponentBeginOverlap"));
 
 	if (OtherActor->GetClass()->ImplementsInterface(UDamageCauserInterface::StaticClass()))
 	{
@@ -79,15 +79,15 @@ void AStationaryEnemy::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
 	for (const AActor* UpdatedActor : UpdatedActors)
 	{
-		//DrawDebugSphere(GetWorld(), UpdatedActor->GetActorLocation(), 100.0f, 32, FColor::Red, false, 100.0f);
-		UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdated find actor %f %f %f"), UpdatedActor->GetActorLocation().X, UpdatedActor->GetActorLocation().Y, UpdatedActor->GetActorLocation().Z);
+		// DrawDebugSphere(GetWorld(), UpdatedActor->GetActorLocation(), 100.0f, 32, FColor::Red, false, 100.0f);
+		// UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdated find actor %f %f %f"), UpdatedActor->GetActorLocation().X, UpdatedActor->GetActorLocation().Y, UpdatedActor->GetActorLocation().Z);
 	}
 }
 
 void AStationaryEnemy::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	DrawDebugSphere(GetWorld(), Actor->GetActorLocation(), 100.0f, 32, FColor::Green, false, 100.0f);
-	UE_LOG(LogTemp, Warning, TEXT("OnActorPerceptionUpdated at location %f %f %f"), Actor->GetActorLocation().X, Actor->GetActorLocation().Y, Actor->GetActorLocation().Z);
+	// DrawDebugSphere(GetWorld(), Actor->GetActorLocation(), 100.0f, 32, FColor::Green, false, 100.0f);
+	// UE_LOG(LogTemp, Warning, TEXT("OnActorPerceptionUpdated at location %f %f %f"), Actor->GetActorLocation().X, Actor->GetActorLocation().Y, Actor->GetActorLocation().Z);
 
 	if (Stimulus.WasSuccessfullySensed())
 	{
@@ -114,7 +114,35 @@ void AStationaryEnemy::TraceTargetActors()
 	{
 		if (TargetActor.IsValid())
 		{
-			AttackTargetActor(TargetActor->GetActorLocation());
+			FVector RandomOffset = FMath::VRand() * FMath::FRandRange(0.0f, TargetRandomRange);
+
+			FVector RayCastStart = GetMuzzleLocation();
+			FVector RayCastEnd = TargetActor->GetActorLocation() + RandomOffset;
+			FHitResult RayCastResult;
+
+			FCollisionQueryParams CollisionParams;
+
+			FVector AdjustedLocation = RayCastEnd;
+
+#if !UE_BUILD_SHIPPING
+			BulletsAmount++;
+#endif
+
+			if (GetWorld()->LineTraceSingleByChannel(RayCastResult, RayCastStart, RayCastEnd, ECC_Pawn, CollisionParams))
+			{
+				// DrawDebugSphere(GetWorld(), RayCastResult.ImpactPoint, 20, 32, FColor::Green, false, 100.0f);
+				// UE_LOG(LogTemp, Warning, TEXT("RayCastResult Hit The Pawn."));
+				AdjustedLocation = RayCastResult.ImpactPoint;
+
+#if !UE_BUILD_SHIPPING
+				SucceededHitAmount++;
+#endif
+			}
+			AttackTargetActor(AdjustedLocation);
+
+#if !UE_BUILD_SHIPPING
+			UE_LOG(LogTemp, Warning, TEXT("RayCastResult Succeeded Hit Percent %f"), SucceededHitAmount * 1.0 / BulletsAmount);
+#endif
 		}
 	}
 }
