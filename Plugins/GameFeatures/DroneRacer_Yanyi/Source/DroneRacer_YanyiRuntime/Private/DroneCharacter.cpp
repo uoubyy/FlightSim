@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Player/LyraLocalPlayer.h"
 #include "Components/CapsuleComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 // Sets default values
 ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
@@ -21,6 +22,8 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = false;
 
 	PawnExtComponent = CreateDefaultSubobject<ULyraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+
+	AIPerceptionStimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSource"));
 }
 
 // Called when the game starts or when spawned
