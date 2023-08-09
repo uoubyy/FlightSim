@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "DRPerceptiveActorInterface.h"
 #include "StationaryEnemy.generated.h"
 
 UCLASS()
-class DRONERACER_YANYIRUNTIME_API AStationaryEnemy : public APawn
+class DRONERACER_YANYIRUNTIME_API AStationaryEnemy : public APawn, public IDRPerceptiveActorInterface
 {
 	GENERATED_BODY()
 	
@@ -21,8 +22,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UStaticMeshComponent> StaticMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UAIPerceptionComponent> AIPerceptionComponent;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	//TObjectPtr<class UAIPerceptionComponent> AIPerceptionComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
@@ -42,6 +43,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float DamageAmount = 10.0f;
 
+	virtual void OnActorPerceptionUpdated_Implementation(AActor* Actor, bool WasSuccessfullySensed);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,12 +55,6 @@ protected:
 
 	UFUNCTION()
 	void OnSphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
-
-	UFUNCTION()
-	void OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 	TArray<TWeakObjectPtr<AActor>> TargetActors;
 

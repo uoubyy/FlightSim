@@ -3,7 +3,6 @@
 
 #include "StationaryEnemy.h"
 #include "Components/SphereComponent.h"
-#include "Perception/AIPerceptionComponent.h"
 #include "DamageCauserInterface.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
@@ -23,8 +22,6 @@ AStationaryEnemy::AStationaryEnemy()
 	SphereComponent->SetupAttachment(RootComponent);
 
 	HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
-
-	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -61,9 +58,6 @@ void AStationaryEnemy::PostInitializeComponents()
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereComponentBeginOverlap);
 
-	AIPerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ThisClass::OnPerceptionUpdated);
-	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnActorPerceptionUpdated);
-
 	HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
 }
 
@@ -80,21 +74,17 @@ void AStationaryEnemy::OnSphereComponentBeginOverlap(UPrimitiveComponent* Overla
 	}
 }
 
-void AStationaryEnemy::OnPerceptionUpdated_Implementation(const TArray<AActor*>& UpdatedActors)
-{
-	for (const AActor* UpdatedActor : UpdatedActors)
-	{
-		// DrawDebugSphere(GetWorld(), UpdatedActor->GetActorLocation(), 100.0f, 32, FColor::Red, false, 100.0f);
-		// UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdated find actor %f %f %f"), UpdatedActor->GetActorLocation().X, UpdatedActor->GetActorLocation().Y, UpdatedActor->GetActorLocation().Z);
-	}
-}
+//void AStationaryEnemy::OnPerceptionUpdated_Implementation(const TArray<AActor*>& UpdatedActors)
+//{
+//
+//}
 
-void AStationaryEnemy::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+void AStationaryEnemy::OnActorPerceptionUpdated_Implementation(AActor* Actor, bool WasSuccessfullySensed)
 {
 	// DrawDebugSphere(GetWorld(), Actor->GetActorLocation(), 100.0f, 32, FColor::Green, false, 100.0f);
 	// UE_LOG(LogTemp, Warning, TEXT("OnActorPerceptionUpdated at location %f %f %f"), Actor->GetActorLocation().X, Actor->GetActorLocation().Y, Actor->GetActorLocation().Z);
 
-	if (Stimulus.WasSuccessfullySensed())
+	if (WasSuccessfullySensed)
 	{
 		TargetActors.AddUnique(Actor);
 	}

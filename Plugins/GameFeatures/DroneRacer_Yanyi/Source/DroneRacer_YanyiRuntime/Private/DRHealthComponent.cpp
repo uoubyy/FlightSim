@@ -36,7 +36,7 @@ bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 			OnDeathStarted.Broadcast(GetOwner());
 		}
 
-		NewHealthValue = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+		NewHealthValue = FMath::Clamp(NewHealthValue, 0.0f, MaxHealth);
 
 		OnHealthChanged.Broadcast(this, CurrentHealth, NewHealthValue, DamageCauser);
 		CurrentHealth = NewHealthValue;
