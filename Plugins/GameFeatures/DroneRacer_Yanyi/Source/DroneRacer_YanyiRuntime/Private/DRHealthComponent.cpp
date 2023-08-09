@@ -30,8 +30,13 @@ bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 {
 	if (CanApplyDamage())
 	{
-		CurrentHealth -= DamageAmount;
-		float NewHealthValue = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+		float NewHealthValue = CurrentHealth - DamageAmount;
+		if (NewHealthValue <= 0.0f)
+		{
+			OnDeathStarted.Broadcast(GetOwner());
+		}
+
+		NewHealthValue = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
 
 		OnHealthChanged.Broadcast(this, CurrentHealth, NewHealthValue, DamageCauser);
 		CurrentHealth = NewHealthValue;
@@ -41,6 +46,7 @@ bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 			IsDamageImmune = true;
 			GetWorld()->GetTimerManager().SetTimer(DamageImmuneTimerHandle, DamageImmuneTimerDelegate, DamageImmuneDuration, false);
 		}
+
 		return true;
 	}
 

@@ -74,6 +74,12 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	FVector GetMuzzleLocation();
 
+	UFUNCTION()
+	void OnDeathStarted(AActor* Actor);
+
+	UFUNCTION()
+	void OnDeathFinished(class UNiagaraComponent* NiagaraComponent);
+
 #if !UE_BUILD_SHIPPING
 	int32 BulletsAmount = 0;
 

@@ -71,4 +71,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FDRHealth_AttributeChanged OnMaxHealthChanged;
+
+	// Delegate fired when the death sequence has started.
+	UPROPERTY(BlueprintAssignable)
+	FDRHealth_DeathEvent OnDeathStarted;
+
+	// Delegate fired when the death sequence has finished.
+	UPROPERTY(BlueprintAssignable)
+	FDRHealth_DeathEvent OnDeathFinished;
 };

@@ -47,6 +47,11 @@ void AStationaryEnemy::OnExploded()
 	if (ExplosionEffect)
 	{
 		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(ExplosionEffect, SphereComponent, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+		NiagaraComp->OnSystemFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
+	}
+	else
+	{
+		OnDeathFinished(nullptr);
 	}
 }
 
@@ -58,6 +63,8 @@ void AStationaryEnemy::PostInitializeComponents()
 
 	AIPerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ThisClass::OnPerceptionUpdated);
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnActorPerceptionUpdated);
+
+	HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
 }
 
 void AStationaryEnemy::OnSphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -70,11 +77,6 @@ void AStationaryEnemy::OnSphereComponentBeginOverlap(UPrimitiveComponent* Overla
 
 		float DamageValue = DamageCauser->Execute_GetDamageAmount(OtherActor);
 		HealthComponent->ApplyDamage(OtherActor->GetInstigator(), DamageValue);
-
-		if (HealthComponent->GetCurrentHealth() <= 0.0f)
-		{
-			OnExploded();
-		}
 	}
 }
 
@@ -148,4 +150,14 @@ void AStationaryEnemy::TraceTargetActors()
 #endif
 		}
 	}
+}
+
+void AStationaryEnemy::OnDeathStarted(AActor* Actor)
+{
+	OnExploded();
+}
+
+void AStationaryEnemy::OnDeathFinished(class UNiagaraComponent* NiagaraComponent)
+{
+	Destroy();
 }
