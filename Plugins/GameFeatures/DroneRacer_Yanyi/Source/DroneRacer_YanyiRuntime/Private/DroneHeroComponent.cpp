@@ -41,7 +41,7 @@ bool UDroneHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Man
 
 void UDroneHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState)
 {
-	UE_LOG(LogDrone, Warning, TEXT("UDroneHeroComponent::HandleChangeInitState"));
+	// UE_LOG(LogDrone, Warning, TEXT("UDroneHeroComponent::HandleChangeInitState"));
 	
 	if (CurrentState == LyraGameplayTags::InitState_DataAvailable && DesiredState == LyraGameplayTags::InitState_DataInitialized)
 	{

@@ -14,21 +14,11 @@ ADRMovableEnemy::ADRMovableEnemy()
 // Called when the game starts or when spawned
 void ADRMovableEnemy::BeginPlay()
 {
-	APawn::BeginPlay();
+	Super::BeginPlay();
 	
 }
 
-// Called every frame
-void ADRMovableEnemy::Tick(float DeltaTime)
+void ADRMovableEnemy::TraceTargetActors_Implementation()
 {
-	Super::Tick(DeltaTime);
-
+	UE_LOG(LogTemp, Warning, TEXT("ADRMovableEnemy TraceTargetActors_Implementation"));
 }
-
-// Called to bind functionality to input
-void ADRMovableEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

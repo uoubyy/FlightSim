@@ -80,7 +80,7 @@ void AStationaryEnemy::OnSphereComponentBeginOverlap(UPrimitiveComponent* Overla
 	}
 }
 
-void AStationaryEnemy::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
+void AStationaryEnemy::OnPerceptionUpdated_Implementation(const TArray<AActor*>& UpdatedActors)
 {
 	for (const AActor* UpdatedActor : UpdatedActors)
 	{
@@ -113,7 +113,7 @@ void AStationaryEnemy::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimu
 	}
 }
 
-void AStationaryEnemy::TraceTargetActors()
+void AStationaryEnemy::TraceTargetActors_Implementation()
 {
 	for (TWeakObjectPtr<AActor> TargetActor : TargetActors)
 	{
@@ -146,7 +146,7 @@ void AStationaryEnemy::TraceTargetActors()
 			AttackTargetActor(AdjustedLocation);
 
 #if !UE_BUILD_SHIPPING
-			UE_LOG(LogTemp, Warning, TEXT("RayCastResult Succeeded Hit Percent %f"), SucceededHitAmount * 1.0 / BulletsAmount);
+			// UE_LOG(LogTemp, Warning, TEXT("RayCastResult Succeeded Hit Percent %f"), SucceededHitAmount * 1.0 / BulletsAmount);
 #endif
 		}
 	}

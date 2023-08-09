@@ -53,7 +53,7 @@ protected:
 	UFUNCTION()
 	void OnSphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintNativeEvent)
 	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 
 	UFUNCTION()
@@ -65,7 +65,7 @@ protected:
 
 	FTimerDelegate AimTargetTimerDelegate;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintNativeEvent)
 	void TraceTargetActors();
 
 	UFUNCTION(BlueprintImplementableEvent)
