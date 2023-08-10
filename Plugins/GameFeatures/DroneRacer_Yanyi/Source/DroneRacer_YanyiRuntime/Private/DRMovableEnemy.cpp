@@ -12,10 +12,9 @@ ADRMovableEnemy::ADRMovableEnemy()
 }
 
 // Called when the game starts or when spawned
-void ADRMovableEnemy::BeginPlay()
+void ADRMovableEnemy::InitializeEnemy()
 {
-	Super::BeginPlay();
-	
+
 }
 
 void ADRMovableEnemy::TraceTargetActors_Implementation()

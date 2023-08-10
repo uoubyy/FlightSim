@@ -3,27 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "DRPerceptiveActorInterface.h"
-#include "StationaryEnemy.generated.h"
+#include "DREnemyBase.generated.h"
 
 UCLASS()
-class DRONERACER_YANYIRUNTIME_API AStationaryEnemy : public APawn, public IDRPerceptiveActorInterface
+class DRONERACER_YANYIRUNTIME_API ADREnemyBase : public ACharacter, public IDRPerceptiveActorInterface
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AStationaryEnemy();
+
+public:
+	// Sets default values for this character's properties
+	ADREnemyBase();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USphereComponent> SphereComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UStaticMeshComponent> StaticMeshComponent;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
-	//TObjectPtr<class UAIPerceptionComponent> AIPerceptionComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
@@ -33,9 +27,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> BulletClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
-	float MaxHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float FireRate;
@@ -63,10 +54,6 @@ protected:
 
 	TArray<TWeakObjectPtr<AActor>> TargetActors;
 
-	FTimerHandle AimTargetTimerHandle;
-
-	FTimerDelegate AimTargetTimerDelegate;
-
 	UFUNCTION(BlueprintNativeEvent)
 	void TraceTargetActors();
 
@@ -89,7 +76,7 @@ protected:
 #endif
 
 public:	
-
+	
 	virtual void PostInitializeComponents() override;
 
 };

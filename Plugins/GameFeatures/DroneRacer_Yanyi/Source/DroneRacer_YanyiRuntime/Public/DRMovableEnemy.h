@@ -17,8 +17,9 @@ public:
 	ADRMovableEnemy();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
+	virtual void InitializeEnemy() override;
 
 	virtual void TraceTargetActors_Implementation() override;
+
 };

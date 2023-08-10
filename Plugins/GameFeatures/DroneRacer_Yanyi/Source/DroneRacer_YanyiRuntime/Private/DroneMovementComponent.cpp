@@ -199,7 +199,7 @@ void UDroneMovementComponent::UpdateCameraEffect()
 	if (CameraShakeClass && uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) && PlayerControler->IsLocalController())
 	{
 		PlayerControler->PlayerCameraManager->StartCameraShake(CameraShakeClass, 1.0f, ECameraShakePlaySpace::CameraLocal, FRotator::ZeroRotator);
-		UE_LOG(LogTemp, Warning, TEXT("StartCameraShake"));
+		// UE_LOG(LogTemp, Warning, TEXT("StartCameraShake"));
 	}
 
 	check(CameraFOVCurveAsset)

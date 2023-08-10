@@ -29,7 +29,7 @@ void AStationaryEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AimTargetTimerDelegate.BindUFunction(this, "TraceTargetActors");
+	InitializeEnemy();
 }
 
 void AStationaryEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -50,6 +50,11 @@ void AStationaryEnemy::OnExploded()
 	{
 		OnDeathFinished(nullptr);
 	}
+}
+
+void AStationaryEnemy::InitializeEnemy()
+{
+	AimTargetTimerDelegate.BindUFunction(this, "TraceTargetActors");
 }
 
 void AStationaryEnemy::PostInitializeComponents()
