@@ -13,6 +13,7 @@
 #include "Player/LyraLocalPlayer.h"
 #include "Components/CapsuleComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Components/ArrowComponent.h"
 
 // Sets default values
 ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
@@ -24,6 +25,12 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 	PawnExtComponent = CreateDefaultSubobject<ULyraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 
 	AIPerceptionStimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSource"));
+
+	LeftMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("LeftMuzzle"));
+	LeftMuzzle->SetupAttachment(GetMesh());
+
+	RightMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("RightMuzzle"));
+	RightMuzzle->SetupAttachment(GetMesh());
 }
 
 // Called when the game starts or when spawned

@@ -20,6 +20,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
 	TObjectPtr<class UAIPerceptionStimuliSourceComponent> AIPerceptionStimuliSource;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	TObjectPtr<class UArrowComponent> LeftMuzzle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	TObjectPtr<class UArrowComponent> RightMuzzle;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

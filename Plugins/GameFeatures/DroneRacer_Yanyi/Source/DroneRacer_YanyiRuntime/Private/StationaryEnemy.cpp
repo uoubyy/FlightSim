@@ -144,6 +144,8 @@ void AStationaryEnemy::TraceTargetActors_Implementation()
 
 void AStationaryEnemy::OnDeathStarted(AActor* Actor)
 {
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+
 	OnExploded();
 }
 

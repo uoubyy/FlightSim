@@ -37,7 +37,11 @@ void ADREnemyController::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Sti
 {
 	// DrawDebugSphere(GetWorld(), Actor->GetActorLocation(), 100.0f, 32, FColor::Green, false, 100.0f);
 	// UE_LOG(LogTemp, Warning, TEXT("OnActorPerceptionUpdated at location %f %f %f"), Actor->GetActorLocation().X, Actor->GetActorLocation().Y, Actor->GetActorLocation().Z);
-
+	// GetGenericTeamId() 
+	if (Actor->ActorHasTag("Enemy"))
+	{
+		return;
+	}
 
 	if (GetPawn() && GetPawn()->GetClass()->ImplementsInterface(UDRPerceptiveActorInterface::StaticClass()))
 	{
