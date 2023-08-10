@@ -20,7 +20,7 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	PawnExtComponent = CreateDefaultSubobject<ULyraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 
@@ -37,6 +37,21 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 void ADroneCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ADroneCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (MainWeaponWaitingTime > 0.0f)
+	{
+		MainWeaponWaitingTime -= DeltaSeconds;
+	}
+
+	if (SecondaryWeaponWaitingTime > 0.0f)
+	{
+		SecondaryWeaponWaitingTime -= DeltaSeconds;
+	}
 }
 
 // Called to bind functionality to input
@@ -78,6 +93,29 @@ void ADroneCharacter::OnRep_PlayerState()
 void ADroneCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+}
+
+bool ADroneCharacter::MainWeaponTryOpenFire()
+{
+	if (CanMainWeaponOpenFire())
+	{
+		OnMainWeaponFire();
+		MainWeaponWaitingTime = 1.0f / MainWeaponFireRate;
+		return true;
+	}
+
+	return false;
+}
+
+bool ADroneCharacter::SecondaryWeaponTryOpenFire()
+{
+	if (CanSecondaryWeaponOpenFire())
+	{
+		OnSecondaryWeaponFire();
+		SecondaryWeaponWaitingTime = 1.0f / SecondaryWeaponFireRate;
+		return true;
+	}
+	return false;
 }
 
 void ADroneCharacter::OnAirCraftHitOthers(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

@@ -290,7 +290,7 @@ void UDroneHeroComponent::Input_MainWeapon(const FInputActionValue& InputActionV
 
 	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
 	{
-		DroneCharacter->OnMainWeaponFire();
+		DroneCharacter->MainWeaponTryOpenFire();
 	}
 }
 
@@ -304,7 +304,7 @@ void UDroneHeroComponent::Input_SecondaryWeapon(const FInputActionValue& InputAc
 
 	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
 	{
-		DroneCharacter->OnSecondaryWeaponFire();
+		DroneCharacter->SecondaryWeaponTryOpenFire();
 	}
 }
 

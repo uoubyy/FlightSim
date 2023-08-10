@@ -26,9 +26,29 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
 	TObjectPtr<class UArrowComponent> RightMuzzle;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	float MainWeaponCooldownTime;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	float SecondaryWeaponCooldownTime;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	float MainWeaponFireRate = 5.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	float SecondaryWeaponFireRate = 0.1f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	float MainWeaponWaitingTime;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	float SecondaryWeaponWaitingTime;
 
 public:	
 	// Called to bind functionality to input
@@ -42,12 +62,18 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+protected:
 	// 2K TODO Bind to Lyra Ability Input
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnMainWeaponFire();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSecondaryWeaponFire();
+
+public:
+	bool MainWeaponTryOpenFire();
+
+	bool SecondaryWeaponTryOpenFire();
 
 private:
 	
@@ -56,4 +82,10 @@ private:
 
 	UFUNCTION()
 	void OnAirCraftHitOthers(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION(BlueprintCallable)
+	bool CanMainWeaponOpenFire() const { return MainWeaponWaitingTime <= 0.0f; }
+
+	UFUNCTION(BlueprintCallable)
+	bool CanSecondaryWeaponOpenFire() const { return SecondaryWeaponWaitingTime <= 0.0f; }
 };
