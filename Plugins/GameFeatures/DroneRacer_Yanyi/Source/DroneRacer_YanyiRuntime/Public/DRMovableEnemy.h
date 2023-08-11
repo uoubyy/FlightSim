@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "StationaryEnemy.h"
+#include "DREnemyBase.h"
 #include "DRMovableEnemy.generated.h"
 
 UCLASS()
-class DRONERACER_YANYIRUNTIME_API ADRMovableEnemy : public AStationaryEnemy
+class DRONERACER_YANYIRUNTIME_API ADRMovableEnemy : public ADREnemyBase
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	ADRMovableEnemy();
+
 
 protected:
 

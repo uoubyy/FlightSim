@@ -19,7 +19,7 @@ ADREnemyBase::ADREnemyBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	SphereComponent->SetupAttachment(RootComponent);
+	SphereComponent->SetupAttachment(GetMesh());
 
 	HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
 }
