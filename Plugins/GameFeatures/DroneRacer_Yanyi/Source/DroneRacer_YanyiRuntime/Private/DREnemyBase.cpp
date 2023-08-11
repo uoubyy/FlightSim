@@ -19,7 +19,7 @@ ADREnemyBase::ADREnemyBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	SphereComponent->SetupAttachment(GetMesh());
+	SphereComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
 }
@@ -68,7 +68,7 @@ void ADREnemyBase::InitializeEnemy()
 
 void ADREnemyBase::OnSphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->GetClass()->ImplementsInterface(UDamageCauserInterface::StaticClass()))
+	if (OtherActor->GetClass()->ImplementsInterface(UDamageCauserInterface::StaticClass()) && OtherActor->GetInstigator() != this)
 	{
 		IDamageCauserInterface* DamageCauser = Cast<IDamageCauserInterface>(OtherActor);
 
