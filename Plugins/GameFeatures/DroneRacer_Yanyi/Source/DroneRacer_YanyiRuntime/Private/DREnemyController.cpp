@@ -35,10 +35,9 @@ void ADREnemyController::OnUnPossess()
 
 void ADREnemyController::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	// DrawDebugSphere(GetWorld(), Actor->GetActorLocation(), 100.0f, 32, FColor::Green, false, 100.0f);
-	// UE_LOG(LogTemp, Warning, TEXT("OnActorPerceptionUpdated at location %f %f %f"), Actor->GetActorLocation().X, Actor->GetActorLocation().Y, Actor->GetActorLocation().Z);
-	// GetGenericTeamId() 
-	if (Actor->ActorHasTag("Enemy"))
+	// 2k TODO
+	// For know, we only care about Player
+	if (!Actor->ActorHasTag("Player"))
 	{
 		return;
 	}

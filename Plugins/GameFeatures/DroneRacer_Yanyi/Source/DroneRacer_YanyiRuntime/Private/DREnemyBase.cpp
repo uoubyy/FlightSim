@@ -82,10 +82,14 @@ void ADREnemyBase::OnActorPerceptionUpdated_Implementation(AActor* Actor, bool W
 	if (WasSuccessfullySensed)
 	{
 		TargetActors.AddUnique(Actor);
+
+		UE_LOG(LogTemp, Warning, TEXT("Actor %s AI Perception Captured %s"), *GetName(), *Actor->GetName());
 	}
 	else
 	{
 		TargetActors.Remove(Actor);
+
+		UE_LOG(LogTemp, Warning, TEXT("Actor %s AI Perception Lost %s"), *GetName(), *Actor->GetName());
 	}
 }
 
