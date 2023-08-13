@@ -14,6 +14,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Components/ArrowComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
@@ -31,6 +33,17 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 
 	RightMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("RightMuzzle"));
 	RightMuzzle->SetupAttachment(GetMesh());
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(RootComponent);
+
+	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
+	ThirdPersonCamera->SetupAttachment(SpringArm);
+	ThirdPersonCamera->SetAutoActivate(true);
+
+	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FirstPersonCamera->SetupAttachment(GetMesh());
+	FirstPersonCamera->SetAutoActivate(false);
 }
 
 // Called when the game starts or when spawned
@@ -116,6 +129,13 @@ bool ADroneCharacter::SecondaryWeaponTryOpenFire()
 		return true;
 	}
 	return false;
+}
+
+void ADroneCharacter::SwitchThirdAndFirstCamera()
+{
+	ThirdCameraEnabled = !ThirdCameraEnabled;
+	ThirdPersonCamera->SetActive(ThirdCameraEnabled);
+	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
 }
 
 void ADroneCharacter::OnAirCraftHitOthers(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

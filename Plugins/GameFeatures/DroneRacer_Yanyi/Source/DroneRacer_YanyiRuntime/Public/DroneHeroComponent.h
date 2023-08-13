@@ -67,6 +67,8 @@ protected:
 	void Input_MainWeapon(const FInputActionValue& InputActionValue);
 	void Input_SecondaryWeapon(const FInputActionValue& InputActionValue);
 
+	void Input_SwitchCamera(const FInputActionValue& InputActionValue);
+
 protected:
 	// Current Status
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")

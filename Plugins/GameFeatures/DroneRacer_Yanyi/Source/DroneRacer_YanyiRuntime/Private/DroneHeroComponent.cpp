@@ -150,6 +150,7 @@ void UDroneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputComp
 					const FGameplayTag InputTag_Pitch = FGameplayTag::RequestGameplayTag(FName("InputTag.Pitch"));
 					const FGameplayTag InputTag_MainWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.MainWeapon"));
 					const FGameplayTag InputTag_SecondaryWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.SecondaryWeapon"));
+					const FGameplayTag InputTag_SwitchCamera = FGameplayTag::RequestGameplayTag(FName("InputTag.SwitchCamera"));
 
 					LyraIC->BindNativeAction(InputConfig, InputTag_ThrottleUp, ETriggerEvent::Triggered, this, &ThisClass::Input_ThrottleUp, false);
 					LyraIC->BindNativeAction(InputConfig, InputTag_Roll, ETriggerEvent::Triggered, this, &ThisClass::Input_Roll, false);
@@ -164,6 +165,7 @@ void UDroneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputComp
 					// 2K Bind to Lyra Ability mSystem
 					LyraIC->BindNativeAction(InputConfig, InputTag_MainWeapon, ETriggerEvent::Triggered, this, &ThisClass::Input_MainWeapon, false);
 					LyraIC->BindNativeAction(InputConfig, InputTag_SecondaryWeapon, ETriggerEvent::Started, this, &ThisClass::Input_SecondaryWeapon, false);
+					LyraIC->BindNativeAction(InputConfig, InputTag_SwitchCamera, ETriggerEvent::Started, this, &ThisClass::Input_SwitchCamera, false);
 				}
 			}
 		}
@@ -305,6 +307,20 @@ void UDroneHeroComponent::Input_SecondaryWeapon(const FInputActionValue& InputAc
 	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
 	{
 		DroneCharacter->SecondaryWeaponTryOpenFire();
+	}
+}
+
+void UDroneHeroComponent::Input_SwitchCamera(const FInputActionValue& InputActionValue)
+{
+	APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return;
+	}
+
+	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
+	{
+		DroneCharacter->SwitchThirdAndFirstCamera();
 	}
 }
 

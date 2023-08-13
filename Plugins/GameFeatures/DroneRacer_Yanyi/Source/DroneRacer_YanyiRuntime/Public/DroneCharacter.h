@@ -26,6 +26,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
 	TObjectPtr<class UArrowComponent> RightMuzzle;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	TObjectPtr<class USpringArmComponent> SpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	TObjectPtr<class UCameraComponent> ThirdPersonCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	TObjectPtr<class UCameraComponent> FirstPersonCamera;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
 	float MainWeaponCooldownTime;
 
@@ -37,6 +46,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
 	float SecondaryWeaponFireRate = 0.1f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	bool ThirdCameraEnabled = true;
 
 protected:
 	// Called when the game starts or when spawned
@@ -74,6 +86,8 @@ public:
 	bool MainWeaponTryOpenFire();
 
 	bool SecondaryWeaponTryOpenFire();
+
+	void SwitchThirdAndFirstCamera();
 
 private:
 	
