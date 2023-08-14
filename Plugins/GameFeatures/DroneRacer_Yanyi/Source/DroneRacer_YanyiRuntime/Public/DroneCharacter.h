@@ -89,6 +89,9 @@ public:
 
 	void SwitchThirdAndFirstCamera();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnMatchEnd(bool WinOrLoss);
+
 private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character", Meta = (AllowPrivateAccess = "true"))

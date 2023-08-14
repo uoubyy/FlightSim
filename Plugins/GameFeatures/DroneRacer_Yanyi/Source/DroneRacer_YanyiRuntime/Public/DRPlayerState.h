@@ -31,5 +31,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdatePersonalRecord(float TimeInSeconds);
+
+	UFUNCTION(BlueprintCallable)
+	float GetBestRecord() const { return BestRecordInSeconds; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentRecord() const { return CurrentRecordInSeconds; }
 	
 };

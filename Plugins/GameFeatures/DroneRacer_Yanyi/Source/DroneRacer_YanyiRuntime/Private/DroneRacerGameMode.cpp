@@ -37,17 +37,26 @@ void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* Victi
 		DRPlayerState->UpdatePersonalRecord(GetWorld()->TimeSeconds);
 	}
 
-	// TEST CODE: Save Game Every Time We Eliminate An Enemy
-	// if (LiveEnemiesCnt <= 0)
+	if (LiveEnemiesCnt <= 0)
 	{
 		UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
 		DRSaveGameSubsystem->WriteSaveGame();
+
+		if (Player)
+		{
+			Player->OnMatchEnd(true);
+		}
 	}
 }
 
 void ADroneRacerGameMode::OnEliminatePlayer(AActor* InstigatorPawn, AActor* Player)
 {
-
+	// TODO 2K: Polish
+	ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Player);
+	if (DroneCharacter)
+	{
+		DroneCharacter->OnMatchEnd(false);
+	}
 }
 
 void ADroneRacerGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
