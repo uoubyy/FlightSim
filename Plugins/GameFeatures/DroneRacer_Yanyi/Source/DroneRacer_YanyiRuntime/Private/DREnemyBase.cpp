@@ -11,6 +11,9 @@
 #include "DRHealthComponent.h"
 
 #include "DamageCauserInterface.h"
+#include "DroneRacerGameMode.h"
+
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ADREnemyBase::ADREnemyBase()
@@ -28,6 +31,8 @@ ADREnemyBase::ADREnemyBase()
 void ADREnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	RegisterEnemy();
 	
 	InitializeEnemy();
 }
@@ -64,6 +69,15 @@ void ADREnemyBase::OnExploded()
 void ADREnemyBase::InitializeEnemy()
 {
 
+}
+
+void ADREnemyBase::RegisterEnemy()
+{
+	ADroneRacerGameMode* DroneRacerGameMode = Cast<ADroneRacerGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (DroneRacerGameMode)
+	{
+		DroneRacerGameMode->OnRegisterEnemy(GetName(), this);
+	}
 }
 
 void ADREnemyBase::OnSphereComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
