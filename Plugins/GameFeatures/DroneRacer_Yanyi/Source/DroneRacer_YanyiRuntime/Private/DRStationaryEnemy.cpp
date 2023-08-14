@@ -14,6 +14,7 @@ void ADRStationaryEnemy::OnActorPerceptionUpdated_Implementation(AActor* Actor, 
 	}
 	else
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("%s Stop Attacking"), *GetName());
 		GetWorld()->GetTimerManager().ClearTimer(TraceTargetTimerHandle);
 	}
 }
@@ -45,7 +46,7 @@ void ADRStationaryEnemy::TraceTargetActors_Implementation()
 
 			if (GetWorld()->LineTraceSingleByChannel(RayCastResult, RayCastStart, RayCastEnd, ECC_Pawn, CollisionParams))
 			{
-				AdjustedLocation = RayCastResult.ImpactPoint;
+				// AdjustedLocation = RayCastResult.ImpactPoint;
 
 				UDRBlueprintFunctionLibrary::ApplyDamage(this, RayCastResult.GetActor(), DamageAmount);
 
@@ -53,6 +54,8 @@ void ADRStationaryEnemy::TraceTargetActors_Implementation()
 				SucceededHitAmount++;
 #endif
 			}
+
+			// UE_LOG(LogTemp, Warning, TEXT("%s Start Attack %s at position(%f, %f, %f)"), *GetName(), *TargetActor->GetName(), AdjustedLocation.X, AdjustedLocation.Y, AdjustedLocation.Z);
 			AttackTargetActor(AdjustedLocation);
 
 		}
