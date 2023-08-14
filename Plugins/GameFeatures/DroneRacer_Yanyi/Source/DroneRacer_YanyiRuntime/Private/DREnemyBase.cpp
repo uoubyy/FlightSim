@@ -13,8 +13,6 @@
 #include "DamageCauserInterface.h"
 #include "DroneRacerGameMode.h"
 
-#include "Kismet/GameplayStatics.h"
-
 // Sets default values
 ADREnemyBase::ADREnemyBase()
 {
@@ -73,7 +71,7 @@ void ADREnemyBase::InitializeEnemy()
 
 void ADREnemyBase::RegisterEnemy()
 {
-	ADroneRacerGameMode* DroneRacerGameMode = Cast<ADroneRacerGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
 	if (DroneRacerGameMode)
 	{
 		DroneRacerGameMode->OnRegisterEnemy(GetName(), this);

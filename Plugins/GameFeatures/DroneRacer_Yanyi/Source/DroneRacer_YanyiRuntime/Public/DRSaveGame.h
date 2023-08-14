@@ -14,4 +14,7 @@ class DRONERACER_YANYIRUNTIME_API UDRSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
+	float BestRecordInSeconds;
 };

@@ -43,6 +43,7 @@ public class DroneRacer_YanyiRuntime : ModuleRules
                 "GameplayTags",                
                 "EnhancedInput",
 				"ModularGameplay",
+				"ModularGameplayActors",
 				"AIModule",
 				"Niagara"
 				// ... add private dependencies that you statically link with here ...	

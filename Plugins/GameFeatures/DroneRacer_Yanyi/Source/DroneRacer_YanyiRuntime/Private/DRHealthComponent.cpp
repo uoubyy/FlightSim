@@ -2,6 +2,7 @@
 
 
 #include "DRHealthComponent.h"
+#include "DroneRacerGameMode.h"
 
 // Sets default values for this component's properties
 UDRHealthComponent::UDRHealthComponent()
@@ -38,8 +39,22 @@ bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 
 		NewHealthValue = FMath::Clamp(NewHealthValue, 0.0f, MaxHealth);
 
-		OnHealthChanged.Broadcast(this, CurrentHealth, NewHealthValue, DamageCauser);
+		
 		CurrentHealth = NewHealthValue;
+
+
+		ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
+		if (CurrentHealth <= 0.0f && DroneRacerGameMode)
+		{
+			if(GetOwner()->ActorHasTag("Enemy")) // TODO 2K
+			{ 
+				DroneRacerGameMode->OnEliminateEnemy(DamageCauser, GetOwner());
+			}
+			else if (GetOwner()->ActorHasTag("Player")) // TODO 2K
+			{
+				DroneRacerGameMode->OnEliminatePlayer(DamageCauser, GetOwner());
+			}
+		}
 
 		if (DamageImmuneDuration > 0.0f)
 		{
@@ -47,6 +62,7 @@ bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 			GetWorld()->GetTimerManager().SetTimer(DamageImmuneTimerHandle, DamageImmuneTimerDelegate, DamageImmuneDuration, false);
 		}
 
+		OnHealthChanged.Broadcast(this, CurrentHealth, NewHealthValue, DamageCauser);
 		return true;
 	}
 
