@@ -20,10 +20,10 @@ public:
 	UDRHealthComponent();
 
 	// Returns the health component if one exists on the specified actor.
-	UFUNCTION(BlueprintPure, Category = "Drone|HealthComponent")
+	UFUNCTION(BlueprintPure, Category = "DroneRacer|HealthComponent")
 	static UDRHealthComponent* FindHealthComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UDRHealthComponent>() : nullptr); }
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|HealthComponent", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|HealthComponent", Meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
 
 protected:
@@ -32,31 +32,31 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|HealthComponent", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|HealthComponent", Meta = (AllowPrivateAccess = "true"))
 	float CurrentHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|HealthComponent", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|HealthComponent", Meta = (AllowPrivateAccess = "true"))
 	float DamageImmuneDuration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|HealthComponent", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|HealthComponent", Meta = (AllowPrivateAccess = "true"))
 	bool IsDamageImmune;
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|HealthComponent")
 	virtual bool ApplyDamage(AActor* DamageCauser, float DamageAmount);
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|HealthComponent")
 	bool CanApplyDamage();
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|HealthComponent")
 	float GetCurrentHealth() const { return CurrentHealth; }
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|HealthComponent")
 	float GetMaxHealth() const { return MaxHealth; }
 
 	// Returns the current health in the range [0.0, 1.0].
-	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|HealthComponent")
 	float GetHealthNormalized() const;
 
 private:
