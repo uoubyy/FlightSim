@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
 	TObjectPtr<class UCameraComponent> FirstPersonCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	TObjectPtr<class UDRHealthComponent> HealthComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
 	float MainWeaponCooldownTime;
 

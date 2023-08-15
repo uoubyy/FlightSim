@@ -8,13 +8,13 @@
 
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DroneRacerGameMode OnRegisterEnemy %s."), *EnemyName);
+	// UE_LOG(LogTemp, Warning, TEXT("DroneRacerGameMode OnRegisterEnemy %s."), *EnemyName);
 	AllEnemies.Emplace(EnemyName, EnemyRef);
 }
 
 void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* VictimPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s"), *VictimPawn->GetName());
+	// UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s"), *VictimPawn->GetName());
 	if (VictimPawn && AllEnemies.Contains(VictimPawn->GetName()))
 	{
 		AllEnemies[VictimPawn->GetName()] = nullptr;

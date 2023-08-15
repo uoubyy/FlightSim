@@ -52,6 +52,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
 	float GetCurrentHealth() const { return CurrentHealth; }
 
+	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
+	float GetMaxHealth() const { return MaxHealth; }
+
 	// Returns the current health in the range [0.0, 1.0].
 	UFUNCTION(BlueprintCallable, Category = "Drone|HealthComponent")
 	float GetHealthNormalized() const;

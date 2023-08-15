@@ -16,6 +16,7 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DRHealthComponent.h"
 
 // Sets default values
 ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
@@ -44,6 +45,8 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(GetMesh());
 	FirstPersonCamera->SetAutoActivate(false);
+
+	HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -106,6 +109,8 @@ void ADroneCharacter::OnRep_PlayerState()
 void ADroneCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ThisClass::OnAirCraftHitOthers);
 }
 
 bool ADroneCharacter::MainWeaponTryOpenFire()
@@ -138,7 +143,10 @@ void ADroneCharacter::SwitchThirdAndFirstCamera()
 	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
 }
 
+// UPrimitiveComponent*, HitComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, FVector, NormalImpulse, const FHitResult&, Hit 
 void ADroneCharacter::OnAirCraftHitOthers(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnAirCraftHitOthers"));
+
+	HealthComponent->ApplyDamage(nullptr, HealthComponent->GetMaxHealth());
 }
