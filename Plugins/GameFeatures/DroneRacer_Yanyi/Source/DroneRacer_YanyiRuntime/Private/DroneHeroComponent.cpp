@@ -62,8 +62,8 @@ void UDroneHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* 
 			// The player state holds the persistent data for this player (state that persists across deaths and multiple pawns).
 			// The ability system component and attribute sets live on the player state.
 			// 
-			// 2K TODO
-			// PawnExtComp->InitializeAbilitySystem(LyraPS->GetLyraAbilitySystemComponent(), LyraPS);
+
+			PawnExtComp->InitializeAbilitySystem(LyraPS->GetLyraAbilitySystemComponent(), LyraPS);
 		}
 
 		if (ALyraPlayerController* LyraPC = GetController<ALyraPlayerController>())
