@@ -32,6 +32,8 @@ class DRONERACER_YANYIRUNTIME_API UDroneMovementComponent : public UCharacterMov
 	
 public:
 
+	UDroneMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
 	UFUNCTION(BlueprintPure, Category = "DroneRacer|MovementComponent")
 	static UDroneMovementComponent* FindDroneMovementComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UDroneMovementComponent>() : nullptr); }
 

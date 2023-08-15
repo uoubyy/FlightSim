@@ -2,6 +2,7 @@
 
 
 #include "DRCharacter.h"
+#include "DroneHeroComponent.h"
 #include "DroneMovementComponent.h"
 
 // LyraGame
@@ -13,6 +14,8 @@
 #include <Components/ArrowComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
+#include <Perception/AIPerceptionStimuliSourceComponent.h>
+#include <Components/CapsuleComponent.h>
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -45,6 +48,11 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	HealthComponent = CreateDefaultSubobject<ULyraHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
 	HealthComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
+
+	HeroComponent = CreateDefaultSubobject<UDroneHeroComponent>(TEXT("HeroComponent"));
+
+	// always face to the direction of movement
+	bUseControllerRotationYaw = false;
 }
 
 void ADRCharacter::PreInitializeComponents()
@@ -139,12 +147,47 @@ void ADRCharacter::InitializeGameplayTags()
 
 void ADRCharacter::OnDeathStarted(AActor* OwningActor)
 {
-
+	DisableMovementAndCollision();
 }
 
 void ADRCharacter::OnDeathFinished(AActor* OwningActor)
 {
 
+}
+
+void ADRCharacter::DisableMovementAndCollision()
+{
+	if (Controller)
+	{
+		Controller->SetIgnoreMoveInput(true);
+	}
+
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+	DroneMovementComponen->StopMovementImmediately();
+	DroneMovementComponen->DisableMovement();
+}
+
+void ADRCharacter::DestroyDueToDeath()
+{
+	UninitAndDestroy();
+}
+
+void ADRCharacter::UninitAndDestroy()
+{
+	if (ULyraAbilitySystemComponent* LyraASC = GetLyraAbilitySystemComponent())
+	{
+		if (LyraASC->GetAvatarActor() == this)
+		{
+			PawnExtComponent->UninitializeAbilitySystem();
+		}
+	}
+
+	SetActorHiddenInGame(true);
 }
 
 ULyraAbilitySystemComponent* ADRCharacter::GetLyraAbilitySystemComponent() const

@@ -57,6 +57,9 @@ private:
 	TObjectPtr<class ULyraPawnExtensionComponent> PawnExtComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDroneHeroComponent> HeroComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class ULyraHealthComponent> HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character", Meta = (AllowPrivateAccess = "true"))
@@ -95,11 +98,15 @@ protected:
 
 	void InitializeGameplayTags();
 
-	// Begins the death sequence for the character (disables collision, disables movement, etc...)
 	UFUNCTION()
 	virtual void OnDeathStarted(AActor* OwningActor);
 
-	// Ends the death sequence for the character (detaches controller, destroys pawn, etc...)
 	UFUNCTION()
 	virtual void OnDeathFinished(AActor* OwningActor);
+
+	void DisableMovementAndCollision();
+
+	void DestroyDueToDeath();
+
+	void UninitAndDestroy();
 };
