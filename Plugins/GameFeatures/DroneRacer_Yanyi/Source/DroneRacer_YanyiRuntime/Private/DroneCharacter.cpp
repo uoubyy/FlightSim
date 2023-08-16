@@ -53,6 +53,8 @@ ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)
 void ADroneCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ToggleMovementAndCollision(false);
 }
 
 void ADroneCharacter::Tick(float DeltaSeconds)
@@ -111,6 +113,31 @@ void ADroneCharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ThisClass::OnAirCraftHitOthers);
+}
+
+void ADroneCharacter::ToggleMovementAndCollision(bool EnableOrNot)
+{
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(EnableOrNot ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(EnableOrNot ? ECR_Block : ECR_Ignore);
+
+	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+
+	if(!EnableOrNot)
+	{ 
+		DroneMovementComponen->StopMovementImmediately();
+		DroneMovementComponen->DisableMovement();
+	}
+
+	DroneMovementComponen->SetActive(EnableOrNot);
+
+	if (Controller)
+	{
+		Controller->SetIgnoreMoveInput(!EnableOrNot);
+	}
+
+	SetActorHiddenInGame(!EnableOrNot);
 }
 
 bool ADroneCharacter::MainWeaponTryOpenFire()

@@ -85,12 +85,18 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSecondaryWeaponFire();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleMovementAndCollision(bool EnableOrNot);
+
 public:
 	bool MainWeaponTryOpenFire();
 
 	bool SecondaryWeaponTryOpenFire();
 
 	void SwitchThirdAndFirstCamera();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnMatchStart();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnMatchEnd(bool WinOrLoss);
