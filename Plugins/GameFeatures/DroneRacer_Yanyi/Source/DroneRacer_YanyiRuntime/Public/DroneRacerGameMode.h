@@ -26,6 +26,13 @@ public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
+	UFUNCTION(BlueprintCallable)
+	void OnMatchStart();
+
+	// TODO 2K
+	UFUNCTION(BlueprintCallable)
+	void OnMatchEnd(bool BattleResult);
 	
 protected:
 	TMap<FString, TWeakObjectPtr<AActor>> AllEnemies;

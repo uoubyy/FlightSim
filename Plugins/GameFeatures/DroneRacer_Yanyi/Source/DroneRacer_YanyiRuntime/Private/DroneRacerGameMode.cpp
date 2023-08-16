@@ -5,6 +5,7 @@
 #include "DRSaveGameSubsystem.h"
 #include "DroneCharacter.h"
 #include "DRPlayerState.h"
+#include "GameModes/LyraGameState.h"
 
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)
 {
@@ -29,34 +30,16 @@ void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* Victi
 		}
 	}
 
-	// TODO 2K: The Instigator may not be the Player
-	ADroneCharacter* Player = Cast<ADroneCharacter>(InstigatorPawn);
-	if (Player)
-	{
-		ADRPlayerState* DRPlayerState = Player->GetPlayerState<ADRPlayerState>();
-		DRPlayerState->UpdatePersonalRecord(GetWorld()->TimeSeconds);
-	}
-
 	if (LiveEnemiesCnt <= 0)
 	{
-		UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
-		DRSaveGameSubsystem->WriteSaveGame();
-
-		if (Player)
-		{
-			Player->OnMatchEnd(true);
-		}
+		OnMatchEnd(true);
 	}
 }
 
 void ADroneRacerGameMode::OnEliminatePlayer(AActor* InstigatorPawn, AActor* Player)
 {
 	// TODO 2K: Polish
-	ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Player);
-	if (DroneCharacter)
-	{
-		DroneCharacter->OnMatchEnd(false);
-	}
+	OnMatchEnd(false);
 }
 
 void ADroneRacerGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -77,5 +60,46 @@ void ADroneRacerGameMode::HandleStartingNewPlayer_Implementation(APlayerControll
 	if (DRSaveGameSubsystem)
 	{
 		DRSaveGameSubsystem->HandleStartingNewPlayer(NewPlayer);
+	}
+}
+
+void ADroneRacerGameMode::OnMatchStart()
+{
+	ALyraGameState* LyraGS = GetGameState<ALyraGameState>();
+
+	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
+	{
+		ADroneCharacter* Player = Cast<ADroneCharacter>(LyraPlayerState->GetPawn());
+		if (Player)
+		{
+			Player->OnMatchStart();
+		}
+	}
+}
+
+
+void ADroneRacerGameMode::OnMatchEnd(bool BattleResult)
+{
+	ALyraGameState* LyraGS = GetGameState<ALyraGameState>();
+
+	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
+	{
+		ADroneCharacter* Player = Cast<ADroneCharacter>(LyraPlayerState->GetPawn());
+		if (Player)
+		{
+			if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(LyraPlayerState))
+			{
+				if(BattleResult)
+					DRPlayerState->UpdatePersonalRecord(GetWorld()->TimeSeconds);
+			}
+
+			Player->OnMatchEnd(BattleResult); // TODO 2K should based on the health component
+		}
+	}
+
+	if(BattleResult)
+	{ 
+		UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
+		DRSaveGameSubsystem->WriteSaveGame();
 	}
 }

@@ -16,25 +16,25 @@ public:
 	// Sets default values for this character's properties
 	ADREnemyBase();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USphereComponent> SphereComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UDRHealthComponent> HealthComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> BulletClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float FireRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float TargetRandomRange = 100.0f;;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drone|Enemy", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float DamageAmount = 10.0f;
 
 	virtual void OnActorPerceptionUpdated_Implementation(AActor* Actor, bool WasSuccessfullySensed);

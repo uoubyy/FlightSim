@@ -17,40 +17,40 @@ public:
 	// Sets default values for this character's properties
 	ADroneCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class UAIPerceptionStimuliSourceComponent> AIPerceptionStimuliSource;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class UArrowComponent> LeftMuzzle;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class UArrowComponent> RightMuzzle;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class USpringArmComponent> SpringArm;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class UCameraComponent> ThirdPersonCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class UCameraComponent> FirstPersonCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	TObjectPtr<class UDRHealthComponent> HealthComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon")
 	float MainWeaponCooldownTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon")
 	float SecondaryWeaponCooldownTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon")
 	float MainWeaponFireRate = 5.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon")
 	float SecondaryWeaponFireRate = 0.1f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character")
 	bool ThirdCameraEnabled = true;
 
 protected:
@@ -59,10 +59,10 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon")
 	float MainWeaponWaitingTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon")
 	float SecondaryWeaponWaitingTime;
 
 public:	
@@ -85,6 +85,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSecondaryWeaponFire();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleMovementAndCollision(bool EnableOrNot);
+
 public:
 	bool MainWeaponTryOpenFire();
 
@@ -93,11 +96,14 @@ public:
 	void SwitchThirdAndFirstCamera();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnMatchStart();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnMatchEnd(bool WinOrLoss);
 
 private:
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drone|Character", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class ULyraPawnExtensionComponent> PawnExtComponent;
 
 	UFUNCTION()

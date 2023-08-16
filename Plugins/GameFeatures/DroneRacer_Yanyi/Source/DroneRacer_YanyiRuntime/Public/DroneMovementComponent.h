@@ -32,23 +32,25 @@ class DRONERACER_YANYIRUNTIME_API UDroneMovementComponent : public UCharacterMov
 	
 public:
 
-	UFUNCTION(BlueprintPure, Category = "Drone|MovementComponent")
+	UDroneMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UFUNCTION(BlueprintPure, Category = "DroneRacer|MovementComponent")
 	static UDroneMovementComponent* FindDroneMovementComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UDroneMovementComponent>() : nullptr); }
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual FRotator ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const;
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|MovementComponent")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|MovementComponent")
 	void UpdatePlaneControlInput(const EPlaneStatus NewControlInput);
 
-	UPROPERTY(BlueprintReadOnly, Category = "Drone|Engine")
+	UPROPERTY(BlueprintReadOnly, Category = "DroneRacer|Engine")
 	float LastUpdatedEngineForce;
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|Engine")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetThrottleAmount() const { return ThrottleAmount; }
 
-	UFUNCTION(BlueprintCallable, Category = "Drone|Engine")
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetMaxEngineForce() const;
 
 	virtual bool ShouldRemainVertical() const;
@@ -58,37 +60,37 @@ public:
 protected:
 
 	// Configuration
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Throttle")
 	bool AutoDrive;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Throttle")
 	float MaxThrottleAmount;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Throttle")
 	float MinThrottleAmount;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Throttle")
 	float ThrottleToForce;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Throttle")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Throttle")
 	float ThrottleSensitivity;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Pitch")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Pitch")
 	float PitchSensitivity;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Roll")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Roll")
 	float RollSensitivity;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Roll")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Roll")
 	float MaxRollDegree;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Yaw")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Yaw")
 	float YawSensitivity;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drone|Engine")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Engine")
 	float MinimumTakeOffSpeed;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Drone|Camera")
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|Camera")
 	TSubclassOf<class UCameraShakeBase> CameraShakeClass;
 
 	UPROPERTY(EditAnywhere, Category = "Balance")
@@ -98,16 +100,16 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")
 	EPlaneStatus CurrentPlaneStatus;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Drone|Throttle")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Throttle")
 	float ThrottleAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Drone|Pitch")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch")
 	float PitchAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Drone|Roll")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll")
 	float RollAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Drone|Yaw")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")
 	float YawAmount;
 
 private:

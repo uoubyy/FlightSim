@@ -5,6 +5,14 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
 
+UDroneMovementComponent::UDroneMovementComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	bOrientRotationToMovement = true;
+	MaxFlySpeed = 5000.0f;
+	RotationRate = FRotator(0.0f, 360.0f, 360.0f);
+}
+
 void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	UpdateThrottleAmount(DeltaTime);
@@ -14,11 +22,6 @@ void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 	UpdateYawAmount(DeltaTime);
 
 	UpdateRollAmount(DeltaTime);
-
-	//if (uint8(CurrentPlaneStatus & EPlaneStatus::PitchUp) && LastUpdateVelocity.Length() > MinimumTakeOffSpeed)
-	//{
-	//	SetMovementMode(EMovementMode::MOVE_Flying);
-	//}
 
 	CalculateEngineForce();
 
