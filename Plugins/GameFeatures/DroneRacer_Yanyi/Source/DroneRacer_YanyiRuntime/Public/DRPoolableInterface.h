@@ -23,12 +23,12 @@ class DRONERACER_YANYIRUNTIME_API IDRPoolableInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	UFUNCTION()
-	virtual void OnActive() = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DroneRacer|PoolableInterface")
+	void OnActive();
 
-	UFUNCTION()
-	virtual void OnDeActive() = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DroneRacer|PoolableInterface")
+	void OnDeActive();
 
-	UFUNCTION()
-	virtual bool IsBussy() = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DroneRacer|PoolableInterface")
+	bool IsBussy();
 };

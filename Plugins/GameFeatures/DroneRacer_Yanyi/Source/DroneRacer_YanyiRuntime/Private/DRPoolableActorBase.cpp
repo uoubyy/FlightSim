@@ -11,3 +11,18 @@ ADRPoolableActorBase::ADRPoolableActorBase()
 
 }
 
+bool ADRPoolableActorBase::IsBussy_Implementation()
+{
+	return false;
+}
+
+void ADRPoolableActorBase::OnDeActive_Implementation()
+{
+
+}
+
+void ADRPoolableActorBase::OnActive_Implementation()
+{
+
+}
+

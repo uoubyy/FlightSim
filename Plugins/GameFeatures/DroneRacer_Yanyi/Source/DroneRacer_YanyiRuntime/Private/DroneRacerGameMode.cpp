@@ -6,6 +6,7 @@
 #include "DroneCharacter.h"
 #include "DRPlayerState.h"
 #include "GameModes/LyraGameState.h"
+#include "DRObjectPoolSubsystem.h"
 
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)
 {
@@ -48,6 +49,12 @@ void ADroneRacerGameMode::InitGame(const FString& MapName, const FString& Option
 
 	UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
 	DRSaveGameSubsystem->LoadSaveGame();
+
+	UDRObjectPoolSubsystem* DRObjectPoolSubsystem = GetWorld()->GetSubsystem<UDRObjectPoolSubsystem>();
+	for (TSubclassOf<AActor> ObjectClass : PoolableObjectClass)
+	{
+		DRObjectPoolSubsystem->RegisterPoolableClass(ObjectClass, 5);
+	}
 }
 
 void ADroneRacerGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)

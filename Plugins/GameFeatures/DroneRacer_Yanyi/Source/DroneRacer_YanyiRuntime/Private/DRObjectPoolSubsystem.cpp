@@ -38,7 +38,7 @@ void UDRObjectPoolSubsystem::RegisterPoolableClass(UClass* ObjectClass, int Init
 		if (IsValid(SpawnedActor))
 		{
 			IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(SpawnedActor);
-			PoolableInterface->OnDeActive();
+			PoolableInterface->Execute_OnDeActive(SpawnedActor);
 
 			ObjectList.PoolableObjects.Push(SpawnedActor);
 		}
@@ -67,7 +67,7 @@ AActor* UDRObjectPoolSubsystem::GetObjectOfType(UClass* ObjectClass)
 
 				IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(IdleObject);
 				// Find a Idle Object
-				if (IdleObject && !PoolableInterface->IsBussy())
+				if (IdleObject && !PoolableInterface->Execute_IsBussy(IdleObject))
 				{
 					PoolableObject = IdleObject;
 					break;

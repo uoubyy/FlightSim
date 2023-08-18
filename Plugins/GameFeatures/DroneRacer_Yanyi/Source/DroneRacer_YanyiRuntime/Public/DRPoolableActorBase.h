@@ -8,7 +8,7 @@
 #include "DRPoolableActorBase.generated.h"
 
 UCLASS()
-class DRONERACER_YANYIRUNTIME_API ADRPoolableActorBase : public AActor//, public IDRPoolableInterface
+class DRONERACER_YANYIRUNTIME_API ADRPoolableActorBase : public AActor, public IDRPoolableInterface
 {
 	GENERATED_BODY()
 	
@@ -16,6 +16,10 @@ public:
 	// Sets default values for this actor's properties
 	ADRPoolableActorBase();
 
-protected:
+	void OnActive_Implementation() override;
+
+	void OnDeActive_Implementation() override;
+
+	bool IsBussy_Implementation() override;
 
 };
