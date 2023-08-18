@@ -170,6 +170,8 @@ void ADRCharacter::DisableMovementAndCollision()
 	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
 	DroneMovementComponen->StopMovementImmediately();
 	DroneMovementComponen->DisableMovement();
+
+	DroneMovementComponen->SetActive(false);
 }
 
 void ADRCharacter::DestroyDueToDeath()

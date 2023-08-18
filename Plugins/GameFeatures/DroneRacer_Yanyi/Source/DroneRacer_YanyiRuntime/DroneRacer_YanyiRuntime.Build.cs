@@ -42,11 +42,12 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				"SlateCore",
                 "GameplayTags",
 				"GameplayAbilities",
+				"GameplayTasks",
                 "EnhancedInput",
 				"ModularGameplay",
 				"ModularGameplayActors",
 				"AIModule",
-				"Niagara"
+				"Niagara",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
