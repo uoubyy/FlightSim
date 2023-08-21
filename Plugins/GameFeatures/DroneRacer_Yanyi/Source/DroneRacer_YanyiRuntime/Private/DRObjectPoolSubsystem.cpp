@@ -19,17 +19,13 @@ void UDRObjectPoolSubsystem::RegisterPoolableClass(UClass* ObjectClass, int Init
 		return;
 	}
 
-	for (const auto& ObjectList : ObjectPool)
+	if (ObjectPool.Contains(ObjectClass->GetName()))
 	{
-		if (ObjectList.PoolableObjectClassName.Equals(ObjectClass->GetName()))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Poolable Object Class %s has registed!"), *ObjectClass->GetName());
-			return;
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Poolable Object Class %s has registed!"), *ObjectClass->GetName());
+		return;
 	}
 
 	FPoolableObjectList ObjectList;
-	ObjectList.PoolableObjectClassName = ObjectClass->GetName();
 
 	for (int i = 0; i < InitialNum; ++i)
 	{
@@ -44,7 +40,7 @@ void UDRObjectPoolSubsystem::RegisterPoolableClass(UClass* ObjectClass, int Init
 		}
 	}
 
-	ObjectPool.Add(ObjectList);
+	ObjectPool.Add(ObjectClass->GetName(), ObjectList);
 
 	UE_LOG(LogTemp, Warning, TEXT("Register Poolable Class %s."), *ObjectClass->GetName());
 }
@@ -53,42 +49,46 @@ AActor* UDRObjectPoolSubsystem::GetObjectOfType(UClass* ObjectClass)
 {
 	AActor* PoolableObject = nullptr;
 
-	for (auto& ObjectList : ObjectPool)
+	// Find the Object List of the Target Object Class
+	if (ObjectPool.Contains(ObjectClass->GetName()))
 	{
-		// Find the Object List of the Target Object Class
-		if (ObjectList.PoolableObjectClassName.Equals(ObjectClass->GetName()))
+		for (auto IdleObject : ObjectPool[ObjectClass->GetName()].PoolableObjects)
 		{
-			for (auto IdleObject : ObjectList.PoolableObjects)
+			if (IdleObject == nullptr)
 			{
-				if (IdleObject == nullptr)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Object of type %s in object pool is invalid"), *ObjectClass->GetName());
-				}
-
-				IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(IdleObject);
-				// Find a Idle Object
-				if (IdleObject && !PoolableInterface->Execute_IsBussy(IdleObject))
-				{
-					PoolableObject = IdleObject;
-					break;
-				}
+				UE_LOG(LogTemp, Warning, TEXT("Object of type %s in object pool is invalid"), *ObjectClass->GetName());
 			}
 
-			if (!PoolableObject) // Try to create an new Idle Object
+			IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(IdleObject);
+			// Find a Idle Object
+			if (IdleObject && !PoolableInterface->Execute_IsBussy(IdleObject))
 			{
-				PoolableObject = SpawnNewObjectForClass(ObjectClass);
-
-				IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(PoolableObject);
-				ObjectList.PoolableObjects.Push(PoolableObject);
-
+				PoolableObject = IdleObject;
 				break;
 			}
 		}
+
+		if (!PoolableObject) // Try to create an new Idle Object
+		{
+			PoolableObject = SpawnNewObjectForClass(ObjectClass);
+
+			IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(PoolableObject);
+			ObjectPool[ObjectClass->GetName()].PoolableObjects.Push(PoolableObject);
+		}
+	}
+	else if(ObjectClass->ImplementsInterface(UDRPoolableInterface::StaticClass()))
+	{
+		PoolableObject = SpawnNewObjectForClass(ObjectClass);
+		IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(PoolableObject);
+
+		FPoolableObjectList NewPoolableObjectList;
+		NewPoolableObjectList.PoolableObjects.Add(PoolableObject);
+		ObjectPool.Add(ObjectClass->GetName(), NewPoolableObjectList);
 	}
 
 	if (!PoolableObject)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Object of type %s not exists in object pool"), *ObjectClass->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("Get Idle Object of Type %s Failed!"), *ObjectClass->GetName());
 	}
 
 	return PoolableObject;
@@ -113,12 +113,9 @@ bool UDRObjectPoolSubsystem::ReturnToPool(AActor* PoolableObject)
 
 	PoolableInterface->OnDeActive();
 
-	for (auto& ObjectList : ObjectPool)
+	if (ObjectPool.Contains(ObjectClass->GetName()))
 	{
-		if (ObjectList.PoolableObjectClassName.Equals(ObjectClass->GetName()))
-		{
-			return true;
-		}
+		return true;
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Return Poolable Object %s to Object Pool Failed!"), *PoolableObject->GetName());

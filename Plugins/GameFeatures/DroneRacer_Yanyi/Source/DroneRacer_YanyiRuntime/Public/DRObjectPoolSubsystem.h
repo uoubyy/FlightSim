@@ -6,14 +6,10 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "DRObjectPoolSubsystem.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FPoolableObjectList
 {
 	GENERATED_BODY()
-
-public:
-	UPROPERTY()
-	FString PoolableObjectClassName;
 
 	UPROPERTY()
 	TArray<AActor*> PoolableObjects;
@@ -40,8 +36,7 @@ public:
 	bool ReturnToPool(AActor* PoolableObject);
 
 private:
-	UPROPERTY()
-	TArray<FPoolableObjectList> ObjectPool;
+	TMap<FString, FPoolableObjectList> ObjectPool;
 
 	AActor* SpawnNewObjectForClass(UClass* ObjectClass);
 };
