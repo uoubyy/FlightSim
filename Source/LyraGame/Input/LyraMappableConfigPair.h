@@ -12,7 +12,7 @@ class UPlayerMappableInputConfig;
 
 /** A container to organize loaded player mappable configs to their CommonUI input type */
 USTRUCT(BlueprintType)
-struct FLoadedMappableConfigPair
+struct LYRAGAME_API FLoadedMappableConfigPair
 {
 	GENERATED_BODY()
 
@@ -38,7 +38,7 @@ struct FLoadedMappableConfigPair
 
 /** A container to organize potentially unloaded player mappable configs to their CommonUI input type */
 USTRUCT()
-struct FMappableConfigPair
+struct LYRAGAME_API FMappableConfigPair
 {
 	GENERATED_BODY()
 	
