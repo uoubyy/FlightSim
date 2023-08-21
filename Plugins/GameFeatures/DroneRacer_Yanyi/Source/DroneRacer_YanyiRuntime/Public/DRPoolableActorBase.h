@@ -11,6 +11,10 @@ UCLASS()
 class DRONERACER_YANYIRUNTIME_API ADRPoolableActorBase : public AActor, public IDRPoolableInterface
 {
 	GENERATED_BODY()
+
+protected:
+
+	bool VisibleInGame;
 	
 public:	
 	// Sets default values for this actor's properties

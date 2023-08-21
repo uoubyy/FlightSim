@@ -9,20 +9,27 @@ ADRPoolableActorBase::ADRPoolableActorBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	VisibleInGame = false;
 }
 
 bool ADRPoolableActorBase::IsBussy_Implementation()
 {
-	return false;
+	return VisibleInGame;
 }
 
 void ADRPoolableActorBase::OnDeActive_Implementation()
 {
+	VisibleInGame = false;
 
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
 }
 
 void ADRPoolableActorBase::OnActive_Implementation()
 {
+	VisibleInGame = true;
 
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
 }
 
