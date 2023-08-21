@@ -126,7 +126,15 @@ AActor* UDRObjectPoolSubsystem::SpawnNewObjectForClass(UClass* ObjectClass)
 {
 	FActorSpawnParameters* SpawnParameters = new FActorSpawnParameters;
 	SpawnParameters->SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FString PoolableObjectName = ObjectClass->GetName() + "_" + FString::FromInt(ObjectPool.Contains(ObjectClass->GetName()) ? ObjectPool[ObjectClass->GetName()].PoolableObjects.Num() : 0);
 	AActor* PoolableObject = GetWorld()->SpawnActor<AActor>(ObjectClass, FVector::ZeroVector, FRotator::ZeroRotator, *SpawnParameters);
+	if (PoolableObject)
+	{
+		PoolableObject->Rename(*PoolableObjectName);
+		PoolableObject->SetActorLabel(*PoolableObjectName);
+		UE_LOG(LogTemp, Warning, TEXT("Spawn New Object %s."), *PoolableObjectName);
+	}
 
 	return PoolableObject;
 }

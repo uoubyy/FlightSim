@@ -23,6 +23,8 @@ void ADRPoolableActorBase::OnDeActive_Implementation()
 
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
+
+	UE_LOG(LogTemp, Warning, TEXT("On DeActive Poolable Actor %s."), *GetName());
 }
 
 void ADRPoolableActorBase::OnActive_Implementation()
@@ -31,5 +33,7 @@ void ADRPoolableActorBase::OnActive_Implementation()
 
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
+
+	UE_LOG(LogTemp, Warning, TEXT("On Active Poolable Actor %s."), *GetName());
 }
 
