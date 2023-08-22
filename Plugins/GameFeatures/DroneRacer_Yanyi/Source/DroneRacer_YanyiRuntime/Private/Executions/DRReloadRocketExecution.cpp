@@ -40,7 +40,12 @@ void UDRReloadRocketExecution::Execute_Implementation(const FGameplayEffectCusto
 	EvaluateParameters.TargetTags = TargetTags;
 
 	float MaxRocketNum = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(RocketNumStatics().MaxRocketNumDef, EvaluateParameters, MaxRocketNum);
+	bool Result = ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(RocketNumStatics().MaxRocketNumDef, EvaluateParameters, MaxRocketNum);
+
+	if (Result)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AttemptCalculateCapturedAttributeMagnitude Success."));
+	}
 
 	OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(UDRCombatSet::GetRocketNumAttribute(), EGameplayModOp::Override, MaxRocketNum));
 #endif // #if WITH_SERVER_CODE

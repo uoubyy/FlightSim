@@ -30,6 +30,8 @@ protected:
 	UFUNCTION()
 	void OnRep_MaxRocketNum(const FGameplayAttributeData& OldValue);
 
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
 private:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RocketNum, Category = "DroneRacer|Combat", Meta = (AllowPrivateAccess = true))

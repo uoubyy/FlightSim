@@ -61,6 +61,6 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 			}
 			);
 
-        // OptimizeCode = CodeOptimization.Never;
+        OptimizeCode = CodeOptimization.Never;
     }
 }

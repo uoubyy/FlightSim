@@ -201,6 +201,7 @@ bool UDroneHeroComponent::IsReadyToBindInputs() const
 
 void UDroneHeroComponent::Input_ThrottleUp(const FInputActionValue& InputActionValue)
 {
+	UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_ThrottleUp Pressed"));
 	CurrentPlaneStatus |= EPlaneStatus::ThrottleUP;
 	CurrentPlaneStatus &= ~EPlaneStatus::ThrottleDown;
 

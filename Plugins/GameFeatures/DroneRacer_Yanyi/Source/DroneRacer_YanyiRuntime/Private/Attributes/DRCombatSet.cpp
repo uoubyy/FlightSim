@@ -4,6 +4,7 @@
 #include "Attributes/DRCombatSet.h"
 
 #include "Net/UnrealNetwork.h"
+#include <../Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/GameplayEffectExtension.h>
 
 UDRCombatSet::UDRCombatSet()
 	: RocketNum(0.0f),
@@ -28,4 +29,16 @@ void UDRCombatSet::OnRep_RocketNum(const FGameplayAttributeData& OldValue)
 void UDRCombatSet::OnRep_MaxRocketNum(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDRCombatSet, MaxRocketNum, OldValue);
+}
+
+void UDRCombatSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if (Data.EvaluatedData.Attribute == GetRocketNumAttribute())
+	{
+		SetRocketNum(FMath::Clamp(GetRocketNum(), 0, GetMaxRocketNum()));
+
+		UE_LOG(LogTemp, Warning, TEXT("PostGameplayEffectExecute Set Rocket Num %f"), GetRocketNum());
+	}
 }
