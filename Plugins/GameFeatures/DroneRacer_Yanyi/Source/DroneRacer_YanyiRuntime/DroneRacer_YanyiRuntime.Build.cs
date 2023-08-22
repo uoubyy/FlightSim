@@ -28,6 +28,7 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				"Core",
                 "LyraGame",
                 "CommonGame",
+				"UMG"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -60,6 +61,6 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 			}
 			);
 
-        OptimizeCode = CodeOptimization.Never;
+        // OptimizeCode = CodeOptimization.Never;
     }
 }
