@@ -14,6 +14,9 @@ class DRONERACER_YANYIRUNTIME_API ADRPlayerState : public ALyraPlayerState
 {
 	GENERATED_BODY()
 
+public:
+	ADRPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	float BestRecordInSeconds;

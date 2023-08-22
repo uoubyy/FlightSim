@@ -10,7 +10,7 @@ UDroneMovementComponent::UDroneMovementComponent(const FObjectInitializer& Objec
 {
 	bOrientRotationToMovement = true;
 	MaxFlySpeed = 5000.0f;
-	RotationRate = FRotator(0.0f, 360.0f, 360.0f);
+	RotationRate = FRotator(360.0f, 360.0f, 0.0f);
 }
 
 void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

@@ -16,6 +16,7 @@
 
 #include "Input/LyraInputComponent.h"
 #include "DroneCharacter.h"
+#include "AbilitySystem/LyraAbilitySystemComponent.h"
 
 
 DEFINE_LOG_CATEGORY(LogDrone);
@@ -142,6 +143,9 @@ void UDroneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputComp
 				{
 					// Add the key mappings that may have been set by the player
 					LyraIC->AddInputMappings(InputConfig, Subsystem);
+
+					TArray<uint32> BindHandles;
+					LyraIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
 
 					// Hard code all the Input Gameplay Tag
 					const FGameplayTag InputTag_ThrottleUp = FGameplayTag::RequestGameplayTag(FName("InputTag.ThrottleUp"));
@@ -321,6 +325,41 @@ void UDroneHeroComponent::Input_SwitchCamera(const FInputActionValue& InputActio
 	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
 	{
 		DroneCharacter->SwitchThirdAndFirstCamera();
+	}
+}
+
+void UDroneHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_AbilityInputTag %s Pressed"), *InputTag.ToString());
+
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const ULyraPawnExtensionComponent* PawnExtComp = ULyraPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (ULyraAbilitySystemComponent* LyraASC = PawnExtComp->GetLyraAbilitySystemComponent())
+			{
+				LyraASC->AbilityInputTagPressed(InputTag);
+			}
+		}
+	}
+}
+
+void UDroneHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_AbilityInputTag %s Released"), *InputTag.ToString());
+
+	const APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return;
+	}
+
+	if (const ULyraPawnExtensionComponent* PawnExtComp = ULyraPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+	{
+		if (ULyraAbilitySystemComponent* LyraASC = PawnExtComp->GetLyraAbilitySystemComponent())
+		{
+			LyraASC->AbilityInputTagReleased(InputTag);
+		}
 	}
 }
 

@@ -3,6 +3,13 @@
 
 #include "DRPlayerState.h"
 #include "DRSaveGame.h"
+#include "Attributes/DRCombatSet.h"
+
+ADRPlayerState::ADRPlayerState(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	CreateDefaultSubobject<UDRCombatSet>(TEXT("DRCombatSet"));
+}
 
 void ADRPlayerState::SavePlayerState_Implementation(class UDRSaveGame* SaveObject)
 {
