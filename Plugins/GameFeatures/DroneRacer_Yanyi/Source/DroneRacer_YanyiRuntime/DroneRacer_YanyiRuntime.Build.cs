@@ -59,5 +59,7 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-	}
+
+        OptimizeCode = CodeOptimization.Never;
+    }
 }

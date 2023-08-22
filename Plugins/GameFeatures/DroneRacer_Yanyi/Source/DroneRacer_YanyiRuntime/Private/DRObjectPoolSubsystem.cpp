@@ -111,7 +111,7 @@ bool UDRObjectPoolSubsystem::ReturnToPool(AActor* PoolableObject)
 		return false;
 	}
 
-	PoolableInterface->OnDeActive();
+	PoolableInterface->Execute_OnDeActive(PoolableObject);
 
 	if (ObjectPool.Contains(ObjectClass->GetName()))
 	{
@@ -134,6 +134,9 @@ AActor* UDRObjectPoolSubsystem::SpawnNewObjectForClass(UClass* ObjectClass)
 		PoolableObject->Rename(*PoolableObjectName);
 		PoolableObject->SetActorLabel(*PoolableObjectName);
 		UE_LOG(LogTemp, Warning, TEXT("Spawn New Object %s."), *PoolableObjectName);
+
+		IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(PoolableObject);
+		PoolableInterface->Execute_OnDeActive(PoolableObject);
 	}
 
 	return PoolableObject;

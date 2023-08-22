@@ -20,6 +20,10 @@ public:
 	// Sets default values for this actor's properties
 	ADRPoolableActorBase();
 
+	virtual void Destroyed() override;
+
+	virtual void FellOutOfWorld(const class UDamageType& dmgType) override;
+
 	void OnActive_Implementation(class APawn* NewInstigator, class AActor* NewOwner) override;
 
 	void InitializeTransform_Implementation(const FVector& Location, const FRotator& Rotation) override;

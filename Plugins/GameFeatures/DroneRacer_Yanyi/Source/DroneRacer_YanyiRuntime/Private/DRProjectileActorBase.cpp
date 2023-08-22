@@ -6,20 +6,21 @@
 #include "NiagaraComponent.h"
 #include <GameFramework/ProjectileMovementComponent.h>
 #include "DRHealthComponent.h"
+#include "DRObjectPoolSubsystem.h"
 
 ADRProjectileActorBase::ADRProjectileActorBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-	SetRootComponent(StaticMeshComponent);
-	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-	CapsuleComponent->SetupAttachment(RootComponent);
 	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CapsuleComponent->SetCollisionObjectType(ECC_WorldDynamic);
 	CapsuleComponent->SetNotifyRigidBodyCollision(true);
+	SetRootComponent(CapsuleComponent);
+
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	StaticMeshComponent->SetupAttachment(RootComponent);
 
 	ExplosionEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ExplosionEffect"));
 	ExplosionEffect->SetupAttachment(RootComponent);
@@ -36,19 +37,29 @@ ADRProjectileActorBase::ADRProjectileActorBase()
 void ADRProjectileActorBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	CapsuleComponent->OnComponentHit.AddDynamic(this, &ThisClass::OnComponentHit);
+	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnComponentBeginOverlap);
+
+	if (ExplosionEffect && ExplosionEffect->GetAsset())
+	{
+		ExplosionEffect->OnSystemFinished.AddDynamic(this, &ThisClass::OnExplosionEffectFinished);
+	}
 }
 
 void ADRProjectileActorBase::OnExplode()
 {
 	if (ExplosionEffect && ExplosionEffect->GetAsset())
 	{
-		ExplosionEffect->OnSystemFinished.AddDynamic(this, &ThisClass::OnExplosionEffectFinished);
 		ExplosionEffect->Activate();
 	}
 	else
 	{
-		OnDeActive();
+		OnExplosionEffectFinished(nullptr);
 	}
+
+	StaticMeshComponent->SetHiddenInGame(true); // can't wait explosion finished to hide the static mesh
+	TracerEffect->Deactivate();
 }
 
 void ADRProjectileActorBase::ApplyDamage(AActor* TargetActor)
@@ -62,7 +73,7 @@ void ADRProjectileActorBase::ApplyDamage(AActor* TargetActor)
 
 void ADRProjectileActorBase::OnExplosionEffectFinished(UNiagaraComponent* ParticleSystem)
 {
-	OnDeActive();
+	GetWorld()->GetSubsystem<UDRObjectPoolSubsystem>()->ReturnToPool(this);
 }
 
 void ADRProjectileActorBase::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -81,12 +92,15 @@ void ADRProjectileActorBase::OnComponentHit(UPrimitiveComponent* HitComponent, A
 
 void ADRProjectileActorBase::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	FString InstigatorName = GetInstigator() ? GetInstigator()->GetName() : "NULL";
+	FString OwnerName = GetOwner() ? GetOwner()->GetName() : "NULL";
+
 	if (OtherActor == GetInstigator() || OtherActor == GetOwner())
 	{
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("%s OnComponentBeginOverlap %s."), *GetName(), *OtherActor->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s OnComponentBeginOverlap %s, Instigator %s, Owner %s."), *GetName(), *OtherActor->GetName(), *InstigatorName, *OwnerName);
 
 	OnExplode();
 
@@ -97,7 +111,7 @@ void ADRProjectileActorBase::OnActive_Implementation(class APawn* NewInstigator,
 {
 	Super::OnActive_Implementation(NewInstigator, NewOwner);
 
-	ProjectileMovementComponent->SetUpdatedComponent(StaticMeshComponent);
+	ProjectileMovementComponent->SetUpdatedComponent(GetRootComponent());
 	ProjectileMovementComponent->Velocity = InitialSpeed * GetActorForwardVector();
 	ProjectileMovementComponent->Activate();
 
@@ -112,8 +126,7 @@ void ADRProjectileActorBase::OnActive_Implementation(class APawn* NewInstigator,
 		TracerEffect->Activate();
 	}
 
-	CapsuleComponent->OnComponentHit.AddDynamic(this, &ThisClass::OnComponentHit);
-	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnComponentBeginOverlap);
+	StaticMeshComponent->SetHiddenInGame(false);
 }
 
 void ADRProjectileActorBase::OnDeActive_Implementation()
@@ -123,8 +136,5 @@ void ADRProjectileActorBase::OnDeActive_Implementation()
 	GetWorld()->GetTimerManager().ClearTimer(MaxLifeTimerHandle);
 
 	ProjectileMovementComponent->Deactivate();
-	TracerEffect->Deactivate();
-
-	CapsuleComponent->OnComponentHit.RemoveDynamic(this, &ThisClass::OnComponentHit);
-	CapsuleComponent->OnComponentBeginOverlap.RemoveDynamic(this, &ThisClass::OnComponentBeginOverlap);
+	ProjectileMovementComponent->StopMovementImmediately();
 }

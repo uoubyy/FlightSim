@@ -3,6 +3,7 @@
 
 #include "DRPoolableActorBase.h"
 #include <GameFramework/Pawn.h>
+#include "DRObjectPoolSubsystem.h"
 
 // Sets default values
 ADRPoolableActorBase::ADRPoolableActorBase()
@@ -11,6 +12,20 @@ ADRPoolableActorBase::ADRPoolableActorBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	VisibleInGame = false;
+}
+
+void ADRPoolableActorBase::Destroyed()
+{
+	Super::Destroyed();
+
+	UE_LOG(LogTemp, Warning, TEXT("Poolable Actor Being Destroyed!"));
+}
+
+void ADRPoolableActorBase::FellOutOfWorld(const class UDamageType& dmgType)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Poolable Actor Fell Out Of World!"));
+
+	GetWorld()->GetSubsystem<UDRObjectPoolSubsystem>()->ReturnToPool(this);
 }
 
 void ADRPoolableActorBase::InitializeTransform_Implementation(const FVector& Location, const FRotator& Rotation)
@@ -44,6 +59,9 @@ void ADRPoolableActorBase::OnActive_Implementation(APawn* NewInstigator, AActor*
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 
-	UE_LOG(LogTemp, Warning, TEXT("On Active Poolable Actor %s."), *GetName());
+	FString InstigatorName = NewInstigator ? NewInstigator->GetName() : "NULL";
+	FString OwnerName = NewOwner ? NewOwner->GetName() : "NULL";
+
+	UE_LOG(LogTemp, Warning, TEXT("On Active Poolable Actor %s, New Instigator %s, New Owner %s."), *GetName(), *InstigatorName, *OwnerName);
 }
 
