@@ -2,6 +2,7 @@
 
 
 #include "DRPoolableActorBase.h"
+#include <GameFramework/Pawn.h>
 
 // Sets default values
 ADRPoolableActorBase::ADRPoolableActorBase()
@@ -10,6 +11,12 @@ ADRPoolableActorBase::ADRPoolableActorBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	VisibleInGame = false;
+}
+
+void ADRPoolableActorBase::InitializeTransform_Implementation(const FVector& Location, const FRotator& Rotation)
+{
+	SetActorLocation(Location);
+	SetActorRotation(Rotation);
 }
 
 bool ADRPoolableActorBase::IsBussy_Implementation()
@@ -27,9 +34,12 @@ void ADRPoolableActorBase::OnDeActive_Implementation()
 	UE_LOG(LogTemp, Warning, TEXT("On DeActive Poolable Actor %s."), *GetName());
 }
 
-void ADRPoolableActorBase::OnActive_Implementation()
+void ADRPoolableActorBase::OnActive_Implementation(APawn* NewInstigator, AActor* NewOwner)
 {
 	VisibleInGame = true;
+
+	SetInstigator(NewInstigator);
+	SetOwner(NewOwner);
 
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);

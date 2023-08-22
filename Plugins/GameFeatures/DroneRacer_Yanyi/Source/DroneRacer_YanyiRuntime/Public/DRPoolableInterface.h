@@ -24,7 +24,10 @@ class DRONERACER_YANYIRUNTIME_API IDRPoolableInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DroneRacer|PoolableInterface")
-	void OnActive();
+	void OnActive(class APawn* NewInstigator, class AActor* NewOwner);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DroneRacer|PoolableInterface")
+	void InitializeTransform(const FVector& Location, const FRotator& Rotation);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DroneRacer|PoolableInterface")
 	void OnDeActive();
