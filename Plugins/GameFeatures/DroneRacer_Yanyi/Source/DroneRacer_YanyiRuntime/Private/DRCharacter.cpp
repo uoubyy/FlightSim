@@ -2,8 +2,8 @@
 
 
 #include "DRCharacter.h"
-#include "DroneHeroComponent.h"
-#include "DroneMovementComponent.h"
+#include "Components/DroneHeroComponent.h"
+#include "Components/DroneMovementComponent.h"
 
 // LyraGame
 #include "Character/LyraPawnExtensionComponent.h"

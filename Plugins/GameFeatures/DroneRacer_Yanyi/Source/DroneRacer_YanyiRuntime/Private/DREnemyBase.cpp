@@ -8,7 +8,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 
-#include "DRHealthComponent.h"
+#include "Components/DRHealthComponent.h"
 
 #include "DamageCauserInterface.h"
 #include "DroneRacerGameMode.h"

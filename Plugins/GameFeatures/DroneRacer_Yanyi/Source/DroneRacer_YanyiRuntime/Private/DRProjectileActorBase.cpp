@@ -5,8 +5,8 @@
 #include <Components/CapsuleComponent.h>
 #include "NiagaraComponent.h"
 #include <GameFramework/ProjectileMovementComponent.h>
-#include "DRHealthComponent.h"
-#include "DRObjectPoolSubsystem.h"
+#include "Components/DRHealthComponent.h"
+#include "Subsystems/DRObjectPoolSubsystem.h"
 
 ADRProjectileActorBase::ADRProjectileActorBase()
 {
