@@ -7,7 +7,7 @@
 #include "Character/LyraPawnExtensionComponent.h"
 #include "Input/LyraInputConfig.h"
 #include "Character/LyraPawnData.h"
-#include "DroneMovementComponent.h"
+#include "Components/DroneMovementComponent.h"
 #include "Input/LyraInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Player/LyraLocalPlayer.h"
@@ -16,7 +16,7 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "DRHealthComponent.h"
+#include "Components/DRHealthComponent.h"
 
 // Sets default values
 ADroneCharacter::ADroneCharacter(const FObjectInitializer& ObjectInitializer)

@@ -28,6 +28,7 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				"Core",
                 "LyraGame",
                 "CommonGame",
+				"UMG"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -42,11 +43,12 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				"SlateCore",
                 "GameplayTags",
 				"GameplayAbilities",
+				"GameplayTasks",
                 "EnhancedInput",
 				"ModularGameplay",
 				"ModularGameplayActors",
 				"AIModule",
-				"Niagara"
+				"Niagara",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
@@ -58,5 +60,7 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-	}
+
+        // OptimizeCode = CodeOptimization.Never;
+    }
 }

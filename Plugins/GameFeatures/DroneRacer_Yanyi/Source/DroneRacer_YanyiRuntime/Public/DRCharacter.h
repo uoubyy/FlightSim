@@ -80,6 +80,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> FirstPersonCamera;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon", Meta = (AllowPrivateAccess = "true"))
+	float MainWeaponWaitingTime;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon", Meta = (AllowPrivateAccess = "true"))
+	float SecondaryWeaponWaitingTime;
+
 protected:
 
 	virtual void OnAbilitySystemInitialized();
@@ -109,4 +115,13 @@ protected:
 	void DestroyDueToDeath();
 
 	void UninitAndDestroy();
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	bool CanMainWeaponOpenFire() const { return MainWeaponWaitingTime <= 0.0f; }
+
+	UFUNCTION(BlueprintCallable)
+	bool CanSecondaryWeaponOpenFire() const { return SecondaryWeaponWaitingTime <= 0.0f; }
+
 };

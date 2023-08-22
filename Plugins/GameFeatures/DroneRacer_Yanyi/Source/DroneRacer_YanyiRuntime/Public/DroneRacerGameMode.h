@@ -33,6 +33,9 @@ public:
 	// TODO 2K
 	UFUNCTION(BlueprintCallable)
 	void OnMatchEnd(bool BattleResult);
+
+	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer")
+	TArray<TSubclassOf<AActor>> PoolableObjectClass;
 	
 protected:
 	TMap<FString, TWeakObjectPtr<AActor>> AllEnemies;

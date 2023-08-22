@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DroneMovementComponent.h"
+#include "Components/DroneMovementComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
 

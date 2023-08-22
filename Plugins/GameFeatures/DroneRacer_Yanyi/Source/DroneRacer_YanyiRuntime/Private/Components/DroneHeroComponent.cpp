@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DroneHeroComponent.h"
+#include "Components/DroneHeroComponent.h"
 #include "LyraGameplayTags.h"
 #include "Components/GameFrameworkComponentManager.h"
 

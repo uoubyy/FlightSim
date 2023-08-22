@@ -2,7 +2,7 @@
 
 
 #include "DRBlueprintFunctionLibrary.h"
-#include "DRHealthComponent.h"
+#include "Components/DRHealthComponent.h"
 
 bool UDRBlueprintFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
