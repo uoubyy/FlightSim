@@ -17,4 +17,16 @@ public:
 
 	static UDRWidgetManagerComponent* GetComponent(AController* Controller);
 
+	UFUNCTION(BlueprintCallable)
+	bool RequestShowWidget(const FName& WidgetName);
+
+	UFUNCTION(BlueprintCallable)
+	bool RequestHideWidget(const FName& WidgetName);
+
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|UIManager", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDRWidgetSet> WidgetSet;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|UIManager", Meta = (AllowPrivateAccess = "true"))
+	TMap<FName, TObjectPtr<class UUserWidget>> LoadedWidget;
 };

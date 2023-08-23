@@ -14,4 +14,7 @@ class DRONERACER_YANYIRUNTIME_API ADRPlayerController : public ALyraPlayerContro
 {
 	GENERATED_BODY()
 	
+public:
+
+	virtual void OnPossess(APawn* InPawn) override;
 };

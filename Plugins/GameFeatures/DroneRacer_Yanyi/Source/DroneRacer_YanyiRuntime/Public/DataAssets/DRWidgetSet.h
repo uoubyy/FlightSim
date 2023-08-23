@@ -20,19 +20,7 @@ public:
 	TSubclassOf<class UUserWidget> WidgetClass;
 };
 
-USTRUCT(BlueprintType)
-struct FDRLoadedWidget
-{
-	GENERATED_BODY()
 
-public:
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FName WidgetName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<class UUserWidget> WidgetObject;
-};
 
 /**
  * 
@@ -45,8 +33,10 @@ class DRONERACER_YANYIRUNTIME_API UDRWidgetSet : public UDataAsset
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|WidgetSet")
-	TArray<FDRWidgetConfig> WidgetConfig;
+	TArray<FDRWidgetConfig> WidgetConfigs;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer|WidgetSet")
-	TArray<FDRLoadedWidget> LoadedWidget;
+public:
+	
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<class UUserWidget> FindWidgetClassByName(const FName& WidgetName);
 };
