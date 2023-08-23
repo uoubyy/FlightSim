@@ -26,9 +26,11 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 
 	LeftMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("LeftMuzzle"));
 	LeftMuzzle->SetupAttachment(GetMesh());
+	LeftMuzzle->ComponentTags.Add(FName("Muzzle"));
 
 	RightMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("RightMuzzle"));
 	RightMuzzle->SetupAttachment(GetMesh());
+	RightMuzzle->ComponentTags.Add(FName("Muzzle"));
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
