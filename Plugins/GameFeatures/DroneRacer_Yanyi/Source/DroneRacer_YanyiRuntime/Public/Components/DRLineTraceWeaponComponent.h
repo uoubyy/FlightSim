@@ -31,17 +31,20 @@ public:
 	UFUNCTION(BlueprintPure, Category = "DroneRacer|Line Trace Weapon")
 	static UDRLineTraceWeaponComponent* FindLineTraceWeaponComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UDRLineTraceWeaponComponent>() : nullptr); }
 
+	UFUNCTION(BlueprintPure, Category = "DroneRacer|Line Trace Weapon")
+	bool CanOpenFire() const;
+
 	bool GetMuzzlePositions(OUT TArray<FVector>& MuzzlePositions) const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
 	FVector GetTargetingDirection() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
 	void UpdateFiringTime();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
 	float GetMaxTraceDistance() const { return MaxTraceDistance; }
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
 	float GetFireRate() const { return WeaponFireRate; }
 };

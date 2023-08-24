@@ -10,6 +10,14 @@ UDRLineTraceWeaponComponent::UDRLineTraceWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+bool UDRLineTraceWeaponComponent::CanOpenFire() const
+{	
+	UWorld* World = GetWorld();
+	check(World);
+	double TimeSeconds = World->GetTimeSeconds();
+	return (TimeSeconds - TimeLastFired) >= 1.0 / WeaponFireRate;
+}
+
 bool UDRLineTraceWeaponComponent::GetMuzzlePositions(OUT TArray<FVector>& MuzzlePositions) const
 {
 	MuzzlePositions.Empty();

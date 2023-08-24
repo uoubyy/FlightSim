@@ -14,6 +14,13 @@ bool UDRGameplayAbility_LineTrace::CanActivateAbility(const FGameplayAbilitySpec
 {
 	bool bResult = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 
+	AActor* AvatarActor = CurrentActorInfo->AvatarActor.Get();
+	if (bResult && AvatarActor)
+	{
+		UDRLineTraceWeaponComponent* LineTraceWeaponComponent = UDRLineTraceWeaponComponent::FindLineTraceWeaponComponent(AvatarActor);
+		bResult = LineTraceWeaponComponent->CanOpenFire();
+	}
+
 	return bResult;
 
 }
