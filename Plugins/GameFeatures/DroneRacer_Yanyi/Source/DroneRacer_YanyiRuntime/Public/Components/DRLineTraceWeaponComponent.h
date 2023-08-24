@@ -26,7 +26,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Line Trace Weapon", Meta = (AllowPrivateAccess = "true"))
 	float WeaponFireRate = 5.0f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Line Trace Weapon", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UNiagaraSystem> BulletTracerEffect;
+
 public:
+
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UFUNCTION(BlueprintPure, Category = "DroneRacer|Line Trace Weapon")
 	static UDRLineTraceWeaponComponent* FindLineTraceWeaponComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UDRLineTraceWeaponComponent>() : nullptr); }
@@ -40,11 +47,21 @@ public:
 	FVector GetTargetingDirection() const;
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
-	void UpdateFiringTime();
+	void OnFire();
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
 	float GetMaxTraceDistance() const { return MaxTraceDistance; }
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Line Trace Weapon")
 	float GetFireRate() const { return WeaponFireRate; }
+
+private:
+
+	UPROPERTY()
+	TArray<class UActorComponent*> Muzzles;
+
+	UPROPERTY()
+	TMap<FString, class UNiagaraComponent*> TracerComponents;
+
+	bool IsUserTrigger = false;
 };

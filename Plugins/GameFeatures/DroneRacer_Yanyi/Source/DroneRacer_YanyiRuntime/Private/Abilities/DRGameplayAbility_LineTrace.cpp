@@ -74,7 +74,7 @@ void UDRGameplayAbility_LineTrace::PerformLocalTargeting(OUT TArray<FHitResult>&
 			FVector TraceDirection = LineTraceWeaponComponent->GetTargetingDirection();
 			float MaxTraceDistance = LineTraceWeaponComponent->GetMaxTraceDistance();
 
-			LineTraceWeaponComponent->UpdateFiringTime(); // TODO should update when activate ability
+			LineTraceWeaponComponent->OnFire(); // TODO should update when activate ability
 
 			FCollisionQueryParams TraceParams;
 			for (const FVector& StartPoint : StartPoints)
@@ -87,6 +87,8 @@ void UDRGameplayAbility_LineTrace::PerformLocalTargeting(OUT TArray<FHitResult>&
 					OutHits.Add(HitResult);
 					UE_LOG(LogTemp, Warning, TEXT("GameplayAbility_LineTrace Hit Actor %s."), *(HitResult.GetActor()->GetName()));
 				}
+
+				// DrawDebugLine(GetWorld(), StartPoint, EndPoint, FColor::Red, false, 60.0f, 0, 2.0f);
 			}
 		}
 		else
