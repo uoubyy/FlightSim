@@ -17,6 +17,7 @@
 #include "Input/LyraInputComponent.h"
 #include "DroneCharacter.h"
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
+#include "DRCharacter.h"
 
 
 DEFINE_LOG_CATEGORY(LogDrone);
@@ -323,7 +324,7 @@ void UDroneHeroComponent::Input_SwitchCamera(const FInputActionValue& InputActio
 		return;
 	}
 
-	if (ADroneCharacter* DroneCharacter = Cast<ADroneCharacter>(Pawn))
+	if (ADRCharacter* DroneCharacter = Cast<ADRCharacter>(Pawn))
 	{
 		DroneCharacter->SwitchThirdAndFirstCamera();
 	}

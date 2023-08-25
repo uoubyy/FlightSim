@@ -37,11 +37,11 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 
 	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
 	ThirdPersonCamera->SetupAttachment(SpringArm);
-	ThirdPersonCamera->SetAutoActivate(true);
+	ThirdPersonCamera->SetAutoActivate(ThirdCameraEnabled);
 
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(GetMesh());
-	FirstPersonCamera->SetAutoActivate(false);
+	FirstPersonCamera->SetAutoActivate(!ThirdCameraEnabled);
 
 	PawnExtComponent = CreateDefaultSubobject<ULyraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 	PawnExtComponent->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
@@ -192,6 +192,13 @@ void ADRCharacter::UninitAndDestroy()
 	}
 
 	SetActorHiddenInGame(true);
+}
+
+void ADRCharacter::SwitchThirdAndFirstCamera()
+{
+	ThirdCameraEnabled = !ThirdCameraEnabled;
+	ThirdPersonCamera->SetActive(ThirdCameraEnabled);
+	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
 }
 
 ULyraAbilitySystemComponent* ADRCharacter::GetLyraAbilitySystemComponent() const

@@ -27,16 +27,15 @@ void UDRLineTraceWeaponComponent::BeginPlay()
 
 void UDRLineTraceWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	//for (const TPair<FString, UNiagaraComponent*>& TracerComponent : TracerComponents)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Manually Release Niagara Component for Muzzle %s."), *TracerComponent.Key);
-	//	TracerComponent.Value->ReleaseToPool();
-	//}
 	Super::EndPlay(EndPlayReason);
 }
 
 bool UDRLineTraceWeaponComponent::CanOpenFire() const
 {	
+	if (WeaponFireRate <= 0.0f)
+	{
+		return false;
+	}
 	UWorld* World = GetWorld();
 	check(World);
 	double TimeSeconds = World->GetTimeSeconds();

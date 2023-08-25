@@ -86,6 +86,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon", Meta = (AllowPrivateAccess = "true"))
 	float SecondaryWeaponWaitingTime;
 
+	bool ThirdCameraEnabled = true;
+
 protected:
 
 	virtual void OnAbilitySystemInitialized();
@@ -123,5 +125,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool CanSecondaryWeaponOpenFire() const { return SecondaryWeaponWaitingTime <= 0.0f; }
+
+	UFUNCTION(BlueprintCallable)
+	void SwitchThirdAndFirstCamera();
 
 };
