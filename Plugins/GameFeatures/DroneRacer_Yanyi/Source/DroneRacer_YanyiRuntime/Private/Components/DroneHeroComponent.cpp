@@ -202,7 +202,7 @@ bool UDroneHeroComponent::IsReadyToBindInputs() const
 
 void UDroneHeroComponent::Input_ThrottleUp(const FInputActionValue& InputActionValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_ThrottleUp Pressed"));
+	// UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_ThrottleUp Pressed"));
 	CurrentPlaneStatus |= EPlaneStatus::ThrottleUP;
 	CurrentPlaneStatus &= ~EPlaneStatus::ThrottleDown;
 
@@ -332,7 +332,7 @@ void UDroneHeroComponent::Input_SwitchCamera(const FInputActionValue& InputActio
 
 void UDroneHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_AbilityInputTag %s Pressed"), *InputTag.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_AbilityInputTag %s Pressed"), *InputTag.ToString());
 
 	if (const APawn* Pawn = GetPawn<APawn>())
 	{
@@ -348,7 +348,7 @@ void UDroneHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 
 void UDroneHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_AbilityInputTag %s Released"), *InputTag.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("DroneHeroComponent Input_AbilityInputTag %s Released"), *InputTag.ToString());
 
 	const APawn* Pawn = GetPawn<APawn>();
 	if (!Pawn)

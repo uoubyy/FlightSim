@@ -8,6 +8,40 @@
 #include "GameModes/LyraGameState.h"
 #include "Subsystems/DRObjectPoolSubsystem.h"
 
+void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
+{
+	if (NewPlayer == nullptr || NewPlayer->IsPendingKillPending())
+	{
+		return;
+	}
+
+	FString SpecificPlayerStartName = TEXT("");
+	if (NewPlayer->PlayerState)
+	{
+		ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(NewPlayer->PlayerState);
+		FDRPlaneConfig CurrentPlaneConfig;
+		if (DRPlayerState && DRPlayerState->GetPlaneConfigByIndex(DRPlayerState->GetSelectedPlane(), CurrentPlaneConfig))
+		{
+			SpecificPlayerStartName = CurrentPlaneConfig.PlayerStartTag;
+		}
+	}
+
+	AActor* StartSpot = StartSpot = FindPlayerStart(NewPlayer, SpecificPlayerStartName);
+
+	// If a start spot wasn't found,
+	if (StartSpot == nullptr)
+	{
+		// Check for a previously assigned spot
+		if (NewPlayer->StartSpot != nullptr)
+		{
+			StartSpot = NewPlayer->StartSpot.Get();
+			UE_LOG(LogGameMode, Warning, TEXT("RestartPlayer: Player start not found, using last start spot"));
+		}
+	}
+
+	RestartPlayerAtPlayerStart(NewPlayer, StartSpot);
+}
+
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("DroneRacerGameMode OnRegisterEnemy %s."), *EnemyName);

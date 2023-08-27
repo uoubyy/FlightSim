@@ -15,6 +15,8 @@ class DRONERACER_YANYIRUNTIME_API ADroneRacerGameMode : public ALyraGameMode
 	GENERATED_BODY()
 
 public:
+	virtual void RestartPlayer(AController* NewPlayer) override;
+
 	void OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef);
 
 	UFUNCTION(BlueprintCallable)
@@ -39,4 +41,7 @@ public:
 	
 protected:
 	TMap<FString, TWeakObjectPtr<AActor>> AllEnemies;
+
+	UPROPERTY()
+	TObjectPtr<class UDataAsset> PlaneSet;
 };

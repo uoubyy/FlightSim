@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Player/LyraPlayerState.h"
+#include "DataAssets/DRPlaneSet.h"
 #include "DRPlayerState.generated.h"
 
 /**
@@ -24,6 +25,12 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	float CurrentRecordInSeconds;
 
+	UPROPERTY(VisibleAnywhere)
+	int32 CurrentSelectedPlane;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Lobby", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDRPlaneSet> PlaneSet;
+
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
@@ -40,5 +47,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentRecord() const { return CurrentRecordInSeconds; }
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateSelectedPlane(int32 PlaneIndex) { CurrentSelectedPlane = PlaneIndex; }
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetSelectedPlane() { return CurrentSelectedPlane; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig);
 	
 };

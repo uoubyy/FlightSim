@@ -15,8 +15,9 @@ void ADRPlayerState::SavePlayerState_Implementation(class UDRSaveGame* SaveObjec
 {
 	if (SaveObject)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ADRPlayerState Save Player State %f"), BestRecordInSeconds);
+		// UE_LOG(LogTemp, Warning, TEXT("ADRPlayerState Save Player State %f"), BestRecordInSeconds);
 		SaveObject->BestRecordInSeconds = BestRecordInSeconds;
+		SaveObject->SelectedPlaneIndex = CurrentSelectedPlane;
 	}
 }
 
@@ -24,8 +25,9 @@ void ADRPlayerState::LoadPlayerState_Implementation(class UDRSaveGame* SaveObjec
 {
 	if(SaveObject)
 	{ 
-		UE_LOG(LogTemp, Warning, TEXT("ADRPlayerState Load Player State %f"), SaveObject->BestRecordInSeconds);
+		// UE_LOG(LogTemp, Warning, TEXT("ADRPlayerState Load Player State %f"), SaveObject->BestRecordInSeconds);
 		BestRecordInSeconds = SaveObject->BestRecordInSeconds;
+		CurrentSelectedPlane = SaveObject->SelectedPlaneIndex;
 	}
 }
 
@@ -36,4 +38,14 @@ void ADRPlayerState::UpdatePersonalRecord(float TimeInSeconds)
 	{
 		BestRecordInSeconds = CurrentRecordInSeconds;
 	}
+}
+
+bool ADRPlayerState::GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig)
+{
+	if (PlaneSet)
+	{
+		return PlaneSet->GetPlaneConfigByIndex(Index, PlaneConfig);
+	}
+
+	return false;
 }
