@@ -149,13 +149,13 @@ void UDroneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputComp
 					LyraIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
 
 					// Hard code all the Input Gameplay Tag
-					const FGameplayTag InputTag_ThrottleUp = FGameplayTag::RequestGameplayTag(FName("InputTag.ThrottleUp"));
-					const FGameplayTag InputTag_Roll = FGameplayTag::RequestGameplayTag(FName("InputTag.Roll"));
-					const FGameplayTag InputTag_Yaw = FGameplayTag::RequestGameplayTag(FName("InputTag.Yaw"));
-					const FGameplayTag InputTag_Pitch = FGameplayTag::RequestGameplayTag(FName("InputTag.Pitch"));
-					const FGameplayTag InputTag_MainWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.MainWeapon"));
-					const FGameplayTag InputTag_SecondaryWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.SecondaryWeapon"));
-					const FGameplayTag InputTag_SwitchCamera = FGameplayTag::RequestGameplayTag(FName("InputTag.SwitchCamera"));
+					const FGameplayTag InputTag_ThrottleUp = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.ThrottleUp"));
+					const FGameplayTag InputTag_Roll = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.Roll"));
+					const FGameplayTag InputTag_Yaw = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.Yaw"));
+					const FGameplayTag InputTag_Pitch = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.Pitch"));
+					const FGameplayTag InputTag_MainWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.MainWeapon"));
+					const FGameplayTag InputTag_SecondaryWeapon = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.SecondaryWeapon"));
+					const FGameplayTag InputTag_SwitchCamera = FGameplayTag::RequestGameplayTag(FName("InputTag.DroneRacer.SwitchCamera"));
 
 					LyraIC->BindNativeAction(InputConfig, InputTag_ThrottleUp, ETriggerEvent::Triggered, this, &ThisClass::Input_ThrottleUp, false);
 					LyraIC->BindNativeAction(InputConfig, InputTag_Roll, ETriggerEvent::Triggered, this, &ThisClass::Input_Roll, false);
