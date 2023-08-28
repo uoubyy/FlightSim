@@ -17,7 +17,7 @@ void ADRPlayerState::SavePlayerState_Implementation(class UDRSaveGame* SaveObjec
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("ADRPlayerState Save Player State %f"), BestRecordInSeconds);
 		SaveObject->BestRecordInSeconds = BestRecordInSeconds;
-		SaveObject->SelectedPlaneIndex = CurrentSelectedPlane;
+		SaveObject->SelectedPlaneName = CurrentSelectedPlane;
 	}
 }
 
@@ -27,7 +27,9 @@ void ADRPlayerState::LoadPlayerState_Implementation(class UDRSaveGame* SaveObjec
 	{ 
 		// UE_LOG(LogTemp, Warning, TEXT("ADRPlayerState Load Player State %f"), SaveObject->BestRecordInSeconds);
 		BestRecordInSeconds = SaveObject->BestRecordInSeconds;
-		CurrentSelectedPlane = SaveObject->SelectedPlaneIndex;
+		CurrentSelectedPlane = SaveObject->SelectedPlaneName.IsEmpty() ? GetDefaultPlaneName() : SaveObject->SelectedPlaneName;
+
+		UpdateSelectedPlane(CurrentSelectedPlane);
 	}
 }
 
@@ -42,32 +44,36 @@ void ADRPlayerState::UpdatePersonalRecord(float TimeInSeconds)
 
 void ADRPlayerState::UpdateSelectedPlane(const FString& NewPlaneName)
 {
+	CurrentSelectedPlane = NewPlaneName;
+	FDRPlaneConfig CurrentPlaneConfig;
+	if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig))
+	{
+		// SetPawnData(CurrentPlaneConfig.PawnData);
+	}
+}
+
+bool ADRPlayerState::GetSelectedPlaneConfig(FDRPlaneConfig& PlaneConfig)
+{
 	if (PlaneSet)
 	{
-		for (int32 Index = 0; Index < PlaneSet->PlaneConfigs.Num(); ++Index)
+		for (auto& Config : PlaneSet->PlaneConfigs)
 		{
-			if(PlaneSet->PlaneConfigs[Index].PlaneName.Equals(NewPlaneName))
+			if (Config.PlaneName.Equals(CurrentSelectedPlane))
 			{
-				CurrentSelectedPlane = Index;
-				break;
+				PlaneConfig = Config;
+				return true;
 			}
 		}
 	}
-}
-
-FString ADRPlayerState::GetSelectedPlaneName()
-{
-	FDRPlaneConfig PlaneConfig;
-	PlaneSet->GetPlaneConfigByIndex(CurrentSelectedPlane, PlaneConfig);
-	return PlaneConfig.PlaneName;
-}
-
-bool ADRPlayerState::GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig)
-{
-	if (PlaneSet)
-	{
-		return PlaneSet->GetPlaneConfigByIndex(Index, PlaneConfig);
-	}
 
 	return false;
+}
+
+FString ADRPlayerState::GetDefaultPlaneName()
+{
+	check(PlaneSet);
+
+	check(PlaneSet->PlaneConfigs.Num() > 0);
+
+	return PlaneSet->PlaneConfigs[0].PlaneName;
 }

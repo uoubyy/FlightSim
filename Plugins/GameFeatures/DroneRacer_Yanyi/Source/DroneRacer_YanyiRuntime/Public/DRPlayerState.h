@@ -26,7 +26,7 @@ protected:
 	float CurrentRecordInSeconds;
 
 	UPROPERTY(VisibleAnywhere)
-	int32 CurrentSelectedPlane;
+	FString CurrentSelectedPlane;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Lobby", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UDRPlaneSet> PlaneSet;
@@ -52,12 +52,12 @@ public:
 	void UpdateSelectedPlane(const FString& NewPlaneName);
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetSelectedPlane() { return CurrentSelectedPlane; }
+	FString GetSelectedPlaneName() { return CurrentSelectedPlane; }
 
 	UFUNCTION(BlueprintCallable)
-	FString GetSelectedPlaneName();
+	bool GetSelectedPlaneConfig(FDRPlaneConfig& PlaneConfig);
 
 	UFUNCTION(BlueprintCallable)
-	bool GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig);
+	FString GetDefaultPlaneName();
 	
 };

@@ -3,15 +3,18 @@
 
 #include "DataAssets/DRPlaneSet.h"
 
-bool UDRPlaneSet::GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig)
+bool UDRPlaneSet::GetPlaneConfigByName(const FString& PlaneName, FDRPlaneConfig& PlaneConfig)
 {
-	if (Index < 0 || Index >= PlaneConfigs.Num())
+	for (auto& Config : PlaneConfigs)
 	{
-		return false;
+		if (Config.PlaneName.Equals(PlaneName))
+		{
+			PlaneConfig = Config;
+			return true;
+		}
 	}
 
-	PlaneConfig = PlaneConfigs[Index];
-	return true;
+	return false;
 }
 
 FDRPlaneConfig UDRPlaneSet::GetNextPlaneConfig(FString CurrentPlaneName)

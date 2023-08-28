@@ -19,5 +19,5 @@ public:
 	float BestRecordInSeconds;
 
 	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
-	int32 SelectedPlaneIndex;
+	FString SelectedPlaneName;
 };

@@ -118,9 +118,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FDRPlaneConfig> PlaneConfigs;
-	
+
 	UFUNCTION(BlueprintCallable)
-	bool GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig);
+	bool GetPlaneConfigByName(const FString& PlaneName, FDRPlaneConfig& PlaneConfig);
 
 	UFUNCTION(BlueprintCallable)
 	FDRPlaneConfig GetNextPlaneConfig(FString CurrentPlaneName);

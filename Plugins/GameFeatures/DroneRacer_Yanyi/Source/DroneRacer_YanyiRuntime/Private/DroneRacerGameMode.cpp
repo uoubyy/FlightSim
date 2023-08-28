@@ -20,7 +20,7 @@ void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 	{
 		ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(NewPlayer->PlayerState);
 		FDRPlaneConfig CurrentPlaneConfig;
-		if (DRPlayerState && DRPlayerState->GetPlaneConfigByIndex(DRPlayerState->GetSelectedPlane(), CurrentPlaneConfig))
+		if (DRPlayerState && DRPlayerState->GetSelectedPlaneConfig(CurrentPlaneConfig))
 		{
 			SpecificPlayerStartName = CurrentPlaneConfig.PlayerStartTag;
 		}
