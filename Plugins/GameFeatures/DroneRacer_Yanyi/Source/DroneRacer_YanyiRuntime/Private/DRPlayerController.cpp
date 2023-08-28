@@ -7,9 +7,4 @@
 void ADRPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-
-	if (UDRWidgetManagerComponent* WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(this))
-	{
-		WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD");
-	}
 }

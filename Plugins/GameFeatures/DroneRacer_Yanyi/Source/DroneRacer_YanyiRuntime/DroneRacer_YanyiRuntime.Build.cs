@@ -49,6 +49,9 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				"ModularGameplayActors",
 				"AIModule",
 				"Niagara",
+				"Json",
+				"JsonUtilities",
+				"CommonUI",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

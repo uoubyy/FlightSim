@@ -7,6 +7,7 @@
 #include <Camera/CameraComponent.h>
 #include "DRPlayerState.h"
 #include "Components/DRWidgetManagerComponent.h"
+#include "JsonObjectConverter.h"
 
 ADRCharacter_Lobby::ADRCharacter_Lobby(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -15,6 +16,25 @@ ADRCharacter_Lobby::ADRCharacter_Lobby(const FObjectInitializer& ObjectInitializ
 
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(RootComponent);
+}
+
+void ADRCharacter_Lobby::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (NewController)
+	{
+		WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
+		if (WidgetManagerComponent)
+		{
+			WidgetManagerComponent->RequestShowWidget(FName("WBP_PlaneInfo"));
+		}
+	}
+
+	if (ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>())
+	{
+		CurrentViewingPlane = DRPlayerState->GetSelectedPlaneName();
+	}
 }
 
 void ADRCharacter_Lobby::BeginPlay()
@@ -31,20 +51,6 @@ void ADRCharacter_Lobby::BeginPlay()
 	}
 
 	check(PlaneSet);
-
-	if (ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>())
-	{
-		CurrentViewingPlane = DRPlayerState->GetSelectedPlaneName();
-	}
-
-	if (GetController())
-	{
-		UDRWidgetManagerComponent* DRWidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(GetController());
-		if (DRWidgetManagerComponent)
-		{
-			DRWidgetManagerComponent->RequestShowWidget(FName("WBP_PlaneInfo"));
-		}
-	}
 }
 
 void ADRCharacter_Lobby::Tick(float DeltaSeconds)
@@ -77,6 +83,8 @@ void ADRCharacter_Lobby::ViewNextPlane()
 			CurrentViewingPlane = NextPlaneConfig.PlaneName;
 			TargetViewPosition = ViewPointForPlanes[FName(NextPlaneConfig.PlayerStartTag)]->GetActorLocation();
 			NeedMoving = true;
+
+			UpdateUI(NextPlaneConfig);
 		}
 	}
 }
@@ -91,6 +99,19 @@ void ADRCharacter_Lobby::ViewPrevPlane()
 			CurrentViewingPlane = PrevPlaneConfig.PlaneName;
 			TargetViewPosition = ViewPointForPlanes[FName(PrevPlaneConfig.PlayerStartTag)]->GetActorLocation();
 			NeedMoving = true;
+
+			UpdateUI(PrevPlaneConfig);
 		}
+	}
+}
+
+void ADRCharacter_Lobby::UpdateUI(const FDRPlaneConfig& PlaneConfig)
+{
+	FDRPlaneConfig_Short PlaneConfig_Short(PlaneConfig);
+	FString MessagePayload;
+
+	if (WidgetManagerComponent && FJsonObjectConverter::UStructToJsonObjectString(PlaneConfig_Short, MessagePayload))
+	{
+		WidgetManagerComponent->RequestUpdateWidget(FName("WBP_PlaneInfo"), MessagePayload);
 	}
 }

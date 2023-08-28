@@ -16,6 +16,7 @@
 #include <Camera/CameraComponent.h>
 #include <Perception/AIPerceptionStimuliSourceComponent.h>
 #include <Components/CapsuleComponent.h>
+#include "Components/DRWidgetManagerComponent.h"
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -112,6 +113,11 @@ void ADRCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	PawnExtComponent->HandleControllerChanged();
+
+	if (UDRWidgetManagerComponent* WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController))
+	{
+		WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD");
+	}
 }
 
 void ADRCharacter::UnPossessed()

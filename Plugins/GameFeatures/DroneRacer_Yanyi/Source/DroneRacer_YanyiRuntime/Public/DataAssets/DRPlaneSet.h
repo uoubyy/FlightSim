@@ -47,6 +47,60 @@ public:
 	float MaxRollDegree;
 };
 
+USTRUCT(BlueprintType)
+struct FDRPlaneConfig_Short
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		FString DisplayName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float MaxSpeed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float MaxThrottleAmount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float MinThrottleAmount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float ThrottleSensitivity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float PitchSensitivity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float RollSensitivity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float MaxRollDegree;
+
+	FDRPlaneConfig_Short()
+		: DisplayName(""),
+		MaxSpeed(0.0f),
+		MaxThrottleAmount(0.0f),
+		MinThrottleAmount(0.0f),
+		ThrottleSensitivity(0.0f),
+		PitchSensitivity(0.0f),
+		MaxRollDegree(0.0f)
+	{}
+
+	FDRPlaneConfig_Short(const FDRPlaneConfig& PlaneConfig)
+		: DisplayName(PlaneConfig.DisplayName),
+		MaxSpeed(PlaneConfig.MaxSpeed),
+		MaxThrottleAmount(PlaneConfig.MaxThrottleAmount),
+		MinThrottleAmount(PlaneConfig.MinThrottleAmount),
+		ThrottleSensitivity(PlaneConfig.ThrottleSensitivity),
+		PitchSensitivity(PlaneConfig.PitchSensitivity),
+		MaxRollDegree(PlaneConfig.MaxRollDegree)
+	{
+
+	}
+};
+
 /**
  * 
  */

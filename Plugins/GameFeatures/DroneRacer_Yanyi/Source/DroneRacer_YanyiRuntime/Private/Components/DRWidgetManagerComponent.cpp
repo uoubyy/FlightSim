@@ -4,6 +4,7 @@
 #include "Components/DRWidgetManagerComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "DataAssets/DRWidgetSet.h"
+#include "UI/DRWidgetInterface.h"
 
 
 UDRWidgetManagerComponent::UDRWidgetManagerComponent(const FObjectInitializer& ObjectInitializer) 
@@ -51,7 +52,7 @@ bool UDRWidgetManagerComponent::RequestHideWidget(const FName& WidgetName)
 {
 	if (LoadedWidget.Contains(WidgetName))
 	{
-		LoadedWidget[WidgetName]->RemoveFromViewport();
+		LoadedWidget[WidgetName]->RemoveFromParent();
 		return true;
 	}
 
@@ -62,8 +63,23 @@ bool UDRWidgetManagerComponent::RequestUpdateWidget(const FName& WidgetName, FSt
 {
 	if (LoadedWidget.Contains(WidgetName))
 	{
-		return true;
+		UUserWidget* TargetWidget = LoadedWidget[WidgetName];
+		if (TargetWidget->Implements<UDRWidgetInterface>())
+		{
+			IDRWidgetInterface::Execute_UpdateWidget(TargetWidget, Payload);
+			return true;
+		}
 	}
 
 	return false;
+}
+
+UUserWidget* UDRWidgetManagerComponent::GetReferenceOfWidget(const FName& WidgetName)
+{
+	if (LoadedWidget.Contains(WidgetName))
+	{
+		return LoadedWidget[WidgetName];
+	}
+
+	return nullptr;
 }

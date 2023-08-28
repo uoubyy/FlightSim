@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool RequestUpdateWidget(const FName& WidgetName, FString& Payload);
 
+	UFUNCTION(BlueprintCallable)
+	class UUserWidget* GetReferenceOfWidget(const FName& WidgetName);
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|UIManager", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UDRWidgetSet> WidgetSet;

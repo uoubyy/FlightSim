@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/LyraCharacter.h"
+#include "DataAssets/DRPlaneSet.h"
 #include "DRCharacter_Lobby.generated.h"
 
 /**
@@ -21,6 +22,8 @@ private:
 public:
 
 	ADRCharacter_Lobby(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void PossessedBy(AController* NewController) override;
 	
 	virtual void BeginPlay() override;
 
@@ -45,4 +48,9 @@ protected:
 	bool NeedMoving = false;
 
 	FString CurrentViewingPlane;
+
+	UPROPERTY()
+	TObjectPtr<class UDRWidgetManagerComponent> WidgetManagerComponent;
+
+	void UpdateUI(const FDRPlaneConfig& PlaneConfig);
 };
