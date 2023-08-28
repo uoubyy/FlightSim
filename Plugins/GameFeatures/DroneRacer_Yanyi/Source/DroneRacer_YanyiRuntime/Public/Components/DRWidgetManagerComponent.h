@@ -23,6 +23,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool RequestHideWidget(const FName& WidgetName);
 
+	UFUNCTION(BlueprintCallable)
+	bool RequestUpdateWidget(const FName& WidgetName, FString& Payload);
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|UIManager", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UDRWidgetSet> WidgetSet;

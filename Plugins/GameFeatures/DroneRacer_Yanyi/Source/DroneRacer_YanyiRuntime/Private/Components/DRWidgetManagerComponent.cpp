@@ -51,6 +51,17 @@ bool UDRWidgetManagerComponent::RequestHideWidget(const FName& WidgetName)
 {
 	if (LoadedWidget.Contains(WidgetName))
 	{
+		LoadedWidget[WidgetName]->RemoveFromViewport();
+		return true;
+	}
+
+	return false;
+}
+
+bool UDRWidgetManagerComponent::RequestUpdateWidget(const FName& WidgetName, FString& Payload)
+{
+	if (LoadedWidget.Contains(WidgetName))
+	{
 		return true;
 	}
 
