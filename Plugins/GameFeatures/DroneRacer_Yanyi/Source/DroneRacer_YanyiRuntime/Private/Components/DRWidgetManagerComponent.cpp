@@ -35,12 +35,32 @@ bool UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetName)
 	}
 	else
 	{
-		TSubclassOf<class UUserWidget> WidgetClass = WidgetSet ? WidgetSet->FindWidgetClassByName(WidgetName) : nullptr;
-		if (WidgetClass && PlayerController)
+		FDRWidgetConfig WidgetConfig;
+		if (PlayerController && WidgetSet && WidgetSet->FindWidgetConfigByName(WidgetName, WidgetConfig))
 		{
+			TSubclassOf<class UUserWidget> WidgetClass = WidgetConfig.WidgetClass;
+
 			UUserWidget* NewUserWidget = CreateWidget<UUserWidget>(PlayerController, WidgetClass, WidgetName);
 			LoadedWidget.Add(WidgetName, NewUserWidget);
 			NewUserWidget->AddToViewport();
+
+			// Stupid code
+			switch (WidgetConfig.OverrideInputMode)
+			{
+				case EDRInputMode::EDR_GameOnly:
+					PlayerController->SetInputMode(FInputModeGameOnly());
+					break;
+				case EDRInputMode::EDR_GameAndUI:
+					PlayerController->SetInputMode(FInputModeGameAndUI());
+					break;
+				case EDRInputMode::EDR_UIOnly:
+					PlayerController->SetInputMode(FInputModeUIOnly());
+					break;
+				default:
+					break;
+			}
+			
+			PlayerController->SetShowMouseCursor(WidgetConfig.ShowMouseCursor);
 			return true;
 		}
 	}
@@ -53,6 +73,13 @@ bool UDRWidgetManagerComponent::RequestHideWidget(const FName& WidgetName)
 	if (LoadedWidget.Contains(WidgetName))
 	{
 		LoadedWidget[WidgetName]->RemoveFromParent();
+
+		APlayerController* PlayerController = Cast<APlayerController>(GetOwner());
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(FInputModeGameOnly());
+			PlayerController->SetShowMouseCursor(false);
+		}
 		return true;
 	}
 

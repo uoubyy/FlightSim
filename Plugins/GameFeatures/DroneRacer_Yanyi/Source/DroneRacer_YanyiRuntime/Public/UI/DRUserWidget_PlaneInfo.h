@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/DRWidgetInterface.h"
+#include "DataAssets/DRPlaneSet.h"
 #include "DRUserWidget_PlaneInfo.generated.h"
 
 /**
@@ -16,6 +17,8 @@ class DRONERACER_YANYIRUNTIME_API UDRUserWidget_PlaneInfo : public UUserWidget, 
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeConstruct() override;
+
 	virtual bool UpdateWidget_Implementation(const FString& Payload) override;
 
 protected:
@@ -36,4 +39,12 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<class UCommonTextBlock> Text_RollSensitivity;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<class UButton> Btn_ChanhePlane;
+
+	UFUNCTION()
+	void OnChanhePlaneBtnClicked();
+
+	FDRPlaneConfig_Short PlaneConfig;
 };

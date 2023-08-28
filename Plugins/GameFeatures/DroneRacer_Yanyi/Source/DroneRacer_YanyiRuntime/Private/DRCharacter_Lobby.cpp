@@ -34,6 +34,9 @@ void ADRCharacter_Lobby::PossessedBy(AController* NewController)
 	if (ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>())
 	{
 		CurrentViewingPlane = DRPlayerState->GetSelectedPlaneName();
+
+		FDRPlaneConfig PlaneConfig = PlaneSet->GetNextPlaneConfig(CurrentViewingPlane);
+		UpdateUI(PlaneConfig);
 	}
 }
 

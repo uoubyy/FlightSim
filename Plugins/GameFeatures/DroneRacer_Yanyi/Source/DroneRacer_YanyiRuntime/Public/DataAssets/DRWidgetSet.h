@@ -6,6 +6,15 @@
 #include "Engine/DataAsset.h"
 #include "DRWidgetSet.generated.h"
 
+UENUM(BlueprintType)
+enum class EDRInputMode : uint8 {
+	EDR_None			UMETA(DisplayName = "None"),
+	EDR_GameOnly		UMETA(DisplayName = "InputModeGameOnly"),
+	EDR_GameAndUI		UMETA(DisplayName = "InputModeGameAndUI"),
+	EDR_UIOnly			UMETA(DisplayName = "InputModeUIOnly"),
+};
+
+
 USTRUCT(BlueprintType)
 struct FDRWidgetConfig
 {
@@ -18,6 +27,12 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<class UUserWidget> WidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EDRInputMode OverrideInputMode;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool ShowMouseCursor = false;
 };
 
 
@@ -39,4 +54,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<class UUserWidget> FindWidgetClassByName(const FName& WidgetName);
+
+	UFUNCTION(BlueprintCallable)
+	bool FindWidgetConfigByName(const FName& WidgetName, FDRWidgetConfig& WidgetConfig);
 };

@@ -49,7 +49,7 @@ public:
 	float GetCurrentRecord() const { return CurrentRecordInSeconds; }
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateSelectedPlane(int32 PlaneIndex) { CurrentSelectedPlane = PlaneIndex; }
+	void UpdateSelectedPlane(const FString& NewPlaneName);
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetSelectedPlane() { return CurrentSelectedPlane; }

@@ -14,7 +14,7 @@ struct FDRPlaneConfig
 public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString PlaneName;
+	FString PlaneName; // Unique ID
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FString DisplayName;
@@ -55,31 +55,35 @@ struct FDRPlaneConfig_Short
 public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		FString DisplayName;
+	FString PlaneName; // Unique ID
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float MaxSpeed;
+	FString DisplayName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float MaxThrottleAmount;
+	float MaxSpeed;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float MinThrottleAmount;
+	float MaxThrottleAmount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float ThrottleSensitivity;
+	float MinThrottleAmount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float PitchSensitivity;
+	float ThrottleSensitivity;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float RollSensitivity;
+	float PitchSensitivity;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float MaxRollDegree;
+	float RollSensitivity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float MaxRollDegree;
 
 	FDRPlaneConfig_Short()
-		: DisplayName(""),
+		: PlaneName(""),
+		DisplayName(""),
 		MaxSpeed(0.0f),
 		MaxThrottleAmount(0.0f),
 		MinThrottleAmount(0.0f),
@@ -89,7 +93,8 @@ public:
 	{}
 
 	FDRPlaneConfig_Short(const FDRPlaneConfig& PlaneConfig)
-		: DisplayName(PlaneConfig.DisplayName),
+		: PlaneName(PlaneConfig.PlaneName),
+		DisplayName(PlaneConfig.DisplayName),
 		MaxSpeed(PlaneConfig.MaxSpeed),
 		MaxThrottleAmount(PlaneConfig.MaxThrottleAmount),
 		MinThrottleAmount(PlaneConfig.MinThrottleAmount),
@@ -109,12 +114,10 @@ class DRONERACER_YANYIRUNTIME_API UDRPlaneSet : public UDataAsset
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FDRPlaneConfig> PlaneConfigs;
-
-public:
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig);
