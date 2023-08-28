@@ -55,6 +55,9 @@ public:
 	int32 GetSelectedPlane() { return CurrentSelectedPlane; }
 
 	UFUNCTION(BlueprintCallable)
+	FString GetSelectedPlaneName();
+
+	UFUNCTION(BlueprintCallable)
 	bool GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig);
 	
 };

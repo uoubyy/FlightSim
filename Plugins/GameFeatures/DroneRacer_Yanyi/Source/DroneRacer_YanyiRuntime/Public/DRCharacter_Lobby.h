@@ -24,6 +24,8 @@ public:
 	
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Lobby")
 	void ViewNextPlane();
 
@@ -38,6 +40,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "DroneRacer|Lobby", Meta = (AllowPrivateAccess = "true"))
 	TMap<FName, TObjectPtr<class APlayerStart>> ViewPointForPlanes;
 
-	UPROPERTY(BlueprintReadOnly, Category = "DroneRacer|Lobby", Meta = (AllowPrivateAccess = "true"))
-	int32 CurrentPlaneIndex = 0;
+	FVector TargetViewPosition;
+
+	bool NeedMoving = false;
+
+	FString CurrentViewingPlane;
 };

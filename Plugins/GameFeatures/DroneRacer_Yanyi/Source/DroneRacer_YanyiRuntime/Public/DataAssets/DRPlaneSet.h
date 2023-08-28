@@ -17,19 +17,22 @@ public:
 	FString PlaneName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString DisplayName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FString PlayerStartTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const class ULyraPawnData> PawnData;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float MaxSpeed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float MaxThrottleAmount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float MinThrottleAmount;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float ThrottleToForce;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float ThrottleSensitivity;

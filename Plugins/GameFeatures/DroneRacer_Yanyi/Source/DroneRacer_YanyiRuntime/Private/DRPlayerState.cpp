@@ -40,6 +40,13 @@ void ADRPlayerState::UpdatePersonalRecord(float TimeInSeconds)
 	}
 }
 
+FString ADRPlayerState::GetSelectedPlaneName()
+{
+	FDRPlaneConfig PlaneConfig;
+	PlaneSet->GetPlaneConfigByIndex(CurrentSelectedPlane, PlaneConfig);
+	return PlaneConfig.PlaneName;
+}
+
 bool ADRPlayerState::GetPlaneConfigByIndex(int32 Index, FDRPlaneConfig& PlaneConfig)
 {
 	if (PlaneSet)
