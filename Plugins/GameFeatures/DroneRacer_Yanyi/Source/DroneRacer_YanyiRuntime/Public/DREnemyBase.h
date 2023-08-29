@@ -81,4 +81,9 @@ public:
 	
 	virtual void PostInitializeComponents() override;
 
+private:
+
+	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|Enemy")
+	TObjectPtr<class ULyraAbilitySystemComponent> AbilitySystemComponent;
+
 };

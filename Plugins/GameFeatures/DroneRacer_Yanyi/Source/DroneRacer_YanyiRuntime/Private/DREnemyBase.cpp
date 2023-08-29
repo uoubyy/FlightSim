@@ -13,6 +13,8 @@
 #include "DamageCauserInterface.h"
 #include "DroneRacerGameMode.h"
 
+#include "AbilitySystem/LyraAbilitySystemComponent.h"
+
 // Sets default values
 ADREnemyBase::ADREnemyBase()
 {
@@ -23,6 +25,8 @@ ADREnemyBase::ADREnemyBase()
 	SphereComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
+
+	AbilitySystemComponent = CreateDefaultSubobject<ULyraAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 // Called when the game starts or when spawned
