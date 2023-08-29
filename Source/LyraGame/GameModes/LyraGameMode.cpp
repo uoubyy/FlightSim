@@ -42,7 +42,7 @@ ALyraGameMode::ALyraGameMode(const FObjectInitializer& ObjectInitializer)
 	HUDClass = ALyraHUD::StaticClass();
 }
 
-const ULyraPawnData* ALyraGameMode::GetPawnDataForController(const AController* InController) const
+const ULyraPawnData* ALyraGameMode::GetPawnDataFromPlayerState_Implementation(const AController* InController) const
 {
 	// See if pawn data is already set on the player state
 	if (InController != nullptr)
@@ -54,6 +54,15 @@ const ULyraPawnData* ALyraGameMode::GetPawnDataForController(const AController* 
 				return PawnData;
 			}
 		}
+	}
+	return nullptr;
+}
+
+const ULyraPawnData* ALyraGameMode::GetPawnDataForController(const AController* InController) const
+{
+	if (const ULyraPawnData* PawnData = GetPawnDataFromPlayerState(InController))
+	{
+		return PawnData;
 	}
 
 	// If not, fall back to the the default for the current experience

@@ -40,6 +40,11 @@ public:
 
 	ALyraGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	// 2K Yanyi Bao GetPawnDataFromPlayerState
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Lyra|Pawn")
+	const ULyraPawnData* GetPawnDataFromPlayerState(const AController* InController) const;
+	// 2K Yanyi Bao GetPawnDataFromPlayerState
+
 	UFUNCTION(BlueprintCallable, Category = "Lyra|Pawn")
 	const ULyraPawnData* GetPawnDataForController(const AController* InController) const;
 
