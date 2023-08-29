@@ -12,7 +12,7 @@
  * But there exists some different with the LyraCharacter so I do not want to subclass the LyraCharacter
  */
 UCLASS(Config = Game, Meta = (ShortTooltip = "The base character pawn class used by DroneRacer Game Feature."))
-class DRONERACER_YANYIRUNTIME_API ADRCharacter : public AModularCharacter, public IAbilitySystemInterface, public IGameplayCueInterface, public IGameplayTagAssetInterface
+class DRONERACER_YANYIRUNTIME_API ADRCharacter : public AModularCharacter, public IAbilitySystemInterface, public IGameplayCueInterface, public IGameplayTagAssetInterface, public ILyraTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -51,6 +51,12 @@ public:
 	virtual void NotifyControllerChanged() override;
 	//~End of APawn interface
 
+	//~ILyraTeamAgentInterface interface
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual FOnLyraTeamIndexChangedDelegate* GetOnTeamIndexChangedDelegate() override;
+	//~End of ILyraTeamAgentInterface interface
+
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Character", Meta = (AllowPrivateAccess = "true"))
@@ -87,6 +93,12 @@ private:
 	float SecondaryWeaponWaitingTime;
 
 	bool ThirdCameraEnabled = true;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon", Meta = (AllowPrivateAccess = "true"))
+	FGenericTeamId TeamID;
+
+	UPROPERTY()
+	FOnLyraTeamIndexChangedDelegate OnTeamChangedDelegate;
 
 protected:
 

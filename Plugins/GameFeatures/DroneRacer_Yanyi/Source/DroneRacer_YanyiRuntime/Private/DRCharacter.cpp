@@ -19,7 +19,8 @@
 #include "Components/DRWidgetManagerComponent.h"
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName))
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
+	TeamID(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -91,6 +92,21 @@ void ADRCharacter::PreReplication(IRepChangedPropertyTracker& ChangedPropertyTra
 void ADRCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
+}
+
+void ADRCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	// 2K TODO
+}
+
+FGenericTeamId ADRCharacter::GetGenericTeamId() const
+{
+	return TeamID;
+}
+
+FOnLyraTeamIndexChangedDelegate* ADRCharacter::GetOnTeamIndexChangedDelegate()
+{
+	return &OnTeamChangedDelegate;
 }
 
 void ADRCharacter::OnAbilitySystemInitialized()

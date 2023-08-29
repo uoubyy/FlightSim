@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Character/LyraCharacter.h"
 #include "DRPerceptiveActorInterface.h"
 #include "DREnemyBase.generated.h"
 
 UCLASS()
-class DRONERACER_YANYIRUNTIME_API ADREnemyBase : public ACharacter, public IDRPerceptiveActorInterface
+class DRONERACER_YANYIRUNTIME_API ADREnemyBase : public ACharacter, public IDRPerceptiveActorInterface, public ILyraTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -23,7 +24,7 @@ public:
 	TObjectPtr<class UNiagaraSystem> ExplosionEffect;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UDRHealthComponent> HealthComponent;
+	TObjectPtr<class ULyraHealthComponent> LyraHealthComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> BulletClass;
@@ -38,6 +39,12 @@ public:
 	float DamageAmount = 10.0f;
 
 	virtual void OnActorPerceptionUpdated_Implementation(AActor* Actor, bool WasSuccessfullySensed);
+
+	//~ILyraTeamAgentInterface interface
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual FOnLyraTeamIndexChangedDelegate* GetOnTeamIndexChangedDelegate() override;
+	//~End of ILyraTeamAgentInterface interface
 
 protected:
 	// Called when the game starts or when spawned
@@ -85,5 +92,14 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|Enemy")
 	TObjectPtr<class ULyraAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
+	FGenericTeamId TeamID;
+
+	UPROPERTY()
+	FOnLyraTeamIndexChangedDelegate OnTeamChangedDelegate;
+
+	UPROPERTY()
+	TObjectPtr<class UAttributeSet> HealthSet;
 
 };

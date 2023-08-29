@@ -14,9 +14,12 @@
 #include "DroneRacerGameMode.h"
 
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/LyraHealthSet.h"
+#include "Character/LyraHealthComponent.h"
 
 // Sets default values
 ADREnemyBase::ADREnemyBase()
+	: TeamID(1)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -24,9 +27,27 @@ ADREnemyBase::ADREnemyBase()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-	HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
+	// HealthComponent = CreateDefaultSubobject<UDRHealthComponent>(TEXT("HealthComponent"));
+	LyraHealthComponent = CreateDefaultSubobject<ULyraHealthComponent>(TEXT("LyraHealthComponent"));
 
 	AbilitySystemComponent = CreateDefaultSubobject<ULyraAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+
+	HealthSet = CreateDefaultSubobject<ULyraHealthSet>(TEXT("HealthSet"));
+}
+
+void ADREnemyBase::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+
+}
+
+FGenericTeamId ADREnemyBase::GetGenericTeamId() const
+{
+	return TeamID;
+}
+
+FOnLyraTeamIndexChangedDelegate* ADREnemyBase::GetOnTeamIndexChangedDelegate()
+{
+	return &OnTeamChangedDelegate;
 }
 
 // Called when the game starts or when spawned
@@ -45,7 +66,9 @@ void ADREnemyBase::PostInitializeComponents()
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereComponentBeginOverlap);
 
-	HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
+	// HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
+
+	LyraHealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 }
 
 void ADREnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -89,7 +112,7 @@ void ADREnemyBase::OnSphereComponentBeginOverlap(UPrimitiveComponent* Overlapped
 		IDamageCauserInterface* DamageCauser = Cast<IDamageCauserInterface>(OtherActor);
 
 		float DamageValue = DamageCauser->Execute_GetDamageAmount(OtherActor);
-		HealthComponent->ApplyDamage(OtherActor->GetInstigator(), DamageValue);
+		// HealthComponent->ApplyDamage(OtherActor->GetInstigator(), DamageValue);
 	}
 }
 
