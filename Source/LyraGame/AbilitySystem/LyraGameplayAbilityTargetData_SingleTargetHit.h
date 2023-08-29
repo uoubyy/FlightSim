@@ -12,7 +12,7 @@ struct FGameplayEffectContextHandle;
 
 /** Game-specific additions to SingleTargetHit tracking */
 USTRUCT()
-struct FLyraGameplayAbilityTargetData_SingleTargetHit : public FGameplayAbilityTargetData_SingleTargetHit
+struct LYRAGAME_API FLyraGameplayAbilityTargetData_SingleTargetHit : public FGameplayAbilityTargetData_SingleTargetHit
 {
 	GENERATED_BODY()
 
