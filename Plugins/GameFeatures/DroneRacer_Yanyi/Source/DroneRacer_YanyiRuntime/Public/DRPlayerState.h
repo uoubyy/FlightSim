@@ -62,5 +62,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FString GetDefaultPlaneName();
-	
 };

@@ -17,6 +17,11 @@
 #include <Perception/AIPerceptionStimuliSourceComponent.h>
 #include <Components/CapsuleComponent.h>
 #include "Components/DRWidgetManagerComponent.h"
+#include "DRPlayerState.h"
+
+#include "UI/DRUIMessageDefinition.h"
+
+#include "JsonObjectConverter.h"
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
@@ -129,11 +134,7 @@ void ADRCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	PawnExtComponent->HandleControllerChanged();
-
-	if (UDRWidgetManagerComponent* WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController))
-	{
-		WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD");
-	}
+	WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
 }
 
 void ADRCharacter::UnPossessed()
@@ -221,6 +222,31 @@ void ADRCharacter::SwitchThirdAndFirstCamera()
 	ThirdCameraEnabled = !ThirdCameraEnabled;
 	ThirdPersonCamera->SetActive(ThirdCameraEnabled);
 	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
+}
+
+void ADRCharacter::OnMatchStart()
+{
+	if (WidgetManagerComponent)
+	{
+		WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD");
+	}
+}
+
+void ADRCharacter::OnMatchEnd(bool WinOrLoss)
+{
+	if (WidgetManagerComponent)
+	{
+		WidgetManagerComponent->RequestHideWidget("WBP_InGameHUD");
+		WidgetManagerComponent->RequestShowWidget("WBP_GameOver");
+
+		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+		FDRBattleResult BattleResult(WinOrLoss, DRPlayerState->GetBestRecord(), DRPlayerState->GetCurrentRecord());
+		FString MessagePayload;
+		if (FJsonObjectConverter::UStructToJsonObjectString(BattleResult, MessagePayload))
+		{
+			WidgetManagerComponent->RequestUpdateWidget("WBP_GameOver", MessagePayload);
+		}
+	}
 }
 
 ULyraAbilitySystemComponent* ADRCharacter::GetLyraAbilitySystemComponent() const

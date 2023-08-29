@@ -69,6 +69,7 @@ void ADREnemyBase::PostInitializeComponents()
 	// HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
 
 	LyraHealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
+	LyraHealthComponent->OnHealthChanged.AddDynamic(this, &ThisClass::OnHealthChanged);
 }
 
 void ADREnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -137,8 +138,21 @@ void ADREnemyBase::TraceTargetActors_Implementation()
 
 }
 
+void ADREnemyBase::OnHealthChanged(class ULyraHealthComponent* HealthComponent, float OldValue, float NewValue, AActor* InstigatorActor)
+{
+	if (OldValue > 0.0f && NewValue <= 0.0f)
+	{
+		ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
+		DroneRacerGameMode->OnEliminateEnemy(InstigatorActor, this);
+
+		OnDeathStarted(InstigatorActor);
+	}
+}
+
 void ADREnemyBase::OnDeathStarted(AActor* Actor)
 {
+	FString DamageCausorName = Actor ? Actor->GetName() : "UNKNOW";
+	UE_LOG(LogTemp, Warning, TEXT("Enemy %s receive damage from %s and start death."), *GetName(), *DamageCausorName);
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 
 	OnExploded();

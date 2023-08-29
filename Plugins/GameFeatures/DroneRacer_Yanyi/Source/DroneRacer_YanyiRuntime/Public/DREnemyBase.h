@@ -73,6 +73,9 @@ protected:
 	FVector GetMuzzleLocation();
 
 	UFUNCTION()
+	void OnHealthChanged(class ULyraHealthComponent* HealthComponent, float OldValue, float NewValue, AActor* InstigatorActor);
+
+	UFUNCTION()
 	void OnDeathStarted(AActor* Actor);
 
 	UFUNCTION()

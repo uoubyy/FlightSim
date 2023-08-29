@@ -18,7 +18,7 @@ public:
 private:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Line Trace Weapon", Meta = (AllowPrivateAccess = "true"))
-	float MaxTraceDistance = 5000.0f;
+	float MaxTraceDistance = 10000.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DroneRacer|Line Trace Weapon", Meta = (AllowPrivateAccess = "true"))
 	double TimeLastFired = 0.0;

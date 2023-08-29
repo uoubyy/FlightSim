@@ -3,7 +3,7 @@
 
 #include "DroneRacerGameMode.h"
 #include "Subsystems/DRSaveGameSubsystem.h"
-#include "DroneCharacter.h"
+#include "DRCharacter.h"
 #include "DRPlayerState.h"
 #include "GameModes/LyraGameState.h"
 #include "Subsystems/DRObjectPoolSubsystem.h"
@@ -72,7 +72,6 @@ void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AAct
 
 void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* VictimPawn)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s"), *VictimPawn->GetName());
 	if (VictimPawn && AllEnemies.Contains(VictimPawn->GetName()))
 	{
 		AllEnemies[VictimPawn->GetName()] = nullptr;
@@ -87,6 +86,7 @@ void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* Victi
 		}
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s, Live Enemies Cnt %d"), *VictimPawn->GetName(), LiveEnemiesCnt);
 	if (LiveEnemiesCnt <= 0)
 	{
 		OnMatchEnd(true);
@@ -132,7 +132,7 @@ void ADroneRacerGameMode::OnMatchStart()
 
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
-		ADroneCharacter* Player = Cast<ADroneCharacter>(LyraPlayerState->GetPawn());
+		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
 		if (Player)
 		{
 			Player->OnMatchStart();
@@ -147,7 +147,7 @@ void ADroneRacerGameMode::OnMatchEnd(bool BattleResult)
 
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
-		ADroneCharacter* Player = Cast<ADroneCharacter>(LyraPlayerState->GetPawn());
+		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
 		if (Player)
 		{
 			if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(LyraPlayerState))

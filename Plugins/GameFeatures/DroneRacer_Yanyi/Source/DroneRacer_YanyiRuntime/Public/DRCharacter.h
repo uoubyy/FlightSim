@@ -100,6 +100,9 @@ private:
 	UPROPERTY()
 	FOnLyraTeamIndexChangedDelegate OnTeamChangedDelegate;
 
+	UPROPERTY()
+	class UDRWidgetManagerComponent* WidgetManagerComponent;
+
 protected:
 
 	virtual void OnAbilitySystemInitialized();
@@ -140,5 +143,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SwitchThirdAndFirstCamera();
+
+	UFUNCTION(BlueprintCallable)
+	void OnMatchStart();
+
+	UFUNCTION(BlueprintCallable)
+	void OnMatchEnd(bool WinOrLoss);
 
 };
