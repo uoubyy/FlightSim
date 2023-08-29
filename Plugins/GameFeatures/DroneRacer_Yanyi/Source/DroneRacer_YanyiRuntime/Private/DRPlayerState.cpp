@@ -30,7 +30,11 @@ void ADRPlayerState::LoadPlayerState_Implementation(class UDRSaveGame* SaveObjec
 		BestRecordInSeconds = SaveObject->BestRecordInSeconds;
 		CurrentSelectedPlane = SaveObject->SelectedPlaneName.IsEmpty() ? GetDefaultPlaneName() : SaveObject->SelectedPlaneName;
 
-		UpdateSelectedPlane(CurrentSelectedPlane);
+		FDRPlaneConfig CurrentPlaneConfig;
+		if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig) && OverrideDefaultPawnData)
+		{
+			SetPawnData(CurrentPlaneConfig.PawnData);
+		}
 	}
 }
 
@@ -46,11 +50,6 @@ void ADRPlayerState::UpdatePersonalRecord(float TimeInSeconds)
 void ADRPlayerState::UpdateSelectedPlane(const FString& NewPlaneName)
 {
 	CurrentSelectedPlane = NewPlaneName;
-	FDRPlaneConfig CurrentPlaneConfig;
-	if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig) && !PawnData)
-	{
-		SetPawnData(CurrentPlaneConfig.PawnData);
-	}
 
 	// TODO: 2K Yanyi Temp Code
 	UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();

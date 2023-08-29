@@ -35,7 +35,8 @@ void ADRCharacter_Lobby::PossessedBy(AController* NewController)
 	{
 		CurrentViewingPlane = DRPlayerState->GetSelectedPlaneName();
 
-		FDRPlaneConfig PlaneConfig = PlaneSet->GetNextPlaneConfig(CurrentViewingPlane);
+		FDRPlaneConfig PlaneConfig;
+		DRPlayerState->GetSelectedPlaneConfig(PlaneConfig);
 		UpdateUI(PlaneConfig);
 	}
 }
