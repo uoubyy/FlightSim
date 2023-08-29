@@ -4,6 +4,7 @@
 #include "DRPlayerState.h"
 #include "DRSaveGame.h"
 #include "Attributes/DRCombatSet.h"
+#include "Subsystems/DRSaveGameSubsystem.h"
 
 ADRPlayerState::ADRPlayerState(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -46,10 +47,14 @@ void ADRPlayerState::UpdateSelectedPlane(const FString& NewPlaneName)
 {
 	CurrentSelectedPlane = NewPlaneName;
 	FDRPlaneConfig CurrentPlaneConfig;
-	if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig))
+	if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig) && !PawnData)
 	{
 		SetPawnData(CurrentPlaneConfig.PawnData);
 	}
+
+	// TODO: 2K Yanyi Temp Code
+	UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
+	DRSaveGameSubsystem->WriteSaveGame();
 }
 
 bool ADRPlayerState::GetSelectedPlaneConfig(FDRPlaneConfig& PlaneConfig)
