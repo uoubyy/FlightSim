@@ -62,6 +62,8 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// always face to the direction of movement
 	bUseControllerRotationYaw = false;
+
+	Tags.Add(FName("Player"));
 }
 
 void ADRCharacter::PreInitializeComponents()
@@ -72,6 +74,8 @@ void ADRCharacter::PreInitializeComponents()
 void ADRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ToggleMovementAndCollision(false);
 }
 
 void ADRCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -135,6 +139,11 @@ void ADRCharacter::PossessedBy(AController* NewController)
 
 	PawnExtComponent->HandleControllerChanged();
 	WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
+
+	if(WidgetManagerComponent)
+	{ 
+		WidgetManagerComponent->RequestShowWidget("WBP_GameMenu");
+	}
 }
 
 void ADRCharacter::UnPossessed()
@@ -217,6 +226,31 @@ void ADRCharacter::UninitAndDestroy()
 	SetActorHiddenInGame(true);
 }
 
+void ADRCharacter::ToggleMovementAndCollision(bool EnableOrNot)
+{
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(EnableOrNot ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(EnableOrNot ? ECR_Block : ECR_Ignore);
+
+	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+
+	if (!EnableOrNot)
+	{
+		DroneMovementComponen->StopMovementImmediately();
+		DroneMovementComponen->DisableMovement();
+	}
+
+	DroneMovementComponen->SetActive(EnableOrNot);
+
+	if (Controller)
+	{
+		Controller->SetIgnoreMoveInput(!EnableOrNot);
+	}
+
+	SetActorHiddenInGame(!EnableOrNot);
+}
+
 void ADRCharacter::SwitchThirdAndFirstCamera()
 {
 	ThirdCameraEnabled = !ThirdCameraEnabled;
@@ -230,6 +264,8 @@ void ADRCharacter::OnMatchStart()
 	{
 		WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD");
 	}
+
+	ToggleMovementAndCollision(true);
 }
 
 void ADRCharacter::OnMatchEnd(bool WinOrLoss)

@@ -89,6 +89,7 @@ public:
 		MinThrottleAmount(0.0f),
 		ThrottleSensitivity(0.0f),
 		PitchSensitivity(0.0f),
+		RollSensitivity(0.0f),
 		MaxRollDegree(0.0f)
 	{}
 
@@ -100,6 +101,7 @@ public:
 		MinThrottleAmount(PlaneConfig.MinThrottleAmount),
 		ThrottleSensitivity(PlaneConfig.ThrottleSensitivity),
 		PitchSensitivity(PlaneConfig.PitchSensitivity),
+		RollSensitivity(PlaneConfig.RollSensitivity),
 		MaxRollDegree(PlaneConfig.MaxRollDegree)
 	{
 

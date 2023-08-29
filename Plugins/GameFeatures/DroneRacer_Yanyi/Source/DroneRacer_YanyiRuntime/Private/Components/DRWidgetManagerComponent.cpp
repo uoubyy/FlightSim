@@ -30,7 +30,7 @@ bool UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetName)
 
 	if (LoadedWidget.Contains(WidgetName))
 	{
-		LoadedWidget[WidgetName]->AddToViewport();
+		LoadedWidget[WidgetName]->AddToPlayerScreen();
 		return true;
 	}
 	else
@@ -42,7 +42,7 @@ bool UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetName)
 
 			UUserWidget* NewUserWidget = CreateWidget<UUserWidget>(PlayerController, WidgetClass, WidgetName);
 			LoadedWidget.Add(WidgetName, NewUserWidget);
-			NewUserWidget->AddToViewport();
+			NewUserWidget->AddToPlayerScreen();
 
 			// Stupid code
 			switch (WidgetConfig.OverrideInputMode)

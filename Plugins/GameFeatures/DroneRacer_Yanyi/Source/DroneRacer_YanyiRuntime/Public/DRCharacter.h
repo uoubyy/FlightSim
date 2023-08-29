@@ -133,6 +133,9 @@ protected:
 
 	void UninitAndDestroy();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleMovementAndCollision(bool EnableOrNot);
+
 public:
 
 	UFUNCTION(BlueprintCallable)
