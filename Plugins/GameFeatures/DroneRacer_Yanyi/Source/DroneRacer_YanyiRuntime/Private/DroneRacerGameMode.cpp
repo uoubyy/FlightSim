@@ -8,6 +8,8 @@
 #include "GameModes/LyraGameState.h"
 #include "Subsystems/DRObjectPoolSubsystem.h"
 
+#include "Character/LyraPawnData.h"
+
 void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 {
 	if (NewPlayer == nullptr || NewPlayer->IsPendingKillPending())
@@ -40,6 +42,26 @@ void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 	}
 
 	RestartPlayerAtPlayerStart(NewPlayer, StartSpot);
+}
+
+const ULyraPawnData* ADroneRacerGameMode::GetPawnDataFromPlayerState_Implementation(const AController* InController) const
+{
+	// 2K Yanyi: Only override the Default Pawn Data if OverrideDefaultPawnData is checked
+	if (InController != nullptr)
+	{
+		if (const ADRPlayerState* DRPlayerState = InController->GetPlayerState<ADRPlayerState>())
+		{
+			if (DRPlayerState->OverrideDefaultPawnData)
+			{
+				if (const ULyraPawnData* PawnData = DRPlayerState->GetPawnData<ULyraPawnData>())
+				{
+					return PawnData;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)

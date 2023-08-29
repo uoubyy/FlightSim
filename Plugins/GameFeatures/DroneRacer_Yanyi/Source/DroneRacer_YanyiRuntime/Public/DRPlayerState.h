@@ -18,6 +18,9 @@ class DRONERACER_YANYIRUNTIME_API ADRPlayerState : public ALyraPlayerState
 public:
 	ADRPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Lobby")
+	bool OverrideDefaultPawnData = false;
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	float BestRecordInSeconds;

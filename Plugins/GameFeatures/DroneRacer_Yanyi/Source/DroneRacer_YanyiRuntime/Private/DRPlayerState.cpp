@@ -48,7 +48,7 @@ void ADRPlayerState::UpdateSelectedPlane(const FString& NewPlaneName)
 	FDRPlaneConfig CurrentPlaneConfig;
 	if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig))
 	{
-		// SetPawnData(CurrentPlaneConfig.PawnData);
+		SetPawnData(CurrentPlaneConfig.PawnData);
 	}
 }
 

@@ -6,6 +6,9 @@
 #include "GameModes/LyraGameMode.h"
 #include "DroneRacerGameMode.generated.h"
 
+class ULyraPawnData;
+class AController;
+
 /**
  * 
  */
@@ -16,6 +19,8 @@ class DRONERACER_YANYIRUNTIME_API ADroneRacerGameMode : public ALyraGameMode
 
 public:
 	virtual void RestartPlayer(AController* NewPlayer) override;
+
+	virtual const ULyraPawnData* GetPawnDataFromPlayerState_Implementation(const AController* InController) const override;
 
 	void OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef);
 
