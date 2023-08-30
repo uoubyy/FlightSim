@@ -24,14 +24,14 @@ UDRWidgetManagerComponent* UDRWidgetManagerComponent::GetComponent(AController* 
 	return nullptr;
 }
 
-bool UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetName)
+UUserWidget* UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetName)
 {
 	APlayerController* PlayerController = Cast<APlayerController>(GetOwner());
 
 	if (LoadedWidget.Contains(WidgetName))
 	{
 		LoadedWidget[WidgetName]->AddToPlayerScreen();
-		return true;
+		return LoadedWidget[WidgetName];
 	}
 	else
 	{
@@ -61,11 +61,11 @@ bool UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetName)
 			}
 			
 			PlayerController->SetShowMouseCursor(WidgetConfig.ShowMouseCursor);
-			return true;
+			return LoadedWidget[WidgetName];
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
 bool UDRWidgetManagerComponent::RequestHideWidget(const FName& WidgetName)

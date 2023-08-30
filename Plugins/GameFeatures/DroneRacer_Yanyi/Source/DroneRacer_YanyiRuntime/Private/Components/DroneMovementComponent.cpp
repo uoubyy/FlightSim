@@ -63,6 +63,18 @@ void UDroneMovementComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+void UDroneMovementComponent::HandlePlayerStateReplicated(const FDRPlaneConfig& PlaneConfig)
+{
+	MaxThrottleAmount = PlaneConfig.MaxThrottleAmount;
+	MinThrottleAmount = PlaneConfig.MinThrottleAmount;
+	ThrottleSensitivity = PlaneConfig.ThrottleSensitivity;
+	PitchSensitivity = PlaneConfig.PitchSensitivity;
+	RollSensitivity = PlaneConfig.RollSensitivity;
+	MaxRollDegree = PlaneConfig.MaxRollDegree;
+
+	MaxFlySpeed = PlaneConfig.MaxSpeed;
+}
+
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
 {
 	if (uint8(CurrentPlaneStatus & EPlaneStatus::ThrottleUP) || AutoDrive)

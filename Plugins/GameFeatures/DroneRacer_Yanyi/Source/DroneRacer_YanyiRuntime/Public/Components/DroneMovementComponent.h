@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DataAssets/DRPlaneSet.h"
 #include "DroneMovementComponent.generated.h"
 
 UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
@@ -51,11 +52,17 @@ public:
 	float GetThrottleAmount() const { return ThrottleAmount; }
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
+	float GetEngineForce() const { return LastUpdatedEngineForce; }
+
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetMaxEngineForce() const;
 
 	virtual bool ShouldRemainVertical() const;
 
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void HandlePlayerStateReplicated(const FDRPlaneConfig& PlaneConfig);
 
 protected:
 

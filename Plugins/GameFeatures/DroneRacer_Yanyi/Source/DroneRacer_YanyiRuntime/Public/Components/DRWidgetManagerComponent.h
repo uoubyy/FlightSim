@@ -18,7 +18,7 @@ public:
 	static UDRWidgetManagerComponent* GetComponent(AController* Controller);
 
 	UFUNCTION(BlueprintCallable)
-	bool RequestShowWidget(const FName& WidgetName);
+	class UUserWidget* RequestShowWidget(const FName& WidgetName);
 
 	UFUNCTION(BlueprintCallable)
 	bool RequestHideWidget(const FName& WidgetName);

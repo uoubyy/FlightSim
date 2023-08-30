@@ -20,6 +20,7 @@
 #include "DRPlayerState.h"
 
 #include "UI/DRUIMessageDefinition.h"
+#include "UI/DRUserWidget_InGameHUD.h"
 
 #include "JsonObjectConverter.h"
 
@@ -76,6 +77,17 @@ void ADRCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	ToggleMovementAndCollision(false);
+}
+
+void ADRCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+	if(InGameHUD)
+	{
+		InGameHUD->UpdateInGameHUD(100.0f, GetActorLocation().Z, DroneMovementComponent->GetLastUpdateVelocity().Length(), DroneMovementComponent->GetThrottleAmount(), DroneMovementComponent->GetEngineForce());
+	}
 }
 
 void ADRCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -165,6 +177,13 @@ void ADRCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 
 	PawnExtComponent->HandlePlayerStateReplicated();
+	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+	FDRPlaneConfig PlaneConfig;
+	if(DRPlayerState->GetSelectedPlaneConfig(PlaneConfig))
+	{ 
+		DroneMovementComponent->HandlePlayerStateReplicated(PlaneConfig);
+	}
 }
 
 void ADRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -181,31 +200,12 @@ void ADRCharacter::InitializeGameplayTags()
 
 void ADRCharacter::OnDeathStarted(AActor* OwningActor)
 {
-	DisableMovementAndCollision();
+	ToggleMovementAndCollision(false);
 }
 
 void ADRCharacter::OnDeathFinished(AActor* OwningActor)
 {
 
-}
-
-void ADRCharacter::DisableMovementAndCollision()
-{
-	if (Controller)
-	{
-		Controller->SetIgnoreMoveInput(true);
-	}
-
-	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
-	check(CapsuleComp);
-	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-
-	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
-	DroneMovementComponen->StopMovementImmediately();
-	DroneMovementComponen->DisableMovement();
-
-	DroneMovementComponen->SetActive(false);
 }
 
 void ADRCharacter::DestroyDueToDeath()
@@ -233,15 +233,15 @@ void ADRCharacter::ToggleMovementAndCollision(bool EnableOrNot)
 	CapsuleComp->SetCollisionEnabled(EnableOrNot ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
 	CapsuleComp->SetCollisionResponseToAllChannels(EnableOrNot ? ECR_Block : ECR_Ignore);
 
-	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
 
 	if (!EnableOrNot)
 	{
-		DroneMovementComponen->StopMovementImmediately();
-		DroneMovementComponen->DisableMovement();
+		DroneMovementComponent->StopMovementImmediately();
+		DroneMovementComponent->DisableMovement();
 	}
 
-	DroneMovementComponen->SetActive(EnableOrNot);
+	DroneMovementComponent->SetActive(EnableOrNot);
 
 	if (Controller)
 	{
@@ -262,7 +262,7 @@ void ADRCharacter::OnMatchStart()
 {
 	if (WidgetManagerComponent)
 	{
-		WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD");
+		InGameHUD = Cast<UDRUserWidget_InGameHUD>(WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD"));
 	}
 
 	ToggleMovementAndCollision(true);
@@ -273,6 +273,8 @@ void ADRCharacter::OnMatchEnd(bool WinOrLoss)
 	if (WidgetManagerComponent)
 	{
 		WidgetManagerComponent->RequestHideWidget("WBP_InGameHUD");
+		InGameHUD = nullptr;
+
 		WidgetManagerComponent->RequestShowWidget("WBP_GameOver");
 
 		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
@@ -283,6 +285,8 @@ void ADRCharacter::OnMatchEnd(bool WinOrLoss)
 			WidgetManagerComponent->RequestUpdateWidget("WBP_GameOver", MessagePayload);
 		}
 	}
+
+	ToggleMovementAndCollision(false);
 }
 
 ULyraAbilitySystemComponent* ADRCharacter::GetLyraAbilitySystemComponent() const

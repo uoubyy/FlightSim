@@ -38,6 +38,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void Reset() override;
@@ -103,6 +105,9 @@ private:
 	UPROPERTY()
 	class UDRWidgetManagerComponent* WidgetManagerComponent;
 
+	UPROPERTY()
+	class UDRUserWidget_InGameHUD* InGameHUD;
+
 protected:
 
 	virtual void OnAbilitySystemInitialized();
@@ -126,8 +131,6 @@ protected:
 
 	UFUNCTION()
 	virtual void OnDeathFinished(AActor* OwningActor);
-
-	void DisableMovementAndCollision();
 
 	void DestroyDueToDeath();
 
