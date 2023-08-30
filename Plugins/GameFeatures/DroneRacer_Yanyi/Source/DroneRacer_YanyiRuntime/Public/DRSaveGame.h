@@ -20,4 +20,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
 	FString SelectedPlaneName;
+
+	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
+	int32 ResolutionLevel;
 };

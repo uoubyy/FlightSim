@@ -16,10 +16,15 @@ class DRONERACER_YANYIRUNTIME_API UDRUserWidget_InGameHUD : public UUserWidget, 
 	GENERATED_BODY()
 	
 public:
+	virtual bool Initialize() override;
 
 	virtual bool UpdateWidget_Implementation(const FString& Payload) override;
 
 	void UpdateInGameHUD(float HP, float Altitude, float Speed, float ThrottleAmount, float EngineForce);
+
+protected:
+
+	virtual void NativeConstruct() override;
 
 protected:
 

@@ -23,7 +23,7 @@ protected:
 
 public:
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
 	void SetSlotName(FString NewSlotName);
 
 	UFUNCTION(BlueprintCallable, Category = "SaveGame")
@@ -32,4 +32,13 @@ public:
 	void LoadSaveGame(FString InSlotName = "");
 
 	void HandleStartingNewPlayer(class AController* NewPlayer);
+
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	const float GetBestRecordFromSaveGame() const;
+
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	const int32 GetResolutionLevelFromSaveGame() const;
+
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	void UpdateResolutionLevel(int32 ResolutionLevel);
 };

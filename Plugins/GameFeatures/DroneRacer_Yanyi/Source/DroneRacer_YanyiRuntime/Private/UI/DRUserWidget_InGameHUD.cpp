@@ -7,6 +7,18 @@
 
 #define LOCTEXT_NAMESPACE "USERWIDGET_INGAMEHUD"
 
+void UDRUserWidget_InGameHUD::NativeConstruct()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UserWidget_InGameHUD::NativeConstruct"));
+	Super::NativeConstruct();
+}
+
+bool UDRUserWidget_InGameHUD::Initialize()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UserWidget_InGameHUD::Initialize"));
+	return Super::Initialize();
+}
+
 bool UDRUserWidget_InGameHUD::UpdateWidget_Implementation(const FString& Payload)
 {
 	return false;
