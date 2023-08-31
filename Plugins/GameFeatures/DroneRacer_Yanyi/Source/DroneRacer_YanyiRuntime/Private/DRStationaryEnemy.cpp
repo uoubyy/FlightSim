@@ -3,6 +3,10 @@
 
 #include "DRStationaryEnemy.h"
 #include "DRBlueprintFunctionLibrary.h"
+#include "GameplayEffect.h"
+#include "AbilitySystemGlobals.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/LyraHealthSet.h"
 
 void ADRStationaryEnemy::OnActorPerceptionUpdated_Implementation(AActor* Actor, bool WasSuccessfullySensed)
 {
@@ -48,7 +52,17 @@ void ADRStationaryEnemy::TraceTargetActors_Implementation()
 			{
 				// AdjustedLocation = RayCastResult.ImpactPoint;
 
-				UDRBlueprintFunctionLibrary::ApplyDamage(this, RayCastResult.GetActor(), DamageAmount);
+				// UDRBlueprintFunctionLibrary::ApplyDamage(this, RayCastResult.GetActor(), DamageAmount);
+
+				// TODO: 2K Yanyi Fake Apply Damage
+				if(RayCastResult.GetActor()->ActorHasTag("Player"))
+				{ 
+					if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(RayCastResult.GetActor()))
+					{
+						float CurrentHealth = ASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
+						ASC->SetNumericAttributeBase(ULyraHealthSet::GetHealthAttribute(), CurrentHealth - DamageAmount);
+					}
+				}
 
 #if !UE_BUILD_SHIPPING
 				SucceededHitAmount++;

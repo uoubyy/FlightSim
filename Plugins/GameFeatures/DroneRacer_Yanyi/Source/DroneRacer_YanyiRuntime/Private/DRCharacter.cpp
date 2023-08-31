@@ -23,6 +23,7 @@
 #include "UI/DRUserWidget_InGameHUD.h"
 
 #include "JsonObjectConverter.h"
+#include "AbilitySystem/Attributes/LyraHealthSet.h"
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
@@ -84,9 +85,11 @@ void ADRCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
-	if(InGameHUD)
+	ULyraAbilitySystemComponent* LyraASC = GetLyraAbilitySystemComponent();
+	if(InGameHUD && LyraASC)
 	{
-		InGameHUD->UpdateInGameHUD(100.0f, GetActorLocation().Z, DroneMovementComponent->GetLastUpdateVelocity().Length(), DroneMovementComponent->GetThrottleAmount(), DroneMovementComponent->GetEngineForce());
+		float CurrentHealth = LyraASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
+		InGameHUD->UpdateInGameHUD(CurrentHealth, GetActorLocation().Z, DroneMovementComponent->GetLastUpdateVelocity().Length(), DroneMovementComponent->GetThrottleAmount(), DroneMovementComponent->GetEngineForce());
 	}
 }
 

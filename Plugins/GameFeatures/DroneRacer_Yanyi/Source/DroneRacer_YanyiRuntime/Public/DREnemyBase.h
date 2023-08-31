@@ -29,6 +29,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> BulletClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class ULyraGameplayAbility> DamageAbility;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UGameplayEffect> DamageEffectClass;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	float FireRate;
 
@@ -47,6 +53,10 @@ public:
 	//~End of ILyraTeamAgentInterface interface
 
 protected:
+
+	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|Enemy")
+	TObjectPtr<class ULyraAbilitySystemComponent> AbilitySystemComponent;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -92,9 +102,6 @@ public:
 	virtual void PostInitializeComponents() override;
 
 private:
-
-	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|Enemy")
-	TObjectPtr<class ULyraAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Enemy", Meta = (AllowPrivateAccess = "true"))
 	FGenericTeamId TeamID;

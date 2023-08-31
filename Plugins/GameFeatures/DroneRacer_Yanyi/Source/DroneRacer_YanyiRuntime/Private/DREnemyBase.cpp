@@ -58,6 +58,12 @@ void ADREnemyBase::BeginPlay()
 	RegisterEnemy();
 	
 	InitializeEnemy();
+
+	//if (DamageAbility)
+	//{
+	//	FGameplayAbilitySpec AbilitySpec(DamageAbility);
+	//	AbilitySystemComponent->GiveAbility(AbilitySpec);
+	//}
 }
 
 void ADREnemyBase::PostInitializeComponents()
