@@ -8,6 +8,10 @@
 #include "Components/DRHealthComponent.h"
 #include "Subsystems/DRObjectPoolSubsystem.h"
 
+#include "AbilitySystem/Attributes/LyraHealthSet.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
+
 ADRProjectileActorBase::ADRProjectileActorBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -68,6 +72,12 @@ void ADRProjectileActorBase::ApplyDamage(AActor* TargetActor)
 	if (DRHealthComponent)
 	{
 		DRHealthComponent->ApplyDamage(GetInstigator(), DamageAmount);
+	}
+
+	if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(TargetActor))
+	{
+		float CurrentHealth = ASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
+		ASC->SetNumericAttributeBase(ULyraHealthSet::GetHealthAttribute(), CurrentHealth - DamageAmount);
 	}
 }
 

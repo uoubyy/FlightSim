@@ -3,6 +3,7 @@
 
 #include "Abilities/DRGameplayAbility_Missile.h"
 #include "DRCharacter.h"
+#include "Attributes/DRCombatSet.h"
 
 UDRGameplayAbility_Missile::UDRGameplayAbility_Missile(const FObjectInitializer& ObjectInitializer /*= FObjectInitializer::Get()*/)
 {
@@ -27,7 +28,34 @@ bool UDRGameplayAbility_Missile::CanActivateAbility(const FGameplayAbilitySpecHa
 		return false;
 	}
 
+	if (const UDRCombatSet* CombatSet = ActorInfo->AbilitySystemComponent->GetSet<UDRCombatSet>())
+	{
+		if (CombatSet->GetRocketNum() <= 0.0f)
+		{
+			return false;
+		}
+	}
+
 	return true;
+}
+
+void UDRGameplayAbility_Missile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	if (!ActorInfo->AbilitySystemComponent.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DRGameplayAbility_Missile::ActivateAbility Failed to get the AbilitySystemComponent"));
+		return;
+	}
+
+	if (const UDRCombatSet* CombatSet = ActorInfo->AbilitySystemComponent->GetSet<UDRCombatSet>())
+	{
+		float CurrentRocketNum = CombatSet->GetRocketNum();
+		CurrentRocketNum--;
+
+		ActorInfo->AbilitySystemComponent->SetNumericAttributeBase(UDRCombatSet::GetRocketNumAttribute(), CurrentRocketNum);
+	}
 }
 
 void UDRGameplayAbility_Missile::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

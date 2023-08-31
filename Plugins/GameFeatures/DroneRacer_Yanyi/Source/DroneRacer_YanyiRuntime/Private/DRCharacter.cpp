@@ -24,6 +24,7 @@
 
 #include "JsonObjectConverter.h"
 #include "AbilitySystem/Attributes/LyraHealthSet.h"
+#include "Attributes/DRCombatSet.h"
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
@@ -89,7 +90,8 @@ void ADRCharacter::Tick(float DeltaSeconds)
 	if(InGameHUD && LyraASC)
 	{
 		float CurrentHealth = LyraASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
-		InGameHUD->UpdateInGameHUD(CurrentHealth, GetActorLocation().Z, DroneMovementComponent->GetLastUpdateVelocity().Length(), DroneMovementComponent->GetThrottleAmount(), DroneMovementComponent->GetEngineForce());
+		int32 RocketNum = LyraASC->GetNumericAttribute(UDRCombatSet::GetRocketNumAttribute());
+		InGameHUD->UpdateInGameHUD(CurrentHealth, GetActorLocation().Z, DroneMovementComponent->GetLastUpdateVelocity().Length(), DroneMovementComponent->GetThrottleAmount(), DroneMovementComponent->GetEngineForce(), RocketNum);
 	}
 }
 
@@ -137,6 +139,11 @@ void ADRCharacter::OnAbilitySystemInitialized()
 {
 	ULyraAbilitySystemComponent* LyraASC = GetLyraAbilitySystemComponent();
 	check(LyraASC);
+
+	// 2K TODO
+	LyraASC->SetNumericAttributeBase(ULyraHealthSet::GetMaxHealthAttribute(), 1000.0f);
+	LyraASC->SetNumericAttributeBase(UDRCombatSet::GetRocketNumAttribute(), 5);
+	// 2K TODO
 
 	HealthComponent->InitializeWithAbilitySystem(LyraASC);
 
