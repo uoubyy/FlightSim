@@ -27,6 +27,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<class UCommonTextBlock> Text_Resolution;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<class UButton> Btn_StartGame;
+
 	void HandleEscapeAction();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -46,4 +49,7 @@ private:
 	int32 ResolutionLevel;
 
 	void UpdateResolution();
+
+	UFUNCTION()
+	void OnStartGameBtnClicked();
 };

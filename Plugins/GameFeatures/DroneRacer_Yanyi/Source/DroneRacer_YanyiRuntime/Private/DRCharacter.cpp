@@ -157,7 +157,7 @@ void ADRCharacter::PossessedBy(AController* NewController)
 
 	if(WidgetManagerComponent)
 	{ 
-		WidgetManagerComponent->RequestShowWidget("WBP_GameMenu");
+		WidgetManagerComponent->RequestShowWidget("WBP_InGameReady");
 	}
 }
 
@@ -275,10 +275,10 @@ void ADRCharacter::OnMatchEnd(bool WinOrLoss)
 {
 	if (WidgetManagerComponent)
 	{
-		WidgetManagerComponent->RequestHideWidget("WBP_InGameHUD");
+		WidgetManagerComponent->RequestHideWidget(FName("WBP_InGameHUD"));
 		InGameHUD = nullptr;
 
-		WidgetManagerComponent->RequestShowWidget("WBP_GameOver");
+		WidgetManagerComponent->RequestShowWidget(FName("WBP_GameOver"));
 
 		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
 		FDRBattleResult BattleResult(WinOrLoss, DRPlayerState->GetBestRecord(), DRPlayerState->GetCurrentRecord());

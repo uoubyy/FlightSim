@@ -4,11 +4,15 @@
 #include "UI/DRUserWidget_GameMenu.h"
 #include "Subsystems/DRSaveGameSubsystem.h"
 #include "CommonTextBlock.h"
+#include "Components/Button.h"
 #include "Input/CommonUIInputTypes.h"
 #include <Kismet/KismetMathLibrary.h>
 #include "NativeGameplayTags.h"
 #include "Performance/LyraPerformanceSettings.h"
 #include "GameFramework/GameUserSettings.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "Components/DRWidgetManagerComponent.h"
 
 // #include "Input/CommonUIInputSettings.h"
 
@@ -39,6 +43,11 @@ void UDRUserWidget_GameMenu::NativeOnInitialized()
 
 	const FGameplayTag TAG_UI_ACTION_ESCAPE = FGameplayTag::RequestGameplayTag(FName("UI.Action.Escape"));
 	RegisterUIActionBinding(FBindUIActionArgs(FUIActionTag::ConvertChecked(TAG_UI_ACTION_ESCAPE), false, FSimpleDelegate::CreateUObject(this, &ThisClass::HandleEscapeAction)));
+
+	if (Btn_StartGame)
+	{
+		Btn_StartGame->OnClicked.AddDynamic(this, &ThisClass::OnStartGameBtnClicked);
+	}
 }
 
 void UDRUserWidget_GameMenu::HandleEscapeAction()
@@ -90,6 +99,16 @@ void UDRUserWidget_GameMenu::UpdateResolution()
 	if (GEngine)
 	{
 		GEngine->GetGameUserSettings()->SetScreenResolution(OutResolution);
+	}
+}
+
+void UDRUserWidget_GameMenu::OnStartGameBtnClicked()
+{
+	APlayerController* LocalPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (UDRWidgetManagerComponent* WidgetManager = UDRWidgetManagerComponent::GetComponent(LocalPlayerController))
+	{
+		WidgetManager->RequestHideWidget(FName("WBP_GameMenu"));
+		WidgetManager->RequestShowWidget(FName("WBP_PlaneInfo"));
 	}
 }
 
