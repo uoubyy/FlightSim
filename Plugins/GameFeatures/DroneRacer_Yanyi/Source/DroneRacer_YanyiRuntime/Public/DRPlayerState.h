@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Player/LyraPlayerState.h"
+#include "DataAssets/DRPlaneSet.h"
 #include "DRPlayerState.generated.h"
 
 /**
@@ -14,12 +15,24 @@ class DRONERACER_YANYIRUNTIME_API ADRPlayerState : public ALyraPlayerState
 {
 	GENERATED_BODY()
 
+public:
+	ADRPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Lobby")
+	bool OverrideDefaultPawnData = false;
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	float BestRecordInSeconds;
 
 	UPROPERTY(VisibleAnywhere)
 	float CurrentRecordInSeconds;
+
+	UPROPERTY(VisibleAnywhere)
+	FString CurrentSelectedPlane;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Lobby", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDRPlaneSet> PlaneSet;
 
 public:
 
@@ -37,5 +50,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentRecord() const { return CurrentRecordInSeconds; }
-	
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateSelectedPlane(const FString& NewPlaneName);
+
+	UFUNCTION(BlueprintCallable)
+	FString GetSelectedPlaneName() { return CurrentSelectedPlane; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetSelectedPlaneConfig(FDRPlaneConfig& PlaneConfig);
+
+	UFUNCTION(BlueprintCallable)
+	FString GetDefaultPlaneName();
 };

@@ -3,10 +3,66 @@
 
 #include "DroneRacerGameMode.h"
 #include "Subsystems/DRSaveGameSubsystem.h"
-#include "DroneCharacter.h"
+#include "DRCharacter.h"
 #include "DRPlayerState.h"
 #include "GameModes/LyraGameState.h"
 #include "Subsystems/DRObjectPoolSubsystem.h"
+
+#include "Character/LyraPawnData.h"
+
+void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
+{
+	if (NewPlayer == nullptr || NewPlayer->IsPendingKillPending())
+	{
+		return;
+	}
+
+	FString SpecificPlayerStartName = TEXT("");
+	if (NewPlayer->PlayerState)
+	{
+		ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(NewPlayer->PlayerState);
+		FDRPlaneConfig CurrentPlaneConfig;
+		if (DRPlayerState && DRPlayerState->GetSelectedPlaneConfig(CurrentPlaneConfig))
+		{
+			SpecificPlayerStartName = CurrentPlaneConfig.PlayerStartTag;
+		}
+	}
+
+	AActor* StartSpot = StartSpot = FindPlayerStart(NewPlayer, SpecificPlayerStartName);
+
+	// If a start spot wasn't found,
+	if (StartSpot == nullptr)
+	{
+		// Check for a previously assigned spot
+		if (NewPlayer->StartSpot != nullptr)
+		{
+			StartSpot = NewPlayer->StartSpot.Get();
+			UE_LOG(LogGameMode, Warning, TEXT("RestartPlayer: Player start not found, using last start spot"));
+		}
+	}
+
+	RestartPlayerAtPlayerStart(NewPlayer, StartSpot);
+}
+
+const ULyraPawnData* ADroneRacerGameMode::GetPawnDataFromPlayerState_Implementation(const AController* InController) const
+{
+	// 2K Yanyi: Only override the Default Pawn Data if OverrideDefaultPawnData is checked
+	if (InController != nullptr)
+	{
+		if (const ADRPlayerState* DRPlayerState = InController->GetPlayerState<ADRPlayerState>())
+		{
+			if (DRPlayerState->OverrideDefaultPawnData)
+			{
+				if (const ULyraPawnData* PawnData = DRPlayerState->GetPawnData<ULyraPawnData>())
+				{
+					return PawnData;
+				}
+			}
+		}
+	}
+
+	return nullptr;
+}
 
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)
 {
@@ -16,7 +72,6 @@ void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AAct
 
 void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* VictimPawn)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s"), *VictimPawn->GetName());
 	if (VictimPawn && AllEnemies.Contains(VictimPawn->GetName()))
 	{
 		AllEnemies[VictimPawn->GetName()] = nullptr;
@@ -31,6 +86,7 @@ void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* Victi
 		}
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s, Live Enemies Cnt %d"), *VictimPawn->GetName(), LiveEnemiesCnt);
 	if (LiveEnemiesCnt <= 0)
 	{
 		OnMatchEnd(true);
@@ -76,7 +132,7 @@ void ADroneRacerGameMode::OnMatchStart()
 
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
-		ADroneCharacter* Player = Cast<ADroneCharacter>(LyraPlayerState->GetPawn());
+		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
 		if (Player)
 		{
 			Player->OnMatchStart();
@@ -91,7 +147,7 @@ void ADroneRacerGameMode::OnMatchEnd(bool BattleResult)
 
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
-		ADroneCharacter* Player = Cast<ADroneCharacter>(LyraPlayerState->GetPawn());
+		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
 		if (Player)
 		{
 			if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(LyraPlayerState))

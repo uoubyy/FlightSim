@@ -8,7 +8,7 @@ void UDRObjectPoolSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	UE_LOG(LogTemp, Warning, TEXT("Initialize DRObjectPoolSubsystem."));
+	// UE_LOG(LogTemp, Warning, TEXT("Initialize DRObjectPoolSubsystem."));
 }
 
 void UDRObjectPoolSubsystem::RegisterPoolableClass(UClass* ObjectClass, int InitialNum)

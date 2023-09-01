@@ -42,6 +42,8 @@ void ADREnemyController::OnActorPerceptionUpdated(AActor* Actor, FAIStimulus Sti
 		return;
 	}
 
+	// UE_LOG(LogTemp, Warning, TEXT("OnActorPerceptionUpdated %s."), *Actor->GetName());
+
 	if (GetPawn() && GetPawn()->GetClass()->ImplementsInterface(UDRPerceptiveActorInterface::StaticClass()))
 	{
 		IDRPerceptiveActorInterface* PerceptiveActorInterface = Cast<IDRPerceptiveActorInterface>(GetPawn());

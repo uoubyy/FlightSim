@@ -65,3 +65,29 @@ void UDRSaveGameSubsystem::HandleStartingNewPlayer(class AController* NewPlayer)
 		DRPlayerState->LoadPlayerState(CurrentSaveGame);
 	}
 }
+
+void UDRSaveGameSubsystem::UpdateResolutionLevel(int32 ResolutionLevel)
+{
+	if (CurrentSaveGame)
+	{
+		CurrentSaveGame->ResolutionLevel = ResolutionLevel;
+	}
+}
+
+const int32 UDRSaveGameSubsystem::GetResolutionLevelFromSaveGame() const
+{
+	if (CurrentSaveGame)
+	{
+		return CurrentSaveGame->ResolutionLevel;
+	}
+	return 0;
+}
+
+const float UDRSaveGameSubsystem::GetBestRecordFromSaveGame() const
+{
+	if (CurrentSaveGame)
+	{
+		return CurrentSaveGame->BestRecordInSeconds;
+	}
+	return 0.0f;
+}

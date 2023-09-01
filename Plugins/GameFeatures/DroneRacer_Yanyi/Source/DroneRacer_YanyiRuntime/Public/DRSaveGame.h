@@ -17,4 +17,10 @@ class DRONERACER_YANYIRUNTIME_API UDRSaveGame : public USaveGame
 public:
 	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
 	float BestRecordInSeconds;
+
+	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
+	FString SelectedPlaneName;
+
+	UPROPERTY(VisibleAnywhere, Category = "DroneRacer|SaveGame")
+	int32 ResolutionLevel;
 };

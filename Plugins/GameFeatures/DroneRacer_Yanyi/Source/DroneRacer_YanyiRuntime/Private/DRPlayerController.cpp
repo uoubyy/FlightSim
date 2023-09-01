@@ -2,4 +2,9 @@
 
 
 #include "DRPlayerController.h"
+#include "Components/DRWidgetManagerComponent.h"
 
+void ADRPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+}

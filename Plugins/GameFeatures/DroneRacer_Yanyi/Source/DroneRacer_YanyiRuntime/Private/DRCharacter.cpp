@@ -16,9 +16,19 @@
 #include <Camera/CameraComponent.h>
 #include <Perception/AIPerceptionStimuliSourceComponent.h>
 #include <Components/CapsuleComponent.h>
+#include "Components/DRWidgetManagerComponent.h"
+#include "DRPlayerState.h"
+
+#include "UI/DRUIMessageDefinition.h"
+#include "UI/DRUserWidget_InGameHUD.h"
+
+#include "JsonObjectConverter.h"
+#include "AbilitySystem/Attributes/LyraHealthSet.h"
+#include "Attributes/DRCombatSet.h"
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName))
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
+	TeamID(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -26,20 +36,22 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 
 	LeftMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("LeftMuzzle"));
 	LeftMuzzle->SetupAttachment(GetMesh());
+	LeftMuzzle->ComponentTags.Add(FName("Muzzle"));
 
 	RightMuzzle = CreateDefaultSubobject<UArrowComponent>(TEXT("RightMuzzle"));
 	RightMuzzle->SetupAttachment(GetMesh());
+	RightMuzzle->ComponentTags.Add(FName("Muzzle"));
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 
 	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
 	ThirdPersonCamera->SetupAttachment(SpringArm);
-	ThirdPersonCamera->SetAutoActivate(true);
+	ThirdPersonCamera->SetAutoActivate(ThirdCameraEnabled);
 
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(GetMesh());
-	FirstPersonCamera->SetAutoActivate(false);
+	FirstPersonCamera->SetAutoActivate(!ThirdCameraEnabled);
 
 	PawnExtComponent = CreateDefaultSubobject<ULyraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 	PawnExtComponent->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
@@ -53,6 +65,8 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// always face to the direction of movement
 	bUseControllerRotationYaw = false;
+
+	Tags.Add(FName("Player"));
 }
 
 void ADRCharacter::PreInitializeComponents()
@@ -63,6 +77,22 @@ void ADRCharacter::PreInitializeComponents()
 void ADRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ToggleMovementAndCollision(false);
+}
+
+void ADRCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+	ULyraAbilitySystemComponent* LyraASC = GetLyraAbilitySystemComponent();
+	if(InGameHUD && LyraASC)
+	{
+		float CurrentHealth = LyraASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
+		int32 RocketNum = LyraASC->GetNumericAttribute(UDRCombatSet::GetRocketNumAttribute());
+		InGameHUD->UpdateInGameHUD(CurrentHealth, GetActorLocation().Z, DroneMovementComponent->GetLastUpdateVelocity().Length(), DroneMovementComponent->GetThrottleAmount(), DroneMovementComponent->GetEngineForce(), RocketNum);
+	}
 }
 
 void ADRCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -90,10 +120,30 @@ void ADRCharacter::NotifyControllerChanged()
 	Super::NotifyControllerChanged();
 }
 
+void ADRCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	// 2K TODO
+}
+
+FGenericTeamId ADRCharacter::GetGenericTeamId() const
+{
+	return TeamID;
+}
+
+FOnLyraTeamIndexChangedDelegate* ADRCharacter::GetOnTeamIndexChangedDelegate()
+{
+	return &OnTeamChangedDelegate;
+}
+
 void ADRCharacter::OnAbilitySystemInitialized()
 {
 	ULyraAbilitySystemComponent* LyraASC = GetLyraAbilitySystemComponent();
 	check(LyraASC);
+
+	// 2K TODO
+	LyraASC->SetNumericAttributeBase(ULyraHealthSet::GetMaxHealthAttribute(), 1000.0f);
+	LyraASC->SetNumericAttributeBase(UDRCombatSet::GetRocketNumAttribute(), 5);
+	// 2K TODO
 
 	HealthComponent->InitializeWithAbilitySystem(LyraASC);
 
@@ -110,6 +160,12 @@ void ADRCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	PawnExtComponent->HandleControllerChanged();
+	WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
+
+	if(WidgetManagerComponent)
+	{ 
+		WidgetManagerComponent->RequestShowWidget("WBP_InGameReady");
+	}
 }
 
 void ADRCharacter::UnPossessed()
@@ -131,6 +187,13 @@ void ADRCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 
 	PawnExtComponent->HandlePlayerStateReplicated();
+	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+	FDRPlaneConfig PlaneConfig;
+	if(DRPlayerState->GetSelectedPlaneConfig(PlaneConfig))
+	{ 
+		DroneMovementComponent->HandlePlayerStateReplicated(PlaneConfig);
+	}
 }
 
 void ADRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -147,31 +210,12 @@ void ADRCharacter::InitializeGameplayTags()
 
 void ADRCharacter::OnDeathStarted(AActor* OwningActor)
 {
-	DisableMovementAndCollision();
+	ToggleMovementAndCollision(false);
 }
 
 void ADRCharacter::OnDeathFinished(AActor* OwningActor)
 {
 
-}
-
-void ADRCharacter::DisableMovementAndCollision()
-{
-	if (Controller)
-	{
-		Controller->SetIgnoreMoveInput(true);
-	}
-
-	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
-	check(CapsuleComp);
-	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-
-	UDroneMovementComponent* DroneMovementComponen = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
-	DroneMovementComponen->StopMovementImmediately();
-	DroneMovementComponen->DisableMovement();
-
-	DroneMovementComponen->SetActive(false);
 }
 
 void ADRCharacter::DestroyDueToDeath()
@@ -190,6 +234,69 @@ void ADRCharacter::UninitAndDestroy()
 	}
 
 	SetActorHiddenInGame(true);
+}
+
+void ADRCharacter::ToggleMovementAndCollision(bool EnableOrNot)
+{
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(EnableOrNot ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(EnableOrNot ? ECR_Block : ECR_Ignore);
+
+	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
+
+	if (!EnableOrNot)
+	{
+		DroneMovementComponent->StopMovementImmediately();
+		DroneMovementComponent->DisableMovement();
+	}
+
+	DroneMovementComponent->SetActive(EnableOrNot);
+
+	if (Controller)
+	{
+		Controller->SetIgnoreMoveInput(!EnableOrNot);
+	}
+
+	SetActorHiddenInGame(!EnableOrNot);
+}
+
+void ADRCharacter::SwitchThirdAndFirstCamera()
+{
+	ThirdCameraEnabled = !ThirdCameraEnabled;
+	ThirdPersonCamera->SetActive(ThirdCameraEnabled);
+	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
+}
+
+void ADRCharacter::OnMatchStart()
+{
+	if (WidgetManagerComponent)
+	{
+		InGameHUD = Cast<UDRUserWidget_InGameHUD>(WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD"));
+	}
+
+	ToggleMovementAndCollision(true);
+}
+
+void ADRCharacter::OnMatchEnd(bool WinOrLoss)
+{
+	if (WidgetManagerComponent)
+	{
+		WidgetManagerComponent->RequestHideWidget(FName("WBP_InGameHUD"));
+		InGameHUD = nullptr;
+
+		WidgetManagerComponent->RequestShowWidget(FName("WBP_GameOver"));
+
+		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+		FDRBattleResult BattleResult(WinOrLoss, DRPlayerState->GetBestRecord(), DRPlayerState->GetCurrentRecord());
+		FString MessagePayload;
+		if (FJsonObjectConverter::UStructToJsonObjectString(BattleResult, MessagePayload))
+		{
+			WidgetManagerComponent->RequestUpdateWidget("WBP_GameOver", MessagePayload);
+		}
+	}
+
+	ToggleMovementAndCollision(false);
 }
 
 ULyraAbilitySystemComponent* ADRCharacter::GetLyraAbilitySystemComponent() const
