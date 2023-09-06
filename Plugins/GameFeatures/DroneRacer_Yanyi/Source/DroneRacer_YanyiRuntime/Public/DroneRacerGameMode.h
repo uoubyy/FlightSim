@@ -44,6 +44,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "DroneRacer")
 	TArray<TSubclassOf<AActor>> PoolableObjectClass;
 	
+	void OnPlayerReady();
+	
 protected:
 	TMap<FString, TWeakObjectPtr<AActor>> AllEnemies;
 

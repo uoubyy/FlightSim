@@ -30,7 +30,10 @@ public:
 	TSubclassOf<AActor> BulletClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class ULyraGameplayAbility> DamageAbility;
+	TSubclassOf<class ULyraGameplayAbility> DamageAbilityClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class ULyraGameplayAbility> DeathAbilityClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DroneRacer|Enemy", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UGameplayEffect> DamageEffectClass;

@@ -150,10 +150,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchThirdAndFirstCamera();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 	void OnMatchStart();
 
 	UFUNCTION(BlueprintCallable)
 	void OnMatchEnd(bool WinOrLoss);
 
+private:
+	
+	void HandleControllerChanged(class AController* NewController);
 };

@@ -64,6 +64,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandlePlayerStateReplicated(const FDRPlaneConfig& PlaneConfig);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 
 	// Configuration
@@ -107,17 +109,20 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")
 	EPlaneStatus CurrentPlaneStatus;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Throttle")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Throttle")//, Replicated)
 	float ThrottleAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch")//, Replicated)
 	float PitchAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll")//, Replicated)
 	float RollAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")//, Replicated)
 	float YawAmount;
+
+	UFUNCTION(Server, Reliable)
+	void ReplicateEngineInfoToServer(float ThrottleAmount_Client, float PitchAmount_Client, float RollAmount_Client, float YawAmount_Client);
 
 private:
 

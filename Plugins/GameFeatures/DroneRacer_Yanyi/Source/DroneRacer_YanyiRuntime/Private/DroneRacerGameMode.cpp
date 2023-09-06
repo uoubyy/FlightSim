@@ -9,6 +9,7 @@
 #include "Subsystems/DRObjectPoolSubsystem.h"
 
 #include "Character/LyraPawnData.h"
+#include "DRPlayerController.h"
 
 void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 {
@@ -164,5 +165,24 @@ void ADroneRacerGameMode::OnMatchEnd(bool BattleResult)
 	{ 
 		UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
 		DRSaveGameSubsystem->WriteSaveGame();
+	}
+}
+
+void ADroneRacerGameMode::OnPlayerReady()
+{
+	bool AllPlayersReady = true;
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ADRPlayerController* PC = Cast<ADRPlayerController>(*Iterator);
+		if (PC == nullptr || !PC->GetIsPlayerReady())
+		{
+			AllPlayersReady = false;
+			break;
+		}
+	}
+
+	if (AllPlayersReady)
+	{
+		OnMatchStart();
 	}
 }

@@ -17,4 +17,17 @@ class DRONERACER_YANYIRUNTIME_API ADRPlayerController : public ALyraPlayerContro
 public:
 
 	virtual void OnPossess(APawn* InPawn) override;
+
+	UFUNCTION(Server, Reliable)
+	void OnClientChangeReadyStatus(bool IsReady);
+
+	UFUNCTION()
+	bool GetIsPlayerReady() { return IsPlayerReady; }
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+protected:
+	
+	UPROPERTY(Replicated)
+	bool IsPlayerReady;
 };

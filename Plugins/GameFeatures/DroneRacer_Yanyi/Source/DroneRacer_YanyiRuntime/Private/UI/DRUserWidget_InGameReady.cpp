@@ -4,10 +4,11 @@
 #include "UI/DRUserWidget_InGameReady.h"
 #include "Components/Button.h"
 
-#include "Kismet/GameplayStatics.h"
+//#include "Kismet/GameplayStatics.h"
 #include "Components/DRWidgetManagerComponent.h"
+#include "DRPlayerController.h"
 
-#include "DroneRacerGameMode.h"
+//#include "DroneRacerGameMode.h"
 
 bool UDRUserWidget_InGameReady::UpdateWidget_Implementation(const FString& Payload)
 {
@@ -26,14 +27,19 @@ void UDRUserWidget_InGameReady::NativeConstruct()
 
 void UDRUserWidget_InGameReady::OnStartGameBtnClicked()
 {
-	APlayerController* LocalPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APlayerController* LocalPlayerController = GetOwningPlayer();
 	if (UDRWidgetManagerComponent* WidgetManager = UDRWidgetManagerComponent::GetComponent(LocalPlayerController))
 	{
 		WidgetManager->RequestHideWidget(FName("WBP_InGameReady"));
 	}
 
-	if (ADroneRacerGameMode* DroneRacerGameMode = Cast<ADroneRacerGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	//if (ADroneRacerGameMode* DroneRacerGameMode = Cast<ADroneRacerGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	//{
+	//	DroneRacerGameMode->OnMatchStart();
+	//}
+
+	if (ADRPlayerController* DRPlayerController = Cast<ADRPlayerController>(LocalPlayerController))
 	{
-		DroneRacerGameMode->OnMatchStart();
+		DRPlayerController->OnClientChangeReadyStatus(true);
 	}
 }

@@ -5,12 +5,16 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
 
+#include "Net/UnrealNetwork.h"
+
 UDroneMovementComponent::UDroneMovementComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	bOrientRotationToMovement = true;
 	MaxFlySpeed = 5000.0f;
 	RotationRate = FRotator(360.0f, 360.0f, 0.0f);
+
+	// bReplicates = true;
 }
 
 void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -26,6 +30,8 @@ void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 	CalculateEngineForce();
 
 	UpdateCameraEffect();
+
+	ReplicateEngineInfoToServer(ThrottleAmount, PitchAmount, RollAmount, YawAmount);
 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
@@ -73,6 +79,31 @@ void UDroneMovementComponent::HandlePlayerStateReplicated(const FDRPlaneConfig& 
 	MaxRollDegree = PlaneConfig.MaxRollDegree;
 
 	MaxFlySpeed = PlaneConfig.MaxSpeed;
+}
+
+void UDroneMovementComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(UDroneMovementComponent, ThrottleAmount);
+	//DOREPLIFETIME(UDroneMovementComponent, PitchAmount);
+	//DOREPLIFETIME(UDroneMovementComponent, RollAmount);
+	//DOREPLIFETIME(UDroneMovementComponent, YawAmount);
+}
+
+void UDroneMovementComponent::ReplicateEngineInfoToServer_Implementation(float ThrottleAmount_Client, float PitchAmount_Client, float RollAmount_Client, float YawAmount_Client)
+{
+	if (GetOwner()->HasAuthority())
+	{
+		ThrottleAmount = ThrottleAmount_Client;
+		PitchAmount = PitchAmount_Client;
+		RollAmount = RollAmount_Client;
+		YawAmount = YawAmount_Client;
+
+		CalculateEngineForce();
+
+		UpdateCameraEffect();
+	}
 }
 
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
@@ -186,6 +217,11 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 		OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
 	}
+
+	//if (GetOwner()->HasAuthority())
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Drone %s on the server has Engine Force %f."), *GetOwner()->GetName(), LastUpdatedEngineForce);
+	//}
 }
 
 float UDroneMovementComponent::ConvertThrottleToForce()

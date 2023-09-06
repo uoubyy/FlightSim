@@ -28,6 +28,11 @@ UUserWidget* UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetNam
 {
 	APlayerController* PlayerController = Cast<APlayerController>(GetOwner());
 
+	if (!PlayerController->IsLocalController())
+	{
+		return false;
+	}
+
 	if (LoadedWidget.Contains(WidgetName))
 	{
 		LoadedWidget[WidgetName]->AddToPlayerScreen();
@@ -41,6 +46,11 @@ UUserWidget* UDRWidgetManagerComponent::RequestShowWidget(const FName& WidgetNam
 			TSubclassOf<class UUserWidget> WidgetClass = WidgetConfig.WidgetClass;
 
 			UUserWidget* NewUserWidget = CreateWidget<UUserWidget>(PlayerController, WidgetClass, WidgetName);
+			if (!NewUserWidget)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("CreateWidget %s failed for player %s"), *WidgetName.ToString(), *PlayerController->GetName());
+				return false;
+			}
 			LoadedWidget.Add(WidgetName, NewUserWidget);
 			NewUserWidget->AddToPlayerScreen();
 
@@ -99,6 +109,19 @@ bool UDRWidgetManagerComponent::RequestUpdateWidget(const FName& WidgetName, FSt
 	}
 
 	return false;
+}
+
+bool UDRWidgetManagerComponent::RequestHideAllWidgets()
+{
+	for (const TPair<FName, TObjectPtr<class UUserWidget>>& WidgetInfo : LoadedWidget)
+	{
+		if (WidgetInfo.Value)
+		{
+			WidgetInfo.Value->RemoveFromParent();
+		}
+	}
+
+	return true;
 }
 
 UUserWidget* UDRWidgetManagerComponent::GetReferenceOfWidget(const FName& WidgetName)

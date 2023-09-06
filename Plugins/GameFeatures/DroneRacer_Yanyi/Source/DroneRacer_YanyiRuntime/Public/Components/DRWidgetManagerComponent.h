@@ -27,6 +27,9 @@ public:
 	bool RequestUpdateWidget(const FName& WidgetName, FString& Payload);
 
 	UFUNCTION(BlueprintCallable)
+	bool RequestHideAllWidgets();
+
+	UFUNCTION(BlueprintCallable)
 	class UUserWidget* GetReferenceOfWidget(const FName& WidgetName);
 
 private:

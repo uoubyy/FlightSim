@@ -64,6 +64,16 @@ void ADREnemyBase::BeginPlay()
 	//	FGameplayAbilitySpec AbilitySpec(DamageAbility);
 	//	AbilitySystemComponent->GiveAbility(AbilitySpec);
 	//}
+
+	if(DeathAbilityClass && HasAuthority())
+	{ 
+		ULyraGameplayAbility* AbilityCDO = DeathAbilityClass->GetDefaultObject<ULyraGameplayAbility>();
+
+		FGameplayAbilitySpec AbilitySpec(AbilityCDO, 1);
+		AbilitySpec.SourceObject = nullptr;
+
+		const FGameplayAbilitySpecHandle AbilitySpecHandle = AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
 }
 
 void ADREnemyBase::PostInitializeComponents()

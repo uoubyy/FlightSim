@@ -67,6 +67,8 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationYaw = false;
 
 	Tags.Add(FName("Player"));
+
+	bReplicates = true;
 }
 
 void ADRCharacter::PreInitializeComponents()
@@ -160,12 +162,8 @@ void ADRCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	PawnExtComponent->HandleControllerChanged();
-	WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
 
-	if(WidgetManagerComponent)
-	{ 
-		WidgetManagerComponent->RequestShowWidget("WBP_InGameReady");
-	}
+	HandleControllerChanged(NewController);
 }
 
 void ADRCharacter::UnPossessed()
@@ -173,6 +171,8 @@ void ADRCharacter::UnPossessed()
 	Super::UnPossessed();
 
 	PawnExtComponent->HandleControllerChanged();
+
+	HandleControllerChanged(nullptr);
 }
 
 void ADRCharacter::OnRep_Controller()
@@ -180,6 +180,8 @@ void ADRCharacter::OnRep_Controller()
 	Super::OnRep_Controller();
 
 	PawnExtComponent->HandleControllerChanged();
+
+	HandleControllerChanged(GetController());
 }
 
 void ADRCharacter::OnRep_PlayerState()
@@ -268,7 +270,7 @@ void ADRCharacter::SwitchThirdAndFirstCamera()
 	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
 }
 
-void ADRCharacter::OnMatchStart()
+void ADRCharacter::OnMatchStart_Implementation()
 {
 	if (WidgetManagerComponent)
 	{
@@ -297,6 +299,21 @@ void ADRCharacter::OnMatchEnd(bool WinOrLoss)
 	}
 
 	ToggleMovementAndCollision(false);
+}
+
+void ADRCharacter::HandleControllerChanged(class AController* NewController)
+{
+	if (WidgetManagerComponent)
+	{
+		WidgetManagerComponent->RequestHideAllWidgets();
+	}
+
+	WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
+
+	if (WidgetManagerComponent)
+	{
+		WidgetManagerComponent->RequestShowWidget("WBP_InGameReady");
+	}
 }
 
 ULyraAbilitySystemComponent* ADRCharacter::GetLyraAbilitySystemComponent() const
