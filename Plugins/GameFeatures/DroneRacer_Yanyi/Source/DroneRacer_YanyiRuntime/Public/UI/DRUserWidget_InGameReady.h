@@ -22,6 +22,8 @@ public:
 protected:
 
 	virtual void NativeConstruct() override;
+
+	virtual bool Initialize() override;
 	
 protected:
 

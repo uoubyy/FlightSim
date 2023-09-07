@@ -28,14 +28,11 @@ class DRONERACER_YANYIRUNTIME_API FSavedMove_Drone : public FSavedMove_Character
 {
 
 public:
-	float ThrottleAmount;
-	float PitchAmount;
-	float RollAmount;
-	float YawAmount;
+	FVector EngineForce;
 
 	virtual ~FSavedMove_Drone() {}
 
-	virtual void SetMoveFor(ACharacter* C, float InDeltaTime, FVector const& NewAccel, class FNetworkPredictionData_Client_Character& ClientData) override;
+	virtual void SetMoveFor(ACharacter* Character, float InDeltaTime, FVector const& NewAccel, class FNetworkPredictionData_Client_Character& ClientData) override;
 
 	virtual void Clear() override;
 
@@ -45,10 +42,7 @@ public:
 class DRONERACER_YANYIRUNTIME_API FNetworkPredictionData_Client_Drone : public FNetworkPredictionData_Client_Character
 {
 public:
-	float ThrottleAmount;
-	float PitchAmount;
-	float RollAmount;
-	float YawAmount;
+	FVector EngineForce;
 
 	FNetworkPredictionData_Client_Drone(const UCharacterMovementComponent& ClientMovement);
 	virtual FSavedMovePtr AllocateNewMove() override;
@@ -59,10 +53,7 @@ public:
 class DRONERACER_YANYIRUNTIME_API FNetworkPredictionData_Server_Drone : public FNetworkPredictionData_Server_Character
 {
 public:
-	float ThrottleAmount;
-	float PitchAmount;
-	float RollAmount;
-	float YawAmount;
+	FVector EngineForce;
 
 	FNetworkPredictionData_Server_Drone(const UCharacterMovementComponent& ServerMovement);
 	virtual ~FNetworkPredictionData_Server_Drone(){}
@@ -107,6 +98,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetEngineForce() const { return LastUpdatedEngineForce; }
+
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
+	FVector GetEngineForceVector() const { return EngineForce; }
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetMaxEngineForce() const;
@@ -163,23 +157,20 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Drone")
 	EPlaneStatus CurrentPlaneStatus;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Throttle")//, Replicated)
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Throttle")
 	float ThrottleAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch")//, Replicated)
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch")
 	float PitchAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll")//, Replicated)
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll")
 	float RollAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")//, Replicated)
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")
 	float YawAmount;
 
 	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Engine")
 	FVector EngineForce = FVector::Zero();
-
-	UFUNCTION(Server, Reliable)
-	void ReplicateEngineInfoToServer(float ThrottleAmount_Client, float PitchAmount_Client, float RollAmount_Client, float YawAmount_Client);
 
 private:
 
@@ -202,6 +193,11 @@ protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode);
 
 public:
+
+	virtual void ReplicateMoveToServer(float DeltaTime, const FVector& NewAcceleration);
+
+	virtual void ControlledCharacterMove(const FVector& InputVector, float DeltaSeconds) override;
+
 	virtual void ApplyAccumulatedForces(float DeltaSeconds) override;
 
 	virtual class FNetworkPredictionData_Client* GetPredictionData_Client() const override;

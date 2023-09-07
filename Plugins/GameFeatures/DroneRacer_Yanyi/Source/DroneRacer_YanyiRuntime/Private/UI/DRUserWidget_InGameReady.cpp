@@ -18,11 +18,18 @@ bool UDRUserWidget_InGameReady::UpdateWidget_Implementation(const FString& Paylo
 void UDRUserWidget_InGameReady::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+bool UDRUserWidget_InGameReady::Initialize()
+{
+	bool Result = Super::Initialize();
 
 	if (Btn_StartGame)
 	{
 		Btn_StartGame->OnClicked.AddDynamic(this, &ThisClass::OnStartGameBtnClicked);
 	}
+
+	return Result;
 }
 
 void UDRUserWidget_InGameReady::OnStartGameBtnClicked()
@@ -32,11 +39,6 @@ void UDRUserWidget_InGameReady::OnStartGameBtnClicked()
 	{
 		WidgetManager->RequestHideWidget(FName("WBP_InGameReady"));
 	}
-
-	//if (ADroneRacerGameMode* DroneRacerGameMode = Cast<ADroneRacerGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
-	//{
-	//	DroneRacerGameMode->OnMatchStart();
-	//}
 
 	if (ADRPlayerController* DRPlayerController = Cast<ADRPlayerController>(LocalPlayerController))
 	{

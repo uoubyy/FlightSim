@@ -116,6 +116,8 @@ protected:
 
 	virtual void Restart() override;
 
+	virtual void PawnClientRestart() override;
+
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void UnPossessed() override;

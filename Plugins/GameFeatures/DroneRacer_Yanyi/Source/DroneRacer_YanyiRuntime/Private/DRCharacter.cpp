@@ -103,6 +103,11 @@ void ADRCharacter::Restart()
 	UE_LOG(LogTemp, Warning, TEXT("On Player Restart %s, Net Mode: %s, LocalRole: %s, RemoteRole: %s, HasAuthority: %s, IsLocalPlayer %s."), *PlayerName, *NetModeStr, *LocalRoleStr, *RemoteRoleStr, *HasAuthorityStr, *IsLocalPlayerStr);
 }
 
+void ADRCharacter::PawnClientRestart()
+{
+	Super::PawnClientRestart();
+}
+
 void ADRCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -201,7 +206,7 @@ void ADRCharacter::OnRep_Controller()
 
 	PawnExtComponent->HandleControllerChanged();
 
-	HandleControllerChanged(GetController());
+	HandleControllerChanged(Controller);
 }
 
 void ADRCharacter::OnRep_PlayerState()
@@ -335,9 +340,10 @@ void ADRCharacter::HandleControllerChanged(class AController* NewController)
 	if (WidgetManagerComponent)
 	{
 		WidgetManagerComponent->RequestHideAllWidgets();
+		WidgetManagerComponent = nullptr;
 	}
 
-	if (!NewController)
+	if (!NewController || !NewController->IsLocalController())
 	{
 		return;
 	}
@@ -349,7 +355,7 @@ void ADRCharacter::HandleControllerChanged(class AController* NewController)
 		WidgetManagerComponent->RequestShowWidget("WBP_InGameReady");
 	}
 
-	if (NewController->IsLocalController() && !WidgetManagerComponent)
+	if (!WidgetManagerComponent)
 	{
 		UE_LOG(LogTemp, Error, TEXT("WidgetManagerComponent is Empty in Client!!!"));
 	}

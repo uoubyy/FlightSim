@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
+#include "Engine/NetSerialization.h"
 #include "GameFramework/CharacterMovementReplication.h"
 
 // #include "DroneMovementReplication.generated.h"
@@ -15,17 +15,11 @@
 struct DRONERACER_YANYIRUNTIME_API FDroneNetworkMoveData : public FCharacterNetworkMoveData
 {
 public:
-	float ThrottleAmount;
-	float PitchAmount;
-	float RollAmount;
-	float YawAmount;
+	FVector_NetQuantize10 EngineForce;
 	
 	FDroneNetworkMoveData()
 		: FCharacterNetworkMoveData()
-		, ThrottleAmount(0.0f)
-		, PitchAmount(0.0f)
-		, RollAmount(0.0f)
-		, YawAmount(0.0f)
+		, EngineForce(ForceInitToZero)
 	{
 	}
 

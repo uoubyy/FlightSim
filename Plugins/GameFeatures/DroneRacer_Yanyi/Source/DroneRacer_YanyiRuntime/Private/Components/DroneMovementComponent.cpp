@@ -21,23 +21,7 @@ UDroneMovementComponent::UDroneMovementComponent(const FObjectInitializer& Objec
 
 void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	
-	if(CharacterOwner && CharacterOwner->GetController() && CharacterOwner->GetController()->IsLocalController())
-	{ 
-		UpdateThrottleAmount(DeltaTime);
-
-		UpdatePitchAmount(DeltaTime);
-
-		UpdateYawAmount(DeltaTime);
-
-		UpdateRollAmount(DeltaTime);
-
-		CalculateEngineForce();
-	}
-
 	UpdateCameraEffect();
-
-	// ReplicateEngineInfoToServer(ThrottleAmount, PitchAmount, RollAmount, YawAmount);
 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
@@ -90,21 +74,6 @@ void UDroneMovementComponent::HandlePlayerStateReplicated(const FDRPlaneConfig& 
 void UDroneMovementComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-}
-
-void UDroneMovementComponent::ReplicateEngineInfoToServer_Implementation(float ThrottleAmount_Client, float PitchAmount_Client, float RollAmount_Client, float YawAmount_Client)
-{
-	if (GetOwner()->HasAuthority())
-	{
-		ThrottleAmount = ThrottleAmount_Client;
-		PitchAmount = PitchAmount_Client;
-		RollAmount = RollAmount_Client;
-		YawAmount = YawAmount_Client;
-
-		CalculateEngineForce();
-
-		UpdateCameraEffect();
-	}
 }
 
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
@@ -180,7 +149,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 		return;
 	}
 
-	EngineForce = FVector::Zero();
+	// EngineForce = FVector::Zero();
 	FVector EngineForwardForce = FVector::Zero();
 	FVector EnginePitchForce = FVector::Zero();
 	FVector EngineYawForce = FVector::Zero();
@@ -204,7 +173,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 	EngineForce = EngineForwardForce + EnginePitchForce + EngineYawForce + PitchCompensation;
 
-	AddForce(EngineForce);
+	// AddForce(EngineForce);
 
 	LastUpdatedEngineForce = EngineForce.Length();
 
@@ -268,10 +237,33 @@ void UDroneMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
 }
 
+void UDroneMovementComponent::ReplicateMoveToServer(float DeltaTime, const FVector& NewAcceleration)
+{
+	Super::ReplicateMoveToServer(DeltaTime, NewAcceleration);
+
+	EngineForce = FVector::Zero();
+}
+
+void UDroneMovementComponent::ControlledCharacterMove(const FVector& InputVector, float DeltaSeconds)
+{
+	UpdateThrottleAmount(DeltaSeconds);
+
+	UpdatePitchAmount(DeltaSeconds);
+
+	UpdateYawAmount(DeltaSeconds);
+
+	UpdateRollAmount(DeltaSeconds);
+
+	CalculateEngineForce();
+
+	AddForce(EngineForce);
+
+	Super::ControlledCharacterMove(InputVector, DeltaSeconds);
+}
+
 void UDroneMovementComponent::ApplyAccumulatedForces(float DeltaSeconds)
 {
 	Super::ApplyAccumulatedForces(DeltaSeconds);
-	Velocity += EngineForce * DeltaSeconds;
 }
 
 class FNetworkPredictionData_Client* UDroneMovementComponent::GetPredictionData_Client() const
@@ -301,39 +293,35 @@ void UDroneMovementComponent::ServerMove_PerformMovement(const FCharacterNetwork
 	const FDroneNetworkMoveData* DroneNetworkMoveData = static_cast<const FDroneNetworkMoveData*>(&MoveData);
 	if (DroneNetworkMoveData)
 	{
-		ThrottleAmount = DroneNetworkMoveData->ThrottleAmount;
-		PitchAmount = DroneNetworkMoveData->PitchAmount;
-		RollAmount = DroneNetworkMoveData->RollAmount;
-		YawAmount = DroneNetworkMoveData->YawAmount;
-
-		CalculateEngineForce();
+		EngineForce = DroneNetworkMoveData->EngineForce;
+		UE_LOG(LogTemp, Warning, TEXT("%s ServerMove_PerformMovement %f %f %f"), *PawnOwner->GetName(), EngineForce.X, EngineForce.Y, EngineForce.Z);
+		AddForce(EngineForce);
 	}
 	
 	Super::ServerMove_PerformMovement(MoveData);
 }
 
-void FSavedMove_Drone::SetMoveFor(ACharacter* C, float InDeltaTime, FVector const& NewAccel, class FNetworkPredictionData_Client_Character& ClientData)
+void FSavedMove_Drone::SetMoveFor(ACharacter* Character, float InDeltaTime, FVector const& NewAccel, class FNetworkPredictionData_Client_Character& ClientData)
 {
-	FSavedMove_Character::SetMoveFor(C, InDeltaTime, NewAccel, ClientData);
+	FSavedMove_Character::SetMoveFor(Character, InDeltaTime, NewAccel, ClientData);
 
 	FNetworkPredictionData_Client_Drone* ClientDroneData = static_cast<FNetworkPredictionData_Client_Drone*>(&ClientData);
 
 	if (ClientDroneData)
 	{
-		ThrottleAmount = ClientDroneData->ThrottleAmount;
-		PitchAmount = ClientDroneData->PitchAmount;
-		RollAmount = ClientDroneData->RollAmount;
-		YawAmount = ClientDroneData->YawAmount;
+		UDroneMovementComponent* DroneMovementComponent = Cast<UDroneMovementComponent>(Character->GetCharacterMovement());
+		ClientDroneData->EngineForce = DroneMovementComponent->GetEngineForceVector();
+		EngineForce = DroneMovementComponent->GetEngineForceVector();
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("SetMoveFor %f %f %f"), EngineForce.X, EngineForce.Y, EngineForce.Z);
 }
 
 void FSavedMove_Drone::Clear()
 {
 	FSavedMove_Character::Clear();
-	ThrottleAmount = 0.0f;
-	PitchAmount = 0.0f;
-	RollAmount = 0.0f;
-	YawAmount = 0.0f;
+
+	EngineForce = FVector::ZeroVector;
 }
 
 bool FSavedMove_Drone::CanCombineWith(const FSavedMovePtr& NewMove, ACharacter* InCharacter, float MaxDelta) const
@@ -346,26 +334,12 @@ bool FSavedMove_Drone::CanCombineWith(const FSavedMovePtr& NewMove, ACharacter* 
 		return CanCombine;
 	}
 
-
-	// TODO create a separate threshold 
-	if (!FMath::IsNearlyEqual(ThrottleAmount, NewDroneMove->ThrottleAmount, MaxSpeedThresholdCombine))
+	if (NewDroneMove->EngineForce.IsZero())
 	{
-		return false;
-	}
-
-	if (!FMath::IsNearlyEqual(PitchAmount, NewDroneMove->PitchAmount, MaxSpeedThresholdCombine))
-	{
-		return false;
-	}
-
-	if (!FMath::IsNearlyEqual(RollAmount, NewDroneMove->RollAmount, MaxSpeedThresholdCombine))
-	{
-		return false;
-	}
-
-	if (!FMath::IsNearlyEqual(YawAmount, NewDroneMove->YawAmount, MaxSpeedThresholdCombine))
-	{
-		return false;
+		if (!EngineForce.IsZero())
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -378,10 +352,9 @@ FNetworkPredictionData_Client_Drone::FNetworkPredictionData_Client_Drone(const U
 
 	if (DroneMovementComponent)
 	{
-		ThrottleAmount = DroneMovementComponent->GetThrottleAmount();
-		PitchAmount = DroneMovementComponent->GetPitchAmount();
-		RollAmount = DroneMovementComponent->GetRollAmount();
-		YawAmount = DroneMovementComponent->GetYawAmount();
+		EngineForce = DroneMovementComponent->GetEngineForceVector();
+
+		// UE_LOG(LogTemp, Warning, TEXT("FNetworkPredictionData_Client_Drone %f %f %f"), EngineForce.X, EngineForce.Y, EngineForce.Z);
 	}
 }
 
@@ -397,9 +370,6 @@ FNetworkPredictionData_Server_Drone::FNetworkPredictionData_Server_Drone(const U
 
 	if (DroneMovementComponent)
 	{
-		ThrottleAmount = DroneMovementComponent->GetThrottleAmount();
-		PitchAmount = DroneMovementComponent->GetPitchAmount();
-		RollAmount = DroneMovementComponent->GetRollAmount();
-		YawAmount = DroneMovementComponent->GetYawAmount();
+		EngineForce = DroneMovementComponent->GetEngineForceVector();
 	}
 }

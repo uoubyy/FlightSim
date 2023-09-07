@@ -52,6 +52,7 @@ public class DroneRacer_YanyiRuntime : ModuleRules
 				"Json",
 				"JsonUtilities",
 				"CommonUI",
+                "NetCore"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
