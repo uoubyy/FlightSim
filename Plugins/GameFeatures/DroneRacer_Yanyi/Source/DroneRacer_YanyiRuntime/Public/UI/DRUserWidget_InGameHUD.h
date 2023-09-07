@@ -20,7 +20,7 @@ public:
 
 	virtual bool UpdateWidget_Implementation(const FString& Payload) override;
 
-	void UpdatePlayerInfo(FString PlayerName);
+	void UpdatePlayerInfo(FString PlayerName, uint8 TeamID);
 
 	void UpdateInGameHUD(float HP, float Altitude, float Speed, float ThrottleAmount, float EngineForce, int32 RocketNum);
 
@@ -32,6 +32,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<class UCommonTextBlock> Text_PlayerName;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<class UCommonTextBlock> Text_TeamID;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<class UCommonTextBlock> Text_HP;

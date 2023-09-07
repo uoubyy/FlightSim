@@ -263,7 +263,14 @@ void UDroneMovementComponent::ControlledCharacterMove(const FVector& InputVector
 
 void UDroneMovementComponent::ApplyAccumulatedForces(float DeltaSeconds)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("%s Apply EngineForce %f %f %f"), *PawnOwner->GetName(), PendingForceToApply.X, PendingForceToApply.Y, PendingForceToApply.Z);
 	Super::ApplyAccumulatedForces(DeltaSeconds);
+}
+
+void UDroneMovementComponent::ClearAccumulatedForces()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("%s Clear EngineForce %f %f %f"), *PawnOwner->GetName(), PendingForceToApply.X, PendingForceToApply.Y, PendingForceToApply.Z);
+	Super::ClearAccumulatedForces();
 }
 
 class FNetworkPredictionData_Client* UDroneMovementComponent::GetPredictionData_Client() const
@@ -294,7 +301,7 @@ void UDroneMovementComponent::ServerMove_PerformMovement(const FCharacterNetwork
 	if (DroneNetworkMoveData)
 	{
 		EngineForce = DroneNetworkMoveData->EngineForce;
-		UE_LOG(LogTemp, Warning, TEXT("%s ServerMove_PerformMovement %f %f %f"), *PawnOwner->GetName(), EngineForce.X, EngineForce.Y, EngineForce.Z);
+		// UE_LOG(LogTemp, Warning, TEXT("%s EngineForce %f %f %f"), *PawnOwner->GetName(), EngineForce.X, EngineForce.Y, EngineForce.Z);
 		AddForce(EngineForce);
 	}
 	
@@ -314,7 +321,7 @@ void FSavedMove_Drone::SetMoveFor(ACharacter* Character, float InDeltaTime, FVec
 		EngineForce = DroneMovementComponent->GetEngineForceVector();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("SetMoveFor %f %f %f"), EngineForce.X, EngineForce.Y, EngineForce.Z);
+	// UE_LOG(LogTemp, Warning, TEXT("%s SetMoveFor %f %f %f"), *PawnOwner->GetName(), EngineForce.X, EngineForce.Y, EngineForce.Z);
 }
 
 void FSavedMove_Drone::Clear()

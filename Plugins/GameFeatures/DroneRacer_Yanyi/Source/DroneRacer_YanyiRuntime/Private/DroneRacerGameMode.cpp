@@ -118,7 +118,7 @@ void ADroneRacerGameMode::HandleStartingNewPlayer_Implementation(APlayerControll
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 
-	UE_LOG(LogTemp, Warning, TEXT("HandleStartingNewPlayer"));
+	// UE_LOG(LogTemp, Warning, TEXT("HandleStartingNewPlayer"));
 
 	UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
 	if (DRSaveGameSubsystem)
@@ -131,12 +131,15 @@ void ADroneRacerGameMode::OnMatchStart()
 {
 	ALyraGameState* LyraGS = GetGameState<ALyraGameState>();
 
+	uint8 TeamID = 1;
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
 		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
 		if (Player)
 		{
+			Player->SetGenericTeamId(TeamID);
 			Player->OnMatchStart();
+			++TeamID;
 		}
 	}
 }

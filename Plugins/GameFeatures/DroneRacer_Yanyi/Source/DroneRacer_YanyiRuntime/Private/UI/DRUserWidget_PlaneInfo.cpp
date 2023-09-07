@@ -13,16 +13,23 @@
 void UDRUserWidget_PlaneInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+bool UDRUserWidget_PlaneInfo::Initialize()
+{
+	bool Result = Super::Initialize();
 
 	if (Btn_ChanhePlane)
 	{
 		Btn_ChanhePlane->OnClicked.AddDynamic(this, &ThisClass::OnChanhePlaneBtnClicked);
 	}
+
+	return Result;
 }
 
 void UDRUserWidget_PlaneInfo::OnChanhePlaneBtnClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnChanhePlaneBtnClicked => %s"), *PlaneConfig.PlaneName);
+	// UE_LOG(LogTemp, Warning, TEXT("OnChanhePlaneBtnClicked => %s"), *PlaneConfig.PlaneName);
 
 	if (ADRPlayerState* DRPlayerState = GetOwningPlayerState<ADRPlayerState>())
 	{

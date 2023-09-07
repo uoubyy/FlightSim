@@ -19,6 +19,8 @@ class DRONERACER_YANYIRUNTIME_API UDRUserWidget_PlaneInfo : public UUserWidget, 
 public:
 	virtual void NativeConstruct() override;
 
+	virtual bool Initialize() override;
+
 	virtual bool UpdateWidget_Implementation(const FString& Payload) override;
 
 protected:

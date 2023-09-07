@@ -200,6 +200,8 @@ public:
 
 	virtual void ApplyAccumulatedForces(float DeltaSeconds) override;
 
+	virtual void ClearAccumulatedForces() override;
+
 	virtual class FNetworkPredictionData_Client* GetPredictionData_Client() const override;
 
 	virtual class FNetworkPredictionData_Server* GetPredictionData_Server() const override;

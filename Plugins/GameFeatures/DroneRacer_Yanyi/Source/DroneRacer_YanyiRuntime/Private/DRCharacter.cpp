@@ -90,6 +90,7 @@ void ADRCharacter::Restart()
 {
 	Super::Restart();
 
+	/*
 	bool IsLocalPlayer = Controller->IsLocalController();
 
 	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
@@ -101,6 +102,7 @@ void ADRCharacter::Restart()
 	FString IsLocalPlayerStr = IsLocalPlayer ? "True" : "False";
 
 	UE_LOG(LogTemp, Warning, TEXT("On Player Restart %s, Net Mode: %s, LocalRole: %s, RemoteRole: %s, HasAuthority: %s, IsLocalPlayer %s."), *PlayerName, *NetModeStr, *LocalRoleStr, *RemoteRoleStr, *HasAuthorityStr, *IsLocalPlayerStr);
+	*/
 }
 
 void ADRCharacter::PawnClientRestart()
@@ -149,7 +151,7 @@ void ADRCharacter::NotifyControllerChanged()
 
 void ADRCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 {
-	// 2K TODO
+	TeamID = NewTeamID;
 }
 
 FGenericTeamId ADRCharacter::GetGenericTeamId() const
@@ -221,8 +223,8 @@ void ADRCharacter::OnRep_PlayerState()
 	{ 
 		DroneMovementComponent->HandlePlayerStateReplicated(PlaneConfig);
 
-		FString PlayerName = DRPlayerState->GetPlayerName();
-		UE_LOG(LogTemp, Warning, TEXT("OnRep_PlayerState Player %s"), *PlayerName);
+		//FString PlayerName = DRPlayerState->GetPlayerName();
+		//UE_LOG(LogTemp, Warning, TEXT("OnRep_PlayerState Player %s"), *PlayerName);
 	}
 }
 
@@ -302,12 +304,13 @@ void ADRCharacter::OnMatchStart_Implementation()
 {
 	if (WidgetManagerComponent)
 	{
+		WidgetManagerComponent->RequestHideWidget(FName("WBP_Waiting"));
 		InGameHUD = Cast<UDRUserWidget_InGameHUD>(WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD"));
 
 		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
 		if(InGameHUD && DRPlayerState)
 		{ 
-			InGameHUD->UpdatePlayerInfo(DRPlayerState->GetPlayerName());
+			InGameHUD->UpdatePlayerInfo(DRPlayerState->GetPlayerName(), TeamID.GetId());
 		}
 	}
 

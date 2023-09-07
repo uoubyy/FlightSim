@@ -36,6 +36,8 @@ ADRProjectileActorBase::ADRProjectileActorBase()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->bAutoActivate = false;
+
+	bReplicates = true;
 }
 
 void ADRProjectileActorBase::PostInitializeComponents()

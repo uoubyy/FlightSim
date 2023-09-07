@@ -38,6 +38,7 @@ void UDRUserWidget_InGameReady::OnStartGameBtnClicked()
 	if (UDRWidgetManagerComponent* WidgetManager = UDRWidgetManagerComponent::GetComponent(LocalPlayerController))
 	{
 		WidgetManager->RequestHideWidget(FName("WBP_InGameReady"));
+		WidgetManager->RequestShowWidget(FName("WBP_Waiting"));
 	}
 
 	if (ADRPlayerController* DRPlayerController = Cast<ADRPlayerController>(LocalPlayerController))

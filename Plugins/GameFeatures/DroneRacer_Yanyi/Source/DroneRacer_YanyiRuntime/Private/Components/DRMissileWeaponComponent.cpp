@@ -31,6 +31,11 @@ bool UDRMissileWeaponComponent::CanOpenFire() const
 
 void UDRMissileWeaponComponent::OnFire()
 {
+	if (!GetOwner()->HasAuthority())
+	{
+		return;
+	}
+
 	UWorld* World = GetWorld();
 	check(World);
 	TimeLastFired = World->GetTimeSeconds();
