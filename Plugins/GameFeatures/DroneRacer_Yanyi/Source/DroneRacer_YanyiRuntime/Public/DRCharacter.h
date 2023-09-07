@@ -114,6 +114,8 @@ protected:
 
 	virtual void OnAbilitySystemUninitialized();
 
+	virtual void Restart() override;
+
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void UnPossessed() override;

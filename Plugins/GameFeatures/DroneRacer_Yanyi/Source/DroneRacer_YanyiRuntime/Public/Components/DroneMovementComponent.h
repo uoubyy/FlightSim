@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DataAssets/DRPlaneSet.h"
+#include "Network/DroneMovementReplication.h"
 #include "DroneMovementComponent.generated.h"
 
 UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
@@ -22,6 +23,50 @@ enum class EPlaneStatus : uint8
 
 };
 ENUM_CLASS_FLAGS(EPlaneStatus)
+
+class DRONERACER_YANYIRUNTIME_API FSavedMove_Drone : public FSavedMove_Character
+{
+
+public:
+	float ThrottleAmount;
+	float PitchAmount;
+	float RollAmount;
+	float YawAmount;
+
+	virtual ~FSavedMove_Drone() {}
+
+	virtual void SetMoveFor(ACharacter* C, float InDeltaTime, FVector const& NewAccel, class FNetworkPredictionData_Client_Character& ClientData) override;
+
+	virtual void Clear() override;
+
+	virtual bool CanCombineWith(const FSavedMovePtr& NewMove, ACharacter* InCharacter, float MaxDelta) const override;
+};
+
+class DRONERACER_YANYIRUNTIME_API FNetworkPredictionData_Client_Drone : public FNetworkPredictionData_Client_Character
+{
+public:
+	float ThrottleAmount;
+	float PitchAmount;
+	float RollAmount;
+	float YawAmount;
+
+	FNetworkPredictionData_Client_Drone(const UCharacterMovementComponent& ClientMovement);
+	virtual FSavedMovePtr AllocateNewMove() override;
+
+	virtual ~FNetworkPredictionData_Client_Drone(){}
+};
+
+class DRONERACER_YANYIRUNTIME_API FNetworkPredictionData_Server_Drone : public FNetworkPredictionData_Server_Character
+{
+public:
+	float ThrottleAmount;
+	float PitchAmount;
+	float RollAmount;
+	float YawAmount;
+
+	FNetworkPredictionData_Server_Drone(const UCharacterMovementComponent& ServerMovement);
+	virtual ~FNetworkPredictionData_Server_Drone(){}
+};
 
 /**
  * 
@@ -50,6 +95,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetThrottleAmount() const { return ThrottleAmount; }
+
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
+	float GetPitchAmount() const { return PitchAmount; }
+
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
+	float GetRollAmount() const { return RollAmount; }
+
+	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
+	float GetYawAmount() const { return YawAmount; }
 
 	UFUNCTION(BlueprintCallable, Category = "DroneRacer|Engine")
 	float GetEngineForce() const { return LastUpdatedEngineForce; }
@@ -121,6 +175,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")//, Replicated)
 	float YawAmount;
 
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Engine")
+	FVector EngineForce = FVector::Zero();
+
 	UFUNCTION(Server, Reliable)
 	void ReplicateEngineInfoToServer(float ThrottleAmount_Client, float PitchAmount_Client, float RollAmount_Client, float YawAmount_Client);
 
@@ -143,4 +200,16 @@ private:
 protected:
 
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode);
+
+public:
+	virtual void ApplyAccumulatedForces(float DeltaSeconds) override;
+
+	virtual class FNetworkPredictionData_Client* GetPredictionData_Client() const override;
+
+	virtual class FNetworkPredictionData_Server* GetPredictionData_Server() const override;
+
+	virtual void ServerMove_PerformMovement(const FCharacterNetworkMoveData& MoveData) override;
+
+private:
+	FDroneNetworkMoveDataContainer DroneNetworkMoveDataContainer;
 };

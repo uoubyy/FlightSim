@@ -17,4 +17,8 @@ class DRONERACER_YANYIRUNTIME_API UDRBlueprintFunctionLibrary : public UBlueprin
 public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	static bool ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount);
+
+	static FString ConvertNetModeEnumToString(ENetMode NetMode);
+
+	static FString ConvertNetRoleEnumToString(ENetRole NetRole);
 };

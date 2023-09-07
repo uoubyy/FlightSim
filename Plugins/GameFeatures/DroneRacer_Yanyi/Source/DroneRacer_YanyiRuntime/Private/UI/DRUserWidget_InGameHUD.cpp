@@ -24,6 +24,12 @@ bool UDRUserWidget_InGameHUD::UpdateWidget_Implementation(const FString& Payload
 	return false;
 }
 
+void UDRUserWidget_InGameHUD::UpdatePlayerInfo(FString PlayerName)
+{
+	UE_LOG(LogTemp, Warning, TEXT("UpdatePlayerInfo => %s"), *PlayerName);
+	Text_PlayerName->SetText(FText::Format(LOCTEXT("TEXT_PLAYERNAME", "Player: {0}"), FText::FromString(PlayerName)));
+}
+
 void UDRUserWidget_InGameHUD::UpdateInGameHUD(float HP, float Altitude, float Speed, float ThrottleAmount, float EngineForce, int32 RocketNum)
 {
 	Text_HP->SetText(FText::Format(LOCTEXT("TEXT_HP", "HP: {0}"), HP));

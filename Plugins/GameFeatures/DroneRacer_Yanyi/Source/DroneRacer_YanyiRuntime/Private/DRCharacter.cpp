@@ -26,6 +26,8 @@
 #include "AbilitySystem/Attributes/LyraHealthSet.h"
 #include "Attributes/DRCombatSet.h"
 
+#include "DRBlueprintFunctionLibrary.h"
+
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
 	TeamID(0)
@@ -69,6 +71,7 @@ ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	Tags.Add(FName("Player"));
 
 	bReplicates = true;
+	bAlwaysRelevant = true;
 }
 
 void ADRCharacter::PreInitializeComponents()
@@ -81,6 +84,23 @@ void ADRCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	ToggleMovementAndCollision(false);
+}
+
+void ADRCharacter::Restart()
+{
+	Super::Restart();
+
+	bool IsLocalPlayer = Controller->IsLocalController();
+
+	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+	FString PlayerName = DRPlayerState ? DRPlayerState->GetPlayerName() : "NONAME";
+	FString HasAuthorityStr = HasAuthority() ? "True" : "False";
+	FString NetModeStr = UDRBlueprintFunctionLibrary::ConvertNetModeEnumToString(GetNetMode());
+	FString LocalRoleStr = UDRBlueprintFunctionLibrary::ConvertNetRoleEnumToString(GetLocalRole());
+	FString RemoteRoleStr = UDRBlueprintFunctionLibrary::ConvertNetRoleEnumToString(GetRemoteRole());
+	FString IsLocalPlayerStr = IsLocalPlayer ? "True" : "False";
+
+	UE_LOG(LogTemp, Warning, TEXT("On Player Restart %s, Net Mode: %s, LocalRole: %s, RemoteRole: %s, HasAuthority: %s, IsLocalPlayer %s."), *PlayerName, *NetModeStr, *LocalRoleStr, *RemoteRoleStr, *HasAuthorityStr, *IsLocalPlayerStr);
 }
 
 void ADRCharacter::Tick(float DeltaSeconds)
@@ -192,9 +212,12 @@ void ADRCharacter::OnRep_PlayerState()
 	UDroneMovementComponent* DroneMovementComponent = CastChecked<UDroneMovementComponent>(GetCharacterMovement());
 	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
 	FDRPlaneConfig PlaneConfig;
-	if(DRPlayerState->GetSelectedPlaneConfig(PlaneConfig))
+	if(DRPlayerState && DRPlayerState->GetSelectedPlaneConfig(PlaneConfig))
 	{ 
 		DroneMovementComponent->HandlePlayerStateReplicated(PlaneConfig);
+
+		FString PlayerName = DRPlayerState->GetPlayerName();
+		UE_LOG(LogTemp, Warning, TEXT("OnRep_PlayerState Player %s"), *PlayerName);
 	}
 }
 
@@ -275,6 +298,12 @@ void ADRCharacter::OnMatchStart_Implementation()
 	if (WidgetManagerComponent)
 	{
 		InGameHUD = Cast<UDRUserWidget_InGameHUD>(WidgetManagerComponent->RequestShowWidget("WBP_InGameHUD"));
+
+		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+		if(InGameHUD && DRPlayerState)
+		{ 
+			InGameHUD->UpdatePlayerInfo(DRPlayerState->GetPlayerName());
+		}
 	}
 
 	ToggleMovementAndCollision(true);
@@ -308,11 +337,21 @@ void ADRCharacter::HandleControllerChanged(class AController* NewController)
 		WidgetManagerComponent->RequestHideAllWidgets();
 	}
 
+	if (!NewController)
+	{
+		return;
+	}
+
 	WidgetManagerComponent = UDRWidgetManagerComponent::GetComponent(NewController);
 
 	if (WidgetManagerComponent)
 	{
 		WidgetManagerComponent->RequestShowWidget("WBP_InGameReady");
+	}
+
+	if (NewController->IsLocalController() && !WidgetManagerComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WidgetManagerComponent is Empty in Client!!!"));
 	}
 }
 

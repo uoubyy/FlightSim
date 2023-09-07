@@ -33,11 +33,13 @@ ADREnemyBase::ADREnemyBase()
 	AbilitySystemComponent = CreateDefaultSubobject<ULyraAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	HealthSet = CreateDefaultSubobject<ULyraHealthSet>(TEXT("HealthSet"));
+
+	bReplicates = true;
 }
 
 void ADREnemyBase::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 {
-
+	TeamID = NewTeamID;
 }
 
 FGenericTeamId ADREnemyBase::GetGenericTeamId() const
