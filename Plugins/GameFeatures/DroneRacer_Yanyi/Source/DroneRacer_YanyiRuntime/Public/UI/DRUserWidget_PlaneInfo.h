@@ -42,11 +42,23 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<class UCommonTextBlock> Text_RollSensitivity;
 
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//TObjectPtr<class UButton> Btn_ChanhePlane;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	TObjectPtr<class UButton> Btn_ChanhePlane;
+	TObjectPtr<class UCommonButtonBase> Btn_PrevPlane;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<class UCommonButtonBase> Btn_NextPlane;
+
+	UFUNCTION(BlueprintCallable)
+	void OnChangePlaneBtnClicked();
 
 	UFUNCTION()
-	void OnChanhePlaneBtnClicked();
+	void OnPrevPlaneBtnClicked();
+
+	UFUNCTION()
+	void OnNextPlaneBtnClicked();
 
 	FDRPlaneConfig_Short PlaneConfig;
 };
