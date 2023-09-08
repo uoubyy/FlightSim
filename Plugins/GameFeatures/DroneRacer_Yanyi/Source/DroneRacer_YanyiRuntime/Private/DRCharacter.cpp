@@ -89,20 +89,6 @@ void ADRCharacter::BeginPlay()
 void ADRCharacter::Restart()
 {
 	Super::Restart();
-
-	/*
-	bool IsLocalPlayer = Controller->IsLocalController();
-
-	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
-	FString PlayerName = DRPlayerState ? DRPlayerState->GetPlayerName() : "NONAME";
-	FString HasAuthorityStr = HasAuthority() ? "True" : "False";
-	FString NetModeStr = UDRBlueprintFunctionLibrary::ConvertNetModeEnumToString(GetNetMode());
-	FString LocalRoleStr = UDRBlueprintFunctionLibrary::ConvertNetRoleEnumToString(GetLocalRole());
-	FString RemoteRoleStr = UDRBlueprintFunctionLibrary::ConvertNetRoleEnumToString(GetRemoteRole());
-	FString IsLocalPlayerStr = IsLocalPlayer ? "True" : "False";
-
-	UE_LOG(LogTemp, Warning, TEXT("On Player Restart %s, Net Mode: %s, LocalRole: %s, RemoteRole: %s, HasAuthority: %s, IsLocalPlayer %s."), *PlayerName, *NetModeStr, *LocalRoleStr, *RemoteRoleStr, *HasAuthorityStr, *IsLocalPlayerStr);
-	*/
 }
 
 void ADRCharacter::PawnClientRestart()

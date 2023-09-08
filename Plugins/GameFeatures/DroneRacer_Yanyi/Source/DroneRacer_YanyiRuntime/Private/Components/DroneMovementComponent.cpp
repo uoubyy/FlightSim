@@ -80,18 +80,19 @@ void UDroneMovementComponent::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 // TODO: cause the mesh's roll, yaw and pitch is fake in local, we need send message to server and then transfer to all clients
 void UDroneMovementComponent::PlaneControlInfo_ClientSend_Implementation(float In_RollAmount, float In_PitchAmount, float In_YawAmount)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ClientSend %f %f %f"), In_RollAmount, In_PitchAmount, In_YawAmount);
-	PlaneControlInfo_ServerSend(In_RollAmount, In_PitchAmount, In_YawAmount);
+	if(GetOwner()->HasAuthority())
+	{ 
+		UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ClientSend %s %f %f %f"), *GetOwner()->GetName(), In_RollAmount, In_PitchAmount, In_YawAmount);
+		PlaneControlInfo_ServerSend(In_RollAmount, In_PitchAmount, In_YawAmount);
+	}
 }
 
 void UDroneMovementComponent::PlaneControlInfo_ServerSend_Implementation(float In_RollAmount, float In_PitchAmount, float In_YawAmount)
 {
 	if (ACharacter* OwnerCharacter = Cast<ACharacter>(PawnOwner))
 	{
-		//if (!(OwnerCharacter->GetLocalRole() == ENetRole::ROLE_AutonomousProxy))
+		if (!(OwnerCharacter->GetLocalRole() == ENetRole::ROLE_AutonomousProxy))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ServerSend %f %f %f"), In_RollAmount, In_PitchAmount, In_YawAmount);
-
 			FRotator CurrentRotator = OwnerCharacter->GetMesh()->GetRelativeRotation();
 			CurrentRotator.Roll = In_RollAmount;
 			CurrentRotator.Pitch = In_PitchAmount;
