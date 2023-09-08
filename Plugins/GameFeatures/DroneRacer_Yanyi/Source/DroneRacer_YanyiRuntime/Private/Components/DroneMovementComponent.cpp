@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 
 #include "Net/UnrealNetwork.h"
+#include "DRBlueprintFunctionLibrary.h"
 
 UDroneMovementComponent::UDroneMovementComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -74,6 +75,35 @@ void UDroneMovementComponent::HandlePlayerStateReplicated(const FDRPlaneConfig& 
 void UDroneMovementComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
+// TODO: cause the mesh's roll, yaw and pitch is fake in local, we need send message to server and then transfer to all clients
+void UDroneMovementComponent::PlaneControlInfo_ClientSend_Implementation(float In_RollAmount, float In_PitchAmount, float In_YawAmount)
+{
+	UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ClientSend %f %f %f"), In_RollAmount, In_PitchAmount, In_YawAmount);
+	PlaneControlInfo_ServerSend(In_RollAmount, In_PitchAmount, In_YawAmount);
+}
+
+void UDroneMovementComponent::PlaneControlInfo_ServerSend_Implementation(float In_RollAmount, float In_PitchAmount, float In_YawAmount)
+{
+	if (ACharacter* OwnerCharacter = Cast<ACharacter>(PawnOwner))
+	{
+		//if (!(OwnerCharacter->GetLocalRole() == ENetRole::ROLE_AutonomousProxy))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ServerSend %f %f %f"), In_RollAmount, In_PitchAmount, In_YawAmount);
+
+			FRotator CurrentRotator = OwnerCharacter->GetMesh()->GetRelativeRotation();
+			CurrentRotator.Roll = In_RollAmount;
+			CurrentRotator.Pitch = In_PitchAmount;
+			CurrentRotator.Yaw = In_YawAmount;
+
+			OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ServerSend OwnerCharacter is nullptr"));
+	}
 }
 
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
@@ -178,6 +208,8 @@ void UDroneMovementComponent::CalculateEngineForce()
 	LastUpdatedEngineForce = EngineForce.Length();
 
 	// 2K TODO
+	PlaneControlInfo_ClientSend(RollAmount, PitchAmount, YawAmount);
+
 	if (ACharacter* OwnerCharacter = Cast<ACharacter>(PawnOwner))
 	{
 		FRotator CurrentRotator = OwnerCharacter->GetMesh()->GetRelativeRotation();
@@ -187,11 +219,6 @@ void UDroneMovementComponent::CalculateEngineForce()
 
 		OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
 	}
-
-	//if (GetOwner()->HasAuthority())
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Drone %s on the server has Engine Force %f."), *GetOwner()->GetName(), LastUpdatedEngineForce);
-	//}
 }
 
 float UDroneMovementComponent::ConvertThrottleToForce()

@@ -19,10 +19,10 @@ void UDRLineTraceWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 	Muzzles = GetOwner()->GetComponentsByTag(UArrowComponent::StaticClass(), FName("Muzzle"));
 
-	for (UActorComponent* Muzzle : Muzzles)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Find Muzzle %s."), *Muzzle->GetName());
-	}
+	//for (UActorComponent* Muzzle : Muzzles)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Find Muzzle %s."), *Muzzle->GetName());
+	//}
 }
 
 void UDRLineTraceWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)

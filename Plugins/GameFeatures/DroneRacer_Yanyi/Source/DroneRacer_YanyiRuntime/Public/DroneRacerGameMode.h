@@ -22,6 +22,8 @@ public:
 
 	virtual const ULyraPawnData* GetPawnDataFromPlayerState_Implementation(const AController* InController) const override;
 
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
 	void OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef);
 
 	UFUNCTION(BlueprintCallable)

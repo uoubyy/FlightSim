@@ -10,6 +10,8 @@
 
 #include "Character/LyraPawnData.h"
 #include "DRPlayerController.h"
+#include <GameFramework/PlayerStart.h>
+#include <EngineUtils.h>
 
 void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 {
@@ -29,7 +31,7 @@ void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 		}
 	}
 
-	AActor* StartSpot = StartSpot = FindPlayerStart(NewPlayer, SpecificPlayerStartName);
+	AActor* StartSpot = FindPlayerStart(NewPlayer, SpecificPlayerStartName);
 
 	// If a start spot wasn't found,
 	if (StartSpot == nullptr)
@@ -63,6 +65,27 @@ const ULyraPawnData* ADroneRacerGameMode::GetPawnDataFromPlayerState_Implementat
 	}
 
 	return nullptr;
+}
+
+AActor* ADroneRacerGameMode::ChoosePlayerStart_Implementation(AController* Player)
+{
+	// return Super::ChoosePlayerStart_Implementation(Player);
+
+	TArray<APlayerStart*> AllStartPoints;
+
+	UWorld* World = GetWorld();
+
+	for (TActorIterator<APlayerStart> It(World); It; ++It)
+	{
+		APlayerStart* PlayerStart = *It;
+
+		AllStartPoints.Add(PlayerStart);
+	}
+
+	int32 MaxIndex = AllStartPoints.Num() - 1;
+	int32 Index = FMath::Clamp(GameState->PlayerArray.Num(), 0, MaxIndex);
+
+	return AllStartPoints[Index];
 }
 
 void ADroneRacerGameMode::OnRegisterEnemy(FString EnemyName, TWeakObjectPtr<AActor> EnemyRef)

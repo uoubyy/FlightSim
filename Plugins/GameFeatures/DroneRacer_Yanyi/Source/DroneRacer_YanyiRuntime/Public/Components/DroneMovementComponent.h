@@ -172,6 +172,12 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Engine")
 	FVector EngineForce = FVector::Zero();
 
+	UFUNCTION(Server, Unreliable)
+	void PlaneControlInfo_ClientSend(float In_RollAmount, float In_PitchAmount, float In_YawAmount);
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void PlaneControlInfo_ServerSend(float In_RollAmount, float In_PitchAmount, float In_YawAmount);
+
 private:
 
 	void UpdateThrottleAmount(float DeltaTime);

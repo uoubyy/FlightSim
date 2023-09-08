@@ -57,7 +57,7 @@ void UDRSaveGameSubsystem::LoadSaveGame(FString InSlotName)
 
 void UDRSaveGameSubsystem::HandleStartingNewPlayer(class AController* NewPlayer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DRSaveGameSubsystem HandleStartingNewPlayer"));
+	// UE_LOG(LogTemp, Warning, TEXT("DRSaveGameSubsystem HandleStartingNewPlayer"));
 
 	ADRPlayerState* DRPlayerState = NewPlayer->GetPlayerState<ADRPlayerState>();
 	if(DRPlayerState)
