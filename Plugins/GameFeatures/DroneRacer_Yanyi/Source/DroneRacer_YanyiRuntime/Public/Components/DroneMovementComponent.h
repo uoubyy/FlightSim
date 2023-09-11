@@ -160,13 +160,13 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Throttle")
 	float ThrottleAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Pitch", Replicated)
 	float PitchAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Roll", Replicated)
 	float RollAmount;
 
-	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw")
+	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Yaw", Replicated)
 	float YawAmount;
 
 	UPROPERTY(BlueprintReadWrite, Category = "DroneRacer|Engine")
@@ -174,9 +174,6 @@ protected:
 
 	UFUNCTION(Server, Unreliable)
 	void PlaneControlInfo_ClientSend(float In_RollAmount, float In_PitchAmount, float In_YawAmount);
-
-	UFUNCTION(NetMulticast, Unreliable)
-	void PlaneControlInfo_ServerSend(float In_RollAmount, float In_PitchAmount, float In_YawAmount);
 
 private:
 
@@ -194,9 +191,13 @@ private:
 
 	void UpdateCameraEffect();
 
+	void UpdateSkeletonMeshPos();
+
 protected:
 
-	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode);
+	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
+
+	virtual void SimulatedTick(float DeltaSeconds) override;
 
 public:
 

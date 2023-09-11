@@ -25,6 +25,12 @@ void UDroneMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 	UpdateCameraEffect();
 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// TODO Fake Skeleton Mesh Rotation Based on Roll, Yaw and Pitch
+	if (!CharacterOwner->IsLocallyControlled())
+	{ 
+		UpdateSkeletonMeshPos();
+	}
 }
 
 FRotator UDroneMovementComponent::ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const
@@ -75,36 +81,18 @@ void UDroneMovementComponent::HandlePlayerStateReplicated(const FDRPlaneConfig& 
 void UDroneMovementComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(UDroneMovementComponent, RollAmount, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(UDroneMovementComponent, PitchAmount, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(UDroneMovementComponent, YawAmount, COND_SkipOwner);
 }
 
 // TODO: cause the mesh's roll, yaw and pitch is fake in local, we need send message to server and then transfer to all clients
 void UDroneMovementComponent::PlaneControlInfo_ClientSend_Implementation(float In_RollAmount, float In_PitchAmount, float In_YawAmount)
 {
-	if(GetOwner()->HasAuthority())
-	{ 
-		UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ClientSend %s %f %f %f"), *GetOwner()->GetName(), In_RollAmount, In_PitchAmount, In_YawAmount);
-		PlaneControlInfo_ServerSend(In_RollAmount, In_PitchAmount, In_YawAmount);
-	}
-}
-
-void UDroneMovementComponent::PlaneControlInfo_ServerSend_Implementation(float In_RollAmount, float In_PitchAmount, float In_YawAmount)
-{
-	if (ACharacter* OwnerCharacter = Cast<ACharacter>(PawnOwner))
-	{
-		if (!(OwnerCharacter->GetLocalRole() == ENetRole::ROLE_AutonomousProxy))
-		{
-			FRotator CurrentRotator = OwnerCharacter->GetMesh()->GetRelativeRotation();
-			CurrentRotator.Roll = In_RollAmount;
-			CurrentRotator.Pitch = In_PitchAmount;
-			CurrentRotator.Yaw = In_YawAmount;
-
-			OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlaneControlInfo_ServerSend OwnerCharacter is nullptr"));
-	}
+	RollAmount = In_RollAmount;
+	PitchAmount = In_PitchAmount;
+	YawAmount = In_YawAmount;
 }
 
 void UDroneMovementComponent::UpdateThrottleAmount(float DeltaTime)
@@ -211,15 +199,7 @@ void UDroneMovementComponent::CalculateEngineForce()
 	// 2K TODO
 	PlaneControlInfo_ClientSend(RollAmount, PitchAmount, YawAmount);
 
-	if (ACharacter* OwnerCharacter = Cast<ACharacter>(PawnOwner))
-	{
-		FRotator CurrentRotator = OwnerCharacter->GetMesh()->GetRelativeRotation();
-		CurrentRotator.Roll = RollAmount;
-		CurrentRotator.Pitch = PitchAmount;
-		CurrentRotator.Yaw = YawAmount;
-
-		OwnerCharacter->GetMesh()->SetRelativeRotation(CurrentRotator);
-	}
+	UpdateSkeletonMeshPos();
 }
 
 float UDroneMovementComponent::ConvertThrottleToForce()
@@ -260,9 +240,29 @@ void UDroneMovementComponent::UpdateCameraEffect()
 	}
 }
 
+void UDroneMovementComponent::UpdateSkeletonMeshPos()
+{
+	if (USkeletalMeshComponent* Mesh = CharacterOwner->GetMesh())
+	{
+		FRotator CurrentRotator = Mesh->GetRelativeRotation();
+		CurrentRotator.Roll = RollAmount;
+		CurrentRotator.Pitch = PitchAmount;
+		CurrentRotator.Yaw = YawAmount;
+
+		Mesh->SetRelativeRotation(CurrentRotator);
+	}
+}
+
 void UDroneMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
+}
+
+void UDroneMovementComponent::SimulatedTick(float DeltaSeconds)
+{
+	Super::SimulatedTick(DeltaSeconds);
+
+	// UpdateSkeletonMeshPos();
 }
 
 void UDroneMovementComponent::ReplicateMoveToServer(float DeltaTime, const FVector& NewAcceleration)

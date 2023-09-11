@@ -65,7 +65,7 @@ enum class ELyraFramePacingMode : uint8
 };
 
 UCLASS(config=Game, defaultconfig)
-class ULyraPlatformSpecificRenderingSettings : public UPlatformSettings
+class LYRAGAME_API ULyraPlatformSpecificRenderingSettings : public UPlatformSettings
 {
 	GENERATED_BODY()
 
