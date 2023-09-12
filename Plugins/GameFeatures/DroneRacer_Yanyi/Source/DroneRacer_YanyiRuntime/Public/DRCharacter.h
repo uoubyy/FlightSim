@@ -96,7 +96,7 @@ private:
 
 	bool ThirdCameraEnabled = true;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Weapon", Meta = (AllowPrivateAccess = "true"), ReplicatedUsing = OnRep_TeamID)
 	FGenericTeamId TeamID;
 
 	UPROPERTY()
@@ -159,6 +159,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnMatchEnd(bool WinOrLoss);
+
+	UFUNCTION()
+	void OnRep_TeamID();
 
 private:
 	

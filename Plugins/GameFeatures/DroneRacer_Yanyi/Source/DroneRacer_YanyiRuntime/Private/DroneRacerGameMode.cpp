@@ -166,6 +166,7 @@ void ADroneRacerGameMode::OnMatchStart()
 			Player->SetGenericTeamId(TeamID);
 			Player->OnMatchStart();
 			++TeamID;
+			// UE_LOG(LogTemp, Warning, TEXT("Set Team ID %d to player %s"), TeamID, *Player->GetName());
 		}
 	}
 }

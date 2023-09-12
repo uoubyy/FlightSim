@@ -26,7 +26,7 @@ bool UDRUserWidget_InGameHUD::UpdateWidget_Implementation(const FString& Payload
 
 void UDRUserWidget_InGameHUD::UpdatePlayerInfo(FString PlayerName, uint8 TeamID)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("UpdatePlayerInfo => %s, %d"), *PlayerName, TeamID);
+	UE_LOG(LogTemp, Warning, TEXT("UpdatePlayerInfo => %s, %d"), *PlayerName, TeamID);
 	Text_PlayerName->SetText(FText::Format(LOCTEXT("TEXT_PLAYERNAME", "Player: {0}"), FText::FromString(PlayerName)));
 
 	Text_TeamID->SetText(FText::Format(LOCTEXT("TEXT_TEAMID", "Team: {0}"), TeamID));

@@ -324,6 +324,15 @@ void ADRCharacter::OnMatchEnd(bool WinOrLoss)
 	ToggleMovementAndCollision(false);
 }
 
+void ADRCharacter::OnRep_TeamID()
+{
+	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
+	if (InGameHUD && DRPlayerState)
+	{
+		InGameHUD->UpdatePlayerInfo(DRPlayerState->GetPlayerName(), TeamID.GetId());
+	}
+}
+
 void ADRCharacter::HandleControllerChanged(class AController* NewController)
 {
 	if (WidgetManagerComponent)
