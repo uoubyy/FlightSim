@@ -47,6 +47,8 @@ public:
 	TArray<TSubclassOf<AActor>> PoolableObjectClass;
 	
 	void OnPlayerReady();
+
+	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 	
 protected:
 	TMap<FString, TWeakObjectPtr<AActor>> AllEnemies;
