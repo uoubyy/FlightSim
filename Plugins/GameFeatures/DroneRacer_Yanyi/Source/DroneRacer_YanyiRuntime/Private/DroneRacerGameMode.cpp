@@ -216,3 +216,11 @@ void ADroneRacerGameMode::OnPlayerReady()
 		OnMatchStart();
 	}
 }
+
+APlayerController* ADroneRacerGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
+	APlayerController* NewPlayerController = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
+
+	UE_LOG(LogTemp, Warning, TEXT("DroneRacerGameMode Login with Options %s."), *Options);
+	return NewPlayerController;
+}
