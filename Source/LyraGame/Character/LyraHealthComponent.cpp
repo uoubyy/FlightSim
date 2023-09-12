@@ -183,7 +183,7 @@ void ULyraHealthComponent::HandleOutOfHealth(AActor* DamageInstigator, AActor* D
 			Message.Verb = TAG_Lyra_Elimination_Message;
 			Message.Instigator = DamageInstigator;
 			Message.InstigatorTags = *DamageEffectSpec.CapturedSourceTags.GetAggregatedTags();
-			Message.Target = ULyraVerbMessageHelpers::GetPlayerStateFromObject(AbilitySystemComponent->GetAvatarActor());
+			Message.Target = AbilitySystemComponent->GetAvatarActor(); //ULyraVerbMessageHelpers::GetPlayerStateFromObject(AbilitySystemComponent->GetAvatarActor());
 			Message.TargetTags = *DamageEffectSpec.CapturedTargetTags.GetAggregatedTags();
 			//@TODO: Fill out context tags, and any non-ability-system source/instigator tags
 			//@TODO: Determine if it's an opposing team kill, self-own, team kill, etc...

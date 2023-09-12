@@ -132,7 +132,7 @@ AActor* UDRObjectPoolSubsystem::SpawnNewObjectForClass(UClass* ObjectClass)
 	if (PoolableObject)
 	{
 		PoolableObject->Rename(*PoolableObjectName);
-		PoolableObject->SetActorLabel(*PoolableObjectName);
+		// PoolableObject->SetActorLabel(*PoolableObjectName);
 		UE_LOG(LogTemp, Warning, TEXT("Spawn New Object %s."), *PoolableObjectName);
 
 		IDRPoolableInterface* PoolableInterface = Cast<IDRPoolableInterface>(PoolableObject);

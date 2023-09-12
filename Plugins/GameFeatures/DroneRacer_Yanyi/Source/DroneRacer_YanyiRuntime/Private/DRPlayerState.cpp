@@ -5,6 +5,9 @@
 #include "DRSaveGame.h"
 #include "Attributes/DRCombatSet.h"
 #include "Subsystems/DRSaveGameSubsystem.h"
+#include "Components/DRWidgetManagerComponent.h"
+#include "UI/DRUserWidget_InGameHUD.h"
+#include <Net/UnrealNetwork.h>
 
 ADRPlayerState::ADRPlayerState(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -80,4 +83,44 @@ FString ADRPlayerState::GetDefaultPlaneName()
 	check(PlaneSet->PlaneConfigs.Num() > 0);
 
 	return PlaneSet->PlaneConfigs[0].PlaneName;
+}
+
+void ADRPlayerState::AddScores(float DeltaScores)
+{
+	if (HasAuthority())
+	{
+		DroneRacerScores += DeltaScores;
+	}
+
+	// TODO BAD CODE
+	if (GetPlayerController()->IsLocalController())
+	{
+		UpdateUI();
+	}
+}
+
+void ADRPlayerState::OnRep_Scores()
+{
+	UpdateUI();
+}
+
+void ADRPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ADRPlayerState, DroneRacerScores, COND_OwnerOnly);
+}
+
+void ADRPlayerState::UpdateUI()
+{
+	if (APlayerController* PlayerController = GetPlayerController())
+	{
+		if (UDRWidgetManagerComponent* WidgetManager = UDRWidgetManagerComponent::GetComponent(PlayerController))
+		{
+			if (UDRUserWidget_InGameHUD* InGameHUD = Cast<UDRUserWidget_InGameHUD>(WidgetManager->GetReferenceOfWidget(FName("WBP_InGameHUD"))))
+			{
+				InGameHUD->UpdatePlayerScores(DroneRacerScores);
+			}
+		}
+	}
 }

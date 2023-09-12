@@ -85,7 +85,7 @@ void UDRGameplayAbility_LineTrace::PerformLocalTargeting(OUT TArray<FHitResult>&
 				if (GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_WorldDynamic, TraceParams))
 				{
 					OutHits.Add(HitResult);
-					UE_LOG(LogTemp, Warning, TEXT("GameplayAbility_LineTrace Hit Actor %s."), *(HitResult.GetActor()->GetName()));
+					// UE_LOG(LogTemp, Warning, TEXT("GameplayAbility_LineTrace Hit Actor %s."), *(HitResult.GetActor()->GetName()));
 				}
 
 				// DrawDebugLine(GetWorld(), StartPoint, EndPoint, FColor::Red, false, 60.0f, 0, 2.0f);

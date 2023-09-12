@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DroneRacer|Lobby", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UDRPlaneSet> PlaneSet;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_Scores)
+	float DroneRacerScores;
+
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
@@ -62,4 +65,21 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FString GetDefaultPlaneName();
+
+	UFUNCTION(BlueprintCallable)
+	void AddScores(float DeltaScores);
+
+	UFUNCTION(BlueprintCallable)
+	float GetDroneRacerScores() const { return DroneRacerScores; }
+
+protected:
+
+	UFUNCTION()
+	void OnRep_Scores();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+private:
+	
+	void UpdateUI();
 };

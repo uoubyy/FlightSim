@@ -71,7 +71,7 @@ void UDRLineTraceWeaponComponent::OnFire()
 	FString NetRole = UDRBlueprintFunctionLibrary::ConvertNetRoleEnumToString(GetOwner()->GetLocalRole());
 	FString NetMode = UDRBlueprintFunctionLibrary::ConvertNetModeEnumToString(GetOwner()->GetNetMode());
 
-	UE_LOG(LogTemp, Warning, TEXT("LineTraceWeaponComponent OnFire %s %s"), *NetRole, *NetMode);
+	// UE_LOG(LogTemp, Warning, TEXT("LineTraceWeaponComponent OnFire %s %s"), *NetRole, *NetMode);
 
 	UWorld * World = GetWorld();
 	check(World);

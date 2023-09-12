@@ -43,18 +43,18 @@ bool UDRHealthComponent::ApplyDamage(AActor* DamageCauser, float DamageAmount)
 		CurrentHealth = NewHealthValue;
 
 
-		ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
-		if (CurrentHealth <= 0.0f && DroneRacerGameMode)
-		{
-			if(GetOwner()->ActorHasTag("Enemy")) // TODO 2K
-			{ 
-				DroneRacerGameMode->OnEliminateEnemy(DamageCauser, GetOwner());
-			}
-			else if (GetOwner()->ActorHasTag("Player")) // TODO 2K
-			{
-				DroneRacerGameMode->OnEliminatePlayer(DamageCauser, GetOwner());
-			}
-		}
+		//ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
+		//if (CurrentHealth <= 0.0f && DroneRacerGameMode)
+		//{
+		//	if(GetOwner()->ActorHasTag("Enemy")) // TODO 2K
+		//	{ 
+		//		DroneRacerGameMode->OnEliminateEnemy(DamageCauser, GetOwner());
+		//	}
+		//	else if (GetOwner()->ActorHasTag("Player")) // TODO 2K
+		//	{
+		//		DroneRacerGameMode->OnEliminatePlayer(DamageCauser, GetOwner());
+		//	}
+		//}
 
 		if (DamageImmuneDuration > 0.0f)
 		{

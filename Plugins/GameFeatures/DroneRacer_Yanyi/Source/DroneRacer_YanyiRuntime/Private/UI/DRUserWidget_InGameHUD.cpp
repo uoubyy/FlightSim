@@ -24,6 +24,11 @@ bool UDRUserWidget_InGameHUD::UpdateWidget_Implementation(const FString& Payload
 	return false;
 }
 
+void UDRUserWidget_InGameHUD::UpdatePlayerScores(float Scores)
+{
+	Text_Scores->SetText(FText::Format(LOCTEXT("TEXT_SCORES", "Score: {0}"), Scores));
+}
+
 void UDRUserWidget_InGameHUD::UpdatePlayerInfo(FString PlayerName, uint8 TeamID)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UpdatePlayerInfo => %s, %d"), *PlayerName, TeamID);

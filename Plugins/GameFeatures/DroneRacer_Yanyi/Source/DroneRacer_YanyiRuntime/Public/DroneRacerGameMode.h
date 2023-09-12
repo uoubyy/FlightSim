@@ -8,6 +8,8 @@
 
 class ULyraPawnData;
 class AController;
+struct FGameplayTag;
+struct FLyraVerbMessage;
 
 /**
  * 
@@ -39,7 +41,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnMatchStart();
 
-	// TODO 2K
 	UFUNCTION(BlueprintCallable)
 	void OnMatchEnd(bool BattleResult);
 
@@ -57,4 +58,6 @@ protected:
 	TObjectPtr<class UDataAsset> PlaneSet;
 
 	TArray<class APlayerStart*> AllStartPoints;
+
+	void OnEliminationMessage(FGameplayTag Channel, const FLyraVerbMessage& Payload);
 };

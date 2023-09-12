@@ -160,11 +160,11 @@ void ADREnemyBase::OnHealthChanged(class ULyraHealthComponent* HealthComponent, 
 {
 	if (OldValue > 0.0f && NewValue <= 0.0f)
 	{
-		if (HasAuthority())
-		{
-			ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
-			DroneRacerGameMode->OnEliminateEnemy(InstigatorActor, this);
-		}
+		//if (HasAuthority())
+		//{
+		//	ADroneRacerGameMode* DroneRacerGameMode = GetWorld()->GetAuthGameMode<ADroneRacerGameMode>();
+		//	DroneRacerGameMode->OnEliminateEnemy(InstigatorActor, this);
+		//}
 
 		OnDeathStarted(InstigatorActor);
 	}

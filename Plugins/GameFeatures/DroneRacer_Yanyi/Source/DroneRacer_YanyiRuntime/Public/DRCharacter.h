@@ -157,7 +157,7 @@ public:
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 	void OnMatchStart(const FGenericTeamId& NewTeamID);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 	void OnMatchEnd(bool WinOrLoss);
 
 private:

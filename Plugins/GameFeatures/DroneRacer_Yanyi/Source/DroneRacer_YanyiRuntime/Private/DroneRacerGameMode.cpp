@@ -12,6 +12,11 @@
 #include "DRPlayerController.h"
 #include <GameFramework/PlayerStart.h>
 #include <EngineUtils.h>
+#include "GameFramework/GameplayMessageSubsystem.h"
+
+#include "NativeGameplayTags.h"
+#include "Messages/LyraVerbMessage.h"
+UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Lyra_Elimination_Message, "Lyra.Elimination.Message");
 
 void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
 {
@@ -71,8 +76,8 @@ AActor* ADroneRacerGameMode::ChoosePlayerStart_Implementation(AController* Playe
 {
 	// return Super::ChoosePlayerStart_Implementation(Player);
 
-	if(AllStartPoints.Num() == 0)
-	{ 
+	if (AllStartPoints.Num() == 0)
+	{
 		UWorld* World = GetWorld();
 
 		for (TActorIterator<APlayerStart> It(World); It; ++It)
@@ -83,7 +88,7 @@ AActor* ADroneRacerGameMode::ChoosePlayerStart_Implementation(AController* Playe
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("ChoosePlayerStart find %d players, and %d start points."), GameState->PlayerArray.Num(), AllStartPoints.Num());
+	// UE_LOG(LogTemp, Warning, TEXT("ChoosePlayerStart find %d players, and %d start points."), GameState->PlayerArray.Num(), AllStartPoints.Num());
 
 	int32 MaxIndex = AllStartPoints.Num() - 1;
 	int32 Index = FMath::Clamp(GameState->PlayerArray.Num() - 1, 0, MaxIndex);
@@ -113,6 +118,19 @@ void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* Victi
 		}
 	}
 
+	// the ability avator may be character or player state
+	if (ADRCharacter* DRCharacter = Cast<ADRCharacter>(InstigatorPawn))
+	{
+		if(ADRPlayerState* DRPlayerState = DRCharacter->GetPlayerState<ADRPlayerState>())
+		{
+			DRPlayerState->AddScores(5.0f);
+		}
+	}
+	else if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(InstigatorPawn))
+	{
+		DRPlayerState->AddScores(5.0f);
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("OnEliminateEnemy %s, Live Enemies Cnt %d"), *VictimPawn->GetName(), LiveEnemiesCnt);
 	if (LiveEnemiesCnt <= 0)
 	{
@@ -122,7 +140,18 @@ void ADroneRacerGameMode::OnEliminateEnemy(AActor* InstigatorPawn, AActor* Victi
 
 void ADroneRacerGameMode::OnEliminatePlayer(AActor* InstigatorPawn, AActor* Player)
 {
-	// TODO 2K: Polish
+	// the ability avator may be character or player state
+	if (ADRCharacter* DRCharacter = Cast<ADRCharacter>(InstigatorPawn))
+	{
+		if (ADRPlayerState* DRPlayerState = DRCharacter->GetPlayerState<ADRPlayerState>())
+		{
+			DRPlayerState->AddScores(100.0f);
+		}
+	}
+	else if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(InstigatorPawn))
+	{
+		DRPlayerState->AddScores(100.0f);
+	}
 	OnMatchEnd(false);
 }
 
@@ -138,6 +167,9 @@ void ADroneRacerGameMode::InitGame(const FString& MapName, const FString& Option
 	{
 		DRObjectPoolSubsystem->RegisterPoolableClass(ObjectClass, 5);
 	}
+
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
+	MessageSubsystem.RegisterListener(TAG_Lyra_Elimination_Message, this, &ThisClass::OnEliminationMessage);
 }
 
 void ADroneRacerGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -157,7 +189,7 @@ void ADroneRacerGameMode::OnMatchStart()
 {
 	ALyraGameState* LyraGS = GetGameState<ALyraGameState>();
 
-	uint8 TeamID = 2;
+	uint8 TeamID = 1;
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
 		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
@@ -165,36 +197,57 @@ void ADroneRacerGameMode::OnMatchStart()
 		{
 			Player->OnMatchStart(TeamID);
 			++TeamID;
-			UE_LOG(LogTemp, Warning, TEXT("Set Team ID %d to player %s"), TeamID, *Player->GetName());
+			// UE_LOG(LogTemp, Warning, TEXT("Set Team ID %d to player %s"), TeamID, *Player->GetName());
 		}
 	}
 }
 
-
+// BattleResult: true means all enemy eliminated, false means one player eliminated
 void ADroneRacerGameMode::OnMatchEnd(bool BattleResult)
 {
 	ALyraGameState* LyraGS = GetGameState<ALyraGameState>();
 
-	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
-	{
-		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
-		if (Player)
+	//if(BattleResult)
+	{ 
+		ADRPlayerState* WinPlayer = nullptr;
+		for (APlayerState* BasePlayerState : LyraGS->PlayerArray)
 		{
-			if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(LyraPlayerState))
-			{
-				if(BattleResult)
-					DRPlayerState->UpdatePersonalRecord(GetWorld()->TimeSeconds);
+			if(ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(BasePlayerState))
+			{ 
+				if (WinPlayer == nullptr || DRPlayerState->GetDroneRacerScores() > WinPlayer->GetDroneRacerScores())
+				{
+					WinPlayer = DRPlayerState;
+				}
 			}
+		}
 
-			Player->OnMatchEnd(BattleResult); // TODO 2K should based on the health component
+		// Fake: I add 100
+		for (APlayerState* BasePlayerState : LyraGS->PlayerArray)
+		{
+			if (ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(BasePlayerState))
+			{
+				ADRCharacter* DRCharacter = DRPlayerState->GetPawn<ADRCharacter>();
+				if (!DRCharacter)
+				{
+					continue;
+				}
+				if (DRPlayerState == WinPlayer)
+				{
+					DRCharacter->OnMatchEnd(true);
+				}
+				else
+				{
+					DRCharacter->OnMatchEnd(false);
+				}
+			}
 		}
 	}
 
-	if(BattleResult)
-	{ 
-		UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
-		DRSaveGameSubsystem->WriteSaveGame();
-	}
+	//if(BattleResult)
+	//{ 
+	//	UDRSaveGameSubsystem* DRSaveGameSubsystem = GetGameInstance()->GetSubsystem<UDRSaveGameSubsystem>();
+	//	DRSaveGameSubsystem->WriteSaveGame();
+	//}
 }
 
 void ADroneRacerGameMode::OnPlayerReady()
@@ -222,4 +275,25 @@ APlayerController* ADroneRacerGameMode::Login(UPlayer* NewPlayer, ENetRole InRem
 
 	UE_LOG(LogTemp, Warning, TEXT("DroneRacerGameMode Login with Options %s."), *Options);
 	return NewPlayerController;
+}
+
+void ADroneRacerGameMode::OnEliminationMessage(FGameplayTag Channel, const FLyraVerbMessage& Payload)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Received OnEliminationMessage"));
+
+	AActor* InstigatorPawn = Cast<AActor>(Payload.Instigator);
+	AActor* VictimPawn = Cast<AActor>(Payload.Target);
+
+	if (VictimPawn && VictimPawn->ActorHasTag("Enemy"))
+	{
+		OnEliminateEnemy(InstigatorPawn, VictimPawn);
+	}
+	else if (VictimPawn && VictimPawn->ActorHasTag("Player"))
+	{
+		OnEliminatePlayer(InstigatorPawn, VictimPawn);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnEliminationMessage Unknow Type"));
+	}
 }

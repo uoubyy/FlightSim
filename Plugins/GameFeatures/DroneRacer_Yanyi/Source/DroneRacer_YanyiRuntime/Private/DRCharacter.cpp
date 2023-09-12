@@ -305,7 +305,7 @@ void ADRCharacter::OnMatchStart_Implementation(const FGenericTeamId& NewTeamID)
 	ToggleMovementAndCollision(true);
 }
 
-void ADRCharacter::OnMatchEnd(bool WinOrLoss)
+void ADRCharacter::OnMatchEnd_Implementation(bool WinOrLoss)
 {
 	if (WidgetManagerComponent)
 	{
