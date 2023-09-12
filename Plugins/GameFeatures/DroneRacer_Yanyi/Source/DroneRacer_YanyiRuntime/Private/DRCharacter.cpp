@@ -286,8 +286,10 @@ void ADRCharacter::SwitchThirdAndFirstCamera()
 	FirstPersonCamera->SetActive(!ThirdCameraEnabled);
 }
 
-void ADRCharacter::OnMatchStart_Implementation()
+void ADRCharacter::OnMatchStart_Implementation(const FGenericTeamId& NewTeamID)
 {
+	SetGenericTeamId(NewTeamID);
+
 	if (WidgetManagerComponent)
 	{
 		WidgetManagerComponent->RequestHideWidget(FName("WBP_Waiting"));
@@ -322,15 +324,6 @@ void ADRCharacter::OnMatchEnd(bool WinOrLoss)
 	}
 
 	ToggleMovementAndCollision(false);
-}
-
-void ADRCharacter::OnRep_TeamID()
-{
-	ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
-	if (InGameHUD && DRPlayerState)
-	{
-		InGameHUD->UpdatePlayerInfo(DRPlayerState->GetPlayerName(), TeamID.GetId());
-	}
 }
 
 void ADRCharacter::HandleControllerChanged(class AController* NewController)

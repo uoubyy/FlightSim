@@ -163,10 +163,9 @@ void ADroneRacerGameMode::OnMatchStart()
 		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
 		if (Player)
 		{
-			Player->SetGenericTeamId(TeamID);
-			Player->OnMatchStart();
+			Player->OnMatchStart(TeamID);
 			++TeamID;
-			// UE_LOG(LogTemp, Warning, TEXT("Set Team ID %d to player %s"), TeamID, *Player->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("Set Team ID %d to player %s"), TeamID, *Player->GetName());
 		}
 	}
 }
