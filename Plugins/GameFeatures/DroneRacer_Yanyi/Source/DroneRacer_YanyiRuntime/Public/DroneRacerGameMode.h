@@ -53,4 +53,6 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UDataAsset> PlaneSet;
+
+	TArray<class APlayerStart*> AllStartPoints;
 };

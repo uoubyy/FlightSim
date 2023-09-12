@@ -6,6 +6,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
+#include "DRBlueprintFunctionLibrary.h"
 
 // Sets default values for this component's properties
 UDRLineTraceWeaponComponent::UDRLineTraceWeaponComponent()
@@ -32,6 +33,9 @@ void UDRLineTraceWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReas
 
 bool UDRLineTraceWeaponComponent::CanOpenFire() const
 {	
+	// TODO
+	// return true;
+
 	if (WeaponFireRate <= 0.0f)
 	{
 		return false;
@@ -64,12 +68,18 @@ FVector UDRLineTraceWeaponComponent::GetTargetingDirection() const
 
 void UDRLineTraceWeaponComponent::OnFire()
 {
+	FString NetRole = UDRBlueprintFunctionLibrary::ConvertNetRoleEnumToString(GetOwner()->GetLocalRole());
+	FString NetMode = UDRBlueprintFunctionLibrary::ConvertNetModeEnumToString(GetOwner()->GetNetMode());
+
+	UE_LOG(LogTemp, Warning, TEXT("LineTraceWeaponComponent OnFire %s %s"), *NetRole, *NetMode);
+
 	UWorld * World = GetWorld();
 	check(World);
 	TimeLastFired = World->GetTimeSeconds();
 
 	if (!BulletTracerEffect)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("BulletTracerEffect is nullptr!"));
 		return;
 	}
 

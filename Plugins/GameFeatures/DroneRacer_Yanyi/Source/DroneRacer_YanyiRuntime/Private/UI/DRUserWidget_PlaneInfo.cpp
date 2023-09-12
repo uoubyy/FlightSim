@@ -15,6 +15,22 @@
 void UDRUserWidget_PlaneInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (ADRPlayerState* DRPlayerState = GetOwningPlayerState<ADRPlayerState>())
+	{
+		// TODO
+		FDRPlaneConfig PlaneConfigTemp;
+		if (DRPlayerState->GetSelectedPlaneConfig(PlaneConfigTemp))
+		{
+			PlaneConfig = FDRPlaneConfig_Short(PlaneConfigTemp);
+			Text_PlaneName->SetText(FText::FromString(PlaneConfig.DisplayName));
+			Text_MaxSpeed->SetText(FText::Format(LOCTEXT("TEXT_MAXSPEED", "Max Speed: {0}"), PlaneConfig.MaxSpeed));
+			Text_MaxThrottle->SetText(FText::Format(LOCTEXT("TEXT_MAXTHROTTLE", "Max Throttle: {0}"), PlaneConfig.MaxThrottleAmount));
+			Text_ThrottleSensitivity->SetText(FText::Format(LOCTEXT("TEXT_THROTTLESENSITIVITY", "Throttle Sensitivity: {0}"), PlaneConfig.ThrottleSensitivity));
+			Text_PitchSensitivity->SetText(FText::Format(LOCTEXT("TEXT_PITCHSENSITIVITY", "Pitch Sensitivity: {0}"), PlaneConfig.PitchSensitivity));
+			Text_RollSensitivity->SetText(FText::Format(LOCTEXT("TEXT_ROLLSENSITIVITY", "Roll Sensitivity: {0}"), PlaneConfig.RollSensitivity));
+		}
+	}
 }
 
 bool UDRUserWidget_PlaneInfo::Initialize()

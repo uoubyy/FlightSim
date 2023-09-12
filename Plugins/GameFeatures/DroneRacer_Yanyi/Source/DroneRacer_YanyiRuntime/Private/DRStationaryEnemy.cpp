@@ -59,8 +59,11 @@ void ADRStationaryEnemy::TraceTargetActors_Implementation()
 				{ 
 					if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(RayCastResult.GetActor()))
 					{
-						float CurrentHealth = ASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
-						ASC->SetNumericAttributeBase(ULyraHealthSet::GetHealthAttribute(), CurrentHealth - DamageAmount);
+						//float CurrentHealth = ASC->GetNumericAttribute(ULyraHealthSet::GetHealthAttribute());
+						//ASC->SetNumericAttributeBase(ULyraHealthSet::GetHealthAttribute(), CurrentHealth - DamageAmount);
+						UGameplayEffect* GameplayEffect = DamageEffectClass->GetDefaultObject<UGameplayEffect>();
+						FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+						ASC->ApplyGameplayEffectToSelf(GameplayEffect, 0.0f, EffectContext);
 					}
 				}
 

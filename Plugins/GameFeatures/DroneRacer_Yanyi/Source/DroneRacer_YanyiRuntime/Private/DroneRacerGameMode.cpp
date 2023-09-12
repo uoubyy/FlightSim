@@ -71,19 +71,22 @@ AActor* ADroneRacerGameMode::ChoosePlayerStart_Implementation(AController* Playe
 {
 	// return Super::ChoosePlayerStart_Implementation(Player);
 
-	TArray<APlayerStart*> AllStartPoints;
+	if(AllStartPoints.Num() == 0)
+	{ 
+		UWorld* World = GetWorld();
 
-	UWorld* World = GetWorld();
+		for (TActorIterator<APlayerStart> It(World); It; ++It)
+		{
+			APlayerStart* PlayerStart = *It;
 
-	for (TActorIterator<APlayerStart> It(World); It; ++It)
-	{
-		APlayerStart* PlayerStart = *It;
-
-		AllStartPoints.Add(PlayerStart);
+			AllStartPoints.Add(PlayerStart);
+		}
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("ChoosePlayerStart find %d players, and %d start points."), GameState->PlayerArray.Num(), AllStartPoints.Num());
+
 	int32 MaxIndex = AllStartPoints.Num() - 1;
-	int32 Index = FMath::Clamp(GameState->PlayerArray.Num(), 0, MaxIndex);
+	int32 Index = FMath::Clamp(GameState->PlayerArray.Num() - 1, 0, MaxIndex);
 
 	return AllStartPoints[Index];
 }
@@ -154,7 +157,7 @@ void ADroneRacerGameMode::OnMatchStart()
 {
 	ALyraGameState* LyraGS = GetGameState<ALyraGameState>();
 
-	uint8 TeamID = 1;
+	uint8 TeamID = 2;
 	for (APlayerState* LyraPlayerState : LyraGS->PlayerArray)
 	{
 		ADRCharacter* Player = Cast<ADRCharacter>(LyraPlayerState->GetPawn());
