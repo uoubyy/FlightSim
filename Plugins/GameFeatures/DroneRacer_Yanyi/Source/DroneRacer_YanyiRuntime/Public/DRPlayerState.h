@@ -72,6 +72,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetDroneRacerScores() const { return DroneRacerScores; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetPawnDataByName(FString NewPlaneName);
+
 protected:
 
 	UFUNCTION()

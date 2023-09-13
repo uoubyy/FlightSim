@@ -99,6 +99,16 @@ void ADRPlayerState::AddScores(float DeltaScores)
 	}
 }
 
+void ADRPlayerState::SetPawnDataByName(FString NewPlaneName)
+{
+	CurrentSelectedPlane = NewPlaneName;
+	FDRPlaneConfig CurrentPlaneConfig;
+	if (PlaneSet && GetSelectedPlaneConfig(CurrentPlaneConfig) && OverrideDefaultPawnData)
+	{
+		SetPawnData(CurrentPlaneConfig.PawnData);
+	}
+}
+
 void ADRPlayerState::OnRep_Scores()
 {
 	UpdateUI();

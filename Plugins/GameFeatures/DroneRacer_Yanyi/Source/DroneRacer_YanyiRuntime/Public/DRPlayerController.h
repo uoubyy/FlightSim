@@ -26,8 +26,16 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void ClientTravelInternal_Implementation(const FString& URL, ETravelType TravelType, bool bSeamless, FGuid MapPackageGuid);
+
+	virtual void InitPlayerState();
+
+	void SetClientSelectedPlane(FString& NewPlaneName) { ClientSelectedPlaneName = NewPlaneName; }
+
 protected:
 	
 	UPROPERTY(Replicated)
 	bool IsPlayerReady;
+
+	FString ClientSelectedPlaneName;
 };

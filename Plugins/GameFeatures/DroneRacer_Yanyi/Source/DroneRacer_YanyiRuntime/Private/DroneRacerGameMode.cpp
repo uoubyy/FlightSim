@@ -16,6 +16,7 @@
 
 #include "NativeGameplayTags.h"
 #include "Messages/LyraVerbMessage.h"
+#include <Kismet/GameplayStatics.h>
 UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Lyra_Elimination_Message, "Lyra.Elimination.Message");
 
 void ADroneRacerGameMode::RestartPlayer(AController* NewPlayer)
@@ -274,6 +275,16 @@ APlayerController* ADroneRacerGameMode::Login(UPlayer* NewPlayer, ENetRole InRem
 	APlayerController* NewPlayerController = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
 
 	UE_LOG(LogTemp, Warning, TEXT("DroneRacerGameMode Login with Options %s."), *Options);
+	if (UGameplayStatics::HasOption(Options, TEXT("PlaneName")))
+	{
+		FString PlaneName = UGameplayStatics::ParseOption(Options, TEXT("PlaneName"));
+
+		if (ADRPlayerController* DRPlayerController = Cast<ADRPlayerController>(NewPlayerController))
+		{
+			DRPlayerController->SetClientSelectedPlane(PlaneName);
+		}
+	}
+
 	return NewPlayerController;
 }
 

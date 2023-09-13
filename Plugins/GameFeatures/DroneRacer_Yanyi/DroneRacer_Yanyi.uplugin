@@ -19,7 +19,7 @@
 		{
 			"Name": "DroneRacer_YanyiRuntime",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "EarliestPossible"
 		}
 	],
 	"Plugins": [

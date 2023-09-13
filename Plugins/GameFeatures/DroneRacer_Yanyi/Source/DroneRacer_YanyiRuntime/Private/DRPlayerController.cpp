@@ -6,6 +6,7 @@
 #include "DroneRacerGameMode.h"
 
 #include "Net/UnrealNetwork.h"
+#include "DRPlayerState.h"
 
 void ADRPlayerController::OnPossess(APawn* InPawn)
 {
@@ -31,4 +32,30 @@ void ADRPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ADRPlayerController, IsPlayerReady);
+}
+
+void ADRPlayerController::InitPlayerState()
+{
+	Super::InitPlayerState();
+
+	if (GetNetMode() != NM_Client)
+	{
+		if (ADRPlayerState* DRPlayerStat = GetPlayerState<ADRPlayerState>())
+		{
+			DRPlayerStat->SetPawnDataByName(ClientSelectedPlaneName);
+		}
+	}
+}
+
+void ADRPlayerController::ClientTravelInternal_Implementation(const FString& URL, ETravelType TravelType, bool bSeamless, FGuid MapPackageGuid)
+{
+	if(ADRPlayerState* DRPlayerStat = GetPlayerState<ADRPlayerState>())
+	{ 
+		FString Address = FString::Printf(TEXT("%s?PlaneName=%s"), *URL, *DRPlayerStat->GetSelectedPlaneName());
+		Super::ClientTravelInternal_Implementation(Address, TravelType, bSeamless, MapPackageGuid);
+	}
+	else
+	{
+		Super::ClientTravelInternal_Implementation(URL, TravelType, bSeamless, MapPackageGuid);
+	}
 }
