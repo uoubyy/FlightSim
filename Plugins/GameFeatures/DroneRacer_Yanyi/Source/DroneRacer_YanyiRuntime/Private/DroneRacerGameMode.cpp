@@ -215,7 +215,7 @@ void ADroneRacerGameMode::OnMatchEnd(bool BattleResult)
 		{
 			if(ADRPlayerState* DRPlayerState = Cast<ADRPlayerState>(BasePlayerState))
 			{ 
-				if (WinPlayer == nullptr || DRPlayerState->GetDroneRacerScores() > WinPlayer->GetDroneRacerScores())
+				if (WinPlayer == nullptr || DRPlayerState->GetScore() > WinPlayer->GetScore())
 				{
 					WinPlayer = DRPlayerState;
 				}

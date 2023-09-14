@@ -89,7 +89,7 @@ void ADRPlayerState::AddScores(float DeltaScores)
 {
 	if (HasAuthority())
 	{
-		DroneRacerScores += DeltaScores;
+		SetScore(GetScore() + DeltaScores);
 	}
 
 	// TODO BAD CODE
@@ -109,16 +109,16 @@ void ADRPlayerState::SetPawnDataByName(FString NewPlaneName)
 	}
 }
 
-void ADRPlayerState::OnRep_Scores()
+void ADRPlayerState::OnRep_Score()
 {
+	Super::OnRep_Score();
+
 	UpdateUI();
 }
 
 void ADRPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME_CONDITION(ADRPlayerState, DroneRacerScores, COND_OwnerOnly);
 }
 
 void ADRPlayerState::UpdateUI()
@@ -129,7 +129,7 @@ void ADRPlayerState::UpdateUI()
 		{
 			if (UDRUserWidget_InGameHUD* InGameHUD = Cast<UDRUserWidget_InGameHUD>(WidgetManager->GetReferenceOfWidget(FName("WBP_InGameHUD"))))
 			{
-				InGameHUD->UpdatePlayerScores(DroneRacerScores);
+				InGameHUD->UpdatePlayerScores(GetScore());
 			}
 		}
 	}

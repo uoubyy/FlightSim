@@ -27,6 +27,7 @@
 #include "Attributes/DRCombatSet.h"
 
 #include "DRBlueprintFunctionLibrary.h"
+#include <GameFramework/GameStateBase.h>
 
 ADRCharacter::ADRCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDroneMovementComponent>(ACharacter::CharacterMovementComponentName)),
@@ -314,12 +315,20 @@ void ADRCharacter::OnMatchEnd_Implementation(bool WinOrLoss)
 
 		WidgetManagerComponent->RequestShowWidget(FName("WBP_GameOver"));
 
-		ADRPlayerState* DRPlayerState = GetPlayerState<ADRPlayerState>();
-		FDRBattleResult BattleResult(WinOrLoss, DRPlayerState->GetBestRecord(), DRPlayerState->GetCurrentRecord());
-		FString MessagePayload;
-		if (FJsonObjectConverter::UStructToJsonObjectString(BattleResult, MessagePayload))
+		if (AGameStateBase* DRGameState = GetWorld() ? GetWorld()->GetGameState() : nullptr)
 		{
-			WidgetManagerComponent->RequestUpdateWidget("WBP_GameOver", MessagePayload);
+			if (DRGameState->PlayerArray.Num() >= 2)
+			{
+				APlayerState* Player1 = DRGameState->PlayerArray[0];
+				APlayerState* Player2 = DRGameState->PlayerArray[1];
+				FDRBattleResult BattleResult(WinOrLoss, Player1->GetPlayerName(), Player2->GetPlayerName(), Player1->GetScore(), Player2->GetScore());
+
+				FString MessagePayload;
+				if (FJsonObjectConverter::UStructToJsonObjectString(BattleResult, MessagePayload))
+				{
+					WidgetManagerComponent->RequestUpdateWidget("WBP_GameOver", MessagePayload);
+				}
+			}
 		}
 	}
 
