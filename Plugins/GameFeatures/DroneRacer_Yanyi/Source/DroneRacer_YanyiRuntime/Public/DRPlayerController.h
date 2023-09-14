@@ -30,7 +30,7 @@ public:
 
 	virtual void InitPlayerState();
 
-	void SetClientSelectedPlane(FString& NewPlaneName) { ClientSelectedPlaneName = NewPlaneName; }
+	void SetClientSelectedPlane(FString& NewPlaneName);// { ClientSelectedPlaneName = NewPlaneName; }
 
 protected:
 	

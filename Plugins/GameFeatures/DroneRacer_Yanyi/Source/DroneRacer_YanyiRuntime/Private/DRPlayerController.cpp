@@ -37,7 +37,11 @@ void ADRPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 void ADRPlayerController::InitPlayerState()
 {
 	Super::InitPlayerState();
+}
 
+void ADRPlayerController::SetClientSelectedPlane(FString& NewPlaneName)
+{
+	ClientSelectedPlaneName = NewPlaneName;
 	if (GetNetMode() != NM_Client)
 	{
 		if (ADRPlayerState* DRPlayerStat = GetPlayerState<ADRPlayerState>())
