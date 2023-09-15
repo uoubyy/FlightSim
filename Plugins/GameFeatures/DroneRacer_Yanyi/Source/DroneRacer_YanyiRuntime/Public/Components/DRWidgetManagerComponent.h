@@ -15,6 +15,7 @@ public:
 
 	UDRWidgetManagerComponent(const FObjectInitializer& ObjectInitializer);
 
+	UFUNCTION(BlueprintPure, Category = "Drone Racer|WidgetManager")
 	static UDRWidgetManagerComponent* GetComponent(AController* Controller);
 
 	UFUNCTION(BlueprintCallable)

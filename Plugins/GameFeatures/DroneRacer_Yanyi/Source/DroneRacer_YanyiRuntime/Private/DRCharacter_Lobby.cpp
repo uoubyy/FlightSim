@@ -28,7 +28,7 @@ void ADRCharacter_Lobby::PossessedBy(AController* NewController)
 		if (WidgetManagerComponent)
 		{
 			// WidgetManagerComponent->RequestShowWidget(FName("WBP_PlaneInfo"));
-			WidgetManagerComponent->RequestShowWidget(FName("WBP_GameMenu"));
+			// WidgetManagerComponent->RequestShowWidget(FName("WBP_GameMenu"));
 		}
 	}
 
