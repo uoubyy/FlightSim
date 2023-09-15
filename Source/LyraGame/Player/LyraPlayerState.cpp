@@ -172,11 +172,14 @@ void ALyraPlayerState::SetPawnData(const ULyraPawnData* InPawnData)
 		return;
 	}
 
+	// 2K Yanyi: we can select and change pawndata in the Lobby
+	/*
 	if (PawnData)
 	{
 		UE_LOG(LogLyra, Error, TEXT("Trying to set PawnData [%s] on player state [%s] that already has valid PawnData [%s]."), *GetNameSafe(InPawnData), *GetNameSafe(this), *GetNameSafe(PawnData));
 		return;
 	}
+	*/
 
 	MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, PawnData, this);
 	PawnData = InPawnData;

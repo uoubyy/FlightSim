@@ -15,7 +15,7 @@ struct FFrame;
 
 /** Description of settings used to display experiences in the UI and start a new session */
 UCLASS(BlueprintType)
-class ULyraUserFacingExperienceDefinition : public UPrimaryDataAsset
+class LYRAGAME_API ULyraUserFacingExperienceDefinition : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
@@ -68,8 +68,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=Experience)
 	int32 MaxPlayerCount = 16;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=Experience)
+	FString ExperienceDefinitionTag;
+
 public:
 	/** Create a request object that is used to actually start a session with these settings */
 	UFUNCTION(BlueprintCallable, BlueprintPure=false)
-	UCommonSession_HostSessionRequest* CreateHostingRequest() const;
+	virtual UCommonSession_HostSessionRequest* CreateHostingRequest() const;
 };
